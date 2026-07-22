@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pixelated vs Coordinate Rearranged Image Zoom</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: #111827; color: #f9fafb; }
+    header { text-align: center; padding: 24px 16px 12px; }
+    header h1 { margin: 0 0 8px; font-size: 28px; }
+    header p { margin: 0; color: #d1d5db; font-size: 15px; }
+    .controls {
+      width: min(900px, 94vw); margin: 18px auto; padding: 16px;
+      background: #1f2937; border-radius: 14px; display: grid; gap: 12px;
+    }
+    .control-row {
+      display: grid; grid-template-columns: 120px 1fr 70px;
+      align-items: center; gap: 12px;
+    }
+    label { font-weight: bold; color: #f3f4f6; }
+    input[type="range"] { width: 100%; cursor: pointer; }
+    button {
+      border: 0; border-radius: 10px; background: #38bdf8;
+      color: #082f49; font-weight: bold; padding: 10px 14px; cursor: pointer;
+    }
+    button:hover { background: #7dd3fc; }
+    .comparison {
+      width: min(1200px, 96vw); margin: 16px auto 32px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 18px;
+    }
+    .panel {
+      background: #1f2937; border: 1px solid #374151;
+      border-radius: 16px; padding: 16px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+    }
+    .panel h2 { margin: 0 0 10px; font-size: 20px; }
+    canvas {
+      display: block; width: 100%; aspect-ratio: 1/1;
+      background: #fff; border-radius: 12px;
+      border: 2px solid #4b5563; cursor: crosshair;
+    }
+    .note {
+      width: min(900px, 94vw); margin: 0 auto 30px;
+      color: #cbd5e1; font-size: 14px; text-align: center; line-height: 1.5;
+    }
+    @media (max-width: 800px) {
+      .comparison { grid-template-columns: 1fr; }
+      .control-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Image Zoom Comparison Activity</h1>
+  <p>Compare how an image behaves when zoomed using two different rendering methods.</p>
+</header>
+
+<section class="controls">
+  <div class="control-row">
+    <label for="zoomRange">Zoom</label>
+    <input id="zoomRange" type="range" min="1" max="8" step="0.1" value="1" />
+    <span id="zoomValue">1.0x</span>
+  </div>
+  <div class="control-row">
+    <label for="tileRange">Tile Size</label>
+    <input id="tileRange" type="range" min="20" max="100" step="5" value="50" />
+    <span id="tileValue">50px</span>
+  </div>
+  <button id="resetButton">Reset Activity</button>
+</section>
+
+<main class="comparison">
+  <section class="panel">
+    <h2>Left: Pixelated Zoom</h2>
+    <canvas id="pixelCanvas" width="520" height="520"></canvas>
+  </section>
+  <section class="panel">
+    <h2>Right: Smooth Zoom with Rearranged Coordinates</h2>
+    <canvas id="rearrangeCanvas" width="520" height="520"></canvas>
+  </section>
+</main>
+
+<p class="note">
+  Move your mouse over either canvas to choose the zoom center. Increase the zoom slider to see the difference.
+</p>
+
+<script>
+  const SIZE = 520;
+  const LOW_RES = 65; // raster baked at low resolution to force pixelation
+
+  const pixelCanvas     = document.getElementById("pixelCanvas");
+  const rearrangeCanvas = document.getElementById("rearrangeCanvas");
+  const pixelCtx        = pixelCanvas.getContext("2d");
+  const rearrangeCtx    = rearrangeCanvas.getContext("2d");
+  const zoomRange       = document.getElementById("zoomRange");
+  const tileRange       = document.getElementById("tileRange");
+  const zoomValue       = document.getElementById("zoomValue");
+  const tileValue       = document.getElementById("tileValue");
+
+  let zoom = 1, tileSize = 50;
+  let focus = { x: SIZE / 2, y: SIZE / 2 };
+
+  // Full-res source (used by rearrange side)
+  const srcCanvas = document.createElement("canvas");
+  srcCanvas.width = srcCanvas.height = SIZE;
+  const srcCtx = srcCanvas.getContext("2d");
+
+  // Low-res baked bitmap (used by pixelated side)
+  const lowCanvas = document.createElement("canvas");
+  lowCanvas.width = lowCanvas.height = LOW_RES;
+  const lowCtx = lowCanvas.getContext("2d");
+
+  function drawScene(ctx, s) {
+    const g = ctx.createLinearGradient(0, 0, s, s);
+    g.addColorStop(0, "#60a5fa");
+    g.addColorStop(0.5, "#f472b6");
+    g.addColorStop(1, "#facc15");
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, s, s);
+
+    ctx.fillStyle = "rgba(255,255,255,0.22)";
+    for (let y = 0; y < s; y += s * 0.05) ctx.fillRect(0, y, s, s * 0.004);
+    for (let x = 0; x < s; x += s * 0.05) ctx.fillRect(x, 0, s * 0.004, s);
+
+    ctx.fillStyle = "#111827";
+    ctx.beginPath(); ctx.arc(s*0.5, s*0.5, s*0.25, 0, Math.PI*2); ctx.fill();
+
+    ctx.fillStyle = "#f9fafb";
+    ctx.beginPath(); ctx.arc(s*0.404, s*0.433, s*0.054, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(s*0.596, s*0.433, s*0.054, 0, Math.PI*2); ctx.fill();
+
+    ctx.fillStyle = "#111827";
+    ctx.beginPath(); ctx.arc(s*0.423, s*0.442, s*0.019, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(s*0.577, s*0.442, s*0.019, 0, Math.PI*2); ctx.fill();
+
+    ctx.strokeStyle = "#f9fafb";
+    ctx.lineWidth = s * 0.027;
+    ctx.lineCap = "round";
+    ctx.beginPath();
+    ctx.arc(s*0.5, s*0.529, s*0.115, 0.15*Math.PI, 0.85*Math.PI);
+    ctx.stroke();
+
+    ctx.fillStyle = "#ffffff";
+    ctx.font = `bold ${s*0.088}px Arial`;
+    ctx.textAlign = "center";
+    ctx.fillText("SHARP IMAGE", s*0.5, s*0.856);
+
+    ctx.fillStyle = "#111827";
+    ctx.font = `bold ${s*0.046}px Arial`;
+    ctx.fillText("Canvas Activity", s*0.5, s*0.138);
+  }
+
+  function buildSources() {
+    drawScene(srcCtx, SIZE);
+    drawScene(lowCtx, LOW_RES);
+  }
+
+  function getRect() {
+    const sw = SIZE / zoom, sh = SIZE / zoom;
+    const sx = Math.max(0, Math.min(SIZE - sw, focus.x - sw / 2));
+    const sy = Math.max(0, Math.min(SIZE - sh, focus.y - sh / 2));
+    return { sx, sy, sw, sh };
+  }
+
+  function drawPixelated() {
+    pixelCtx.clearRect(0, 0, SIZE, SIZE);
+    const { sx, sy, sw, sh } = getRect();
+    const lx = (sx / SIZE) * LOW_RES;
+    const ly = (sy / SIZE) * LOW_RES;
+    const lw = (sw / SIZE) * LOW_RES;
+    const lh = (sh / SIZE) * LOW_RES;
+    pixelCtx.imageSmoothingEnabled = false;
+    pixelCtx.drawImage(lowCanvas, lx, ly, lw, lh, 0, 0, SIZE, SIZE);
+  }
+
+  function drawRearranged() {
+    rearrangeCtx.clearRect(0, 0, SIZE, SIZE);
+    const rect = getRect();
+    rearrangeCtx.imageSmoothingEnabled = true;
+    rearrangeCtx.imageSmoothingQuality = "high";
+
+    if (zoom <= 1) {
+      rearrangeCtx.drawImage(srcCanvas, 0, 0, SIZE, SIZE);
+      return;
+    }
+
+    const cols = Math.ceil(SIZE / tileSize);
+    const rows = Math.ceil(SIZE / tileSize);
+
+    for (let row = 0; row < rows; row++) {
+      for (let col = 0; col < cols; col++) {
+        const dx = col * tileSize, dy = row * tileSize;
+        const dw = Math.min(tileSize, SIZE - dx);
+        const dh = Math.min(tileSize, SIZE - dy);
+
+        const baseSx = rect.sx + (dx / SIZE) * rect.sw;
+        const baseSy = rect.sy + (dy / SIZE) * rect.sh;
+        const stw = (dw / SIZE) * rect.sw;
+        const sth = (dh / SIZE) * rect.sh;
+
+        const waveX = Math.sin(row * 1.2 + zoom) * 22 * (zoom - 1);
+        const waveY = Math.cos(col * 1.2 + zoom) * 22 * (zoom - 1);
+
+        const shiftedSx = wrapCoord(baseSx + waveX, 0, SIZE - stw);
+        const shiftedSy = wrapCoord(baseSy + waveY, 0, SIZE - sth);
+
+        rearrangeCtx.drawImage(srcCanvas, shiftedSx, shiftedSy, stw, sth, dx, dy, dw, dh);
+        rearrangeCtx.strokeStyle = "rgba(255,255,255,0.28)";
+        rearrangeCtx.lineWidth = 1;
+        rearrangeCtx.strokeRect(dx, dy, dw, dh);
+      }
+    }
+  }
+
+  function wrapCoord(v, min, max) {
+    const range = max - min;
+    if (range <= 0) return min;
+    while (v < min) v += range;
+    while (v > max) v -= range;
+    return v;
+  }
+
+  function render() {
+    zoom = Number(zoomRange.value);
+    tileSize = Number(tileRange.value);
+    zoomValue.textContent = zoom.toFixed(1) + "x";
+    tileValue.textContent = tileSize + "px";
+    drawPixelated();
+    drawRearranged();
+  }
+
+  function updateFocus(event) {
+    const r = event.currentTarget.getBoundingClientRect();
+    focus.x = Math.max(0, Math.min(SIZE, (event.clientX - r.left) * (SIZE / r.width)));
+    focus.y = Math.max(0, Math.min(SIZE, (event.clientY - r.top)  * (SIZE / r.height)));
+    render();
+  }
+
+  pixelCanvas.addEventListener("mousemove", updateFocus);
+  rearrangeCanvas.addEventListener("mousemove", updateFocus);
+  pixelCanvas.addEventListener("touchmove", e => { e.preventDefault(); updateFocus(e.touches[0]); }, { passive: false });
+  rearrangeCanvas.addEventListener("touchmove", e => { e.preventDefault(); updateFocus(e.touches[0]); }, { passive: false });
+  zoomRange.addEventListener("input", render);
+  tileRange.addEventListener("input", render);
+  document.getElementById("resetButton").addEventListener("click", () => {
+    zoomRange.value = 1; tileRange.value = 50;
+    focus = { x: SIZE / 2, y: SIZE / 2 };
+    render();
+  });
+
+  buildSources();
+  render();
+</script>
+</body>
+</html>

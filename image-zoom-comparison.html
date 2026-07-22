@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Raster vs Vector Zoom Comparison</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #1a1a2e; color: #eee; font-family: Arial, sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 20px; }
+  h1 { margin-bottom: 6px; font-size: 1.4rem; color: #e0e0ff; }
+  p.subtitle { font-size: 0.85rem; color: #aaa; margin-bottom: 18px; }
+  .panels { display: flex; gap: 24px; flex-wrap: wrap; justify-content: center; }
+  .panel { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .panel h2 { font-size: 1rem; }
+  .raster-label { color: #ff6b6b; }
+  .vector-label { color: #6bffb8; }
+  canvas { border: 2px solid #444; border-radius: 6px; background: #fff; cursor: crosshair; }
+  .desc { font-size: 0.75rem; color: #aaa; max-width: 280px; text-align: center; }
+  .controls { margin-top: 18px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; justify-content: center; }
+  label { font-size: 0.9rem; }
+  input[type=range] { width: 200px; accent-color: #6bffb8; }
+  .zoom-val { font-size: 1rem; font-weight: bold; color: #6bffb8; min-width: 50px; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.72rem; font-weight: bold; margin-top: 2px; }
+  .badge-raster { background: #ff6b6b33; color: #ff6b6b; border: 1px solid #ff6b6b; }
+  .badge-vector { background: #6bffb833; color: #6bffb8; border: 1px solid #6bffb8; }
+</style>
+</head>
+<body>
+
+<h1>🔍 Raster vs Vector — Zoom Comparison</h1>
+<p class="subtitle">Drag the slider to zoom in and observe the difference</p>
+
+<div class="panels">
+  <div class="panel">
+    <h2 class="raster-label">Raster Image</h2>
+    <span class="badge badge-raster">Pixel-based · Becomes Blurry</span>
+    <canvas id="rasterCanvas" width="280" height="280"></canvas>
+
+  </div>
+  <div class="panel">
+    <h2 class="vector-label">Vector Image</h2>
+    <span class="badge badge-vector">Math-based · Always Sharp</span>
+    <canvas id="vectorCanvas" width="280" height="280"></canvas>
+
+  </div>
+</div>
+
+<div class="controls">
+  <label for="zoomSlider">Zoom:</label>
+  <input type="range" id="zoomSlider" min="1" max="12" step="0.1" value="1">
+  <span class="zoom-val" id="zoomVal">1×</span>
+  <button onclick="resetZoom()" style="padding:4px 14px;border-radius:6px;border:1px solid #555;background:#2a2a4a;color:#eee;cursor:pointer;">Reset</button>
+</div>
+
+<script>
+const W = 280, H = 280;
+const PIXEL_SIZE = 4; // raster source resolution cell size
+
+// ── Draw the "source" scene onto an offscreen canvas at low resolution ──
+function buildSourceScene(size) {
+  const oc = document.createElement('canvas');
+  oc.width = oc.height = size;
+  const ctx = oc.getContext('2d');
+  const s = size;
+
+  // Background
+  ctx.fillStyle = '#f0f4ff'; ctx.fillRect(0, 0, s, s);
+
+  // Sun
+  ctx.fillStyle = '#FFD700';
+  ctx.beginPath(); ctx.arc(s*0.75, s*0.18, s*0.1, 0, Math.PI*2); ctx.fill();
+
+  // Mountain
+  ctx.fillStyle = '#7c9cbf';
+  ctx.beginPath(); ctx.moveTo(0, s); ctx.lineTo(s*0.35, s*0.3); ctx.lineTo(s*0.7, s); ctx.closePath(); ctx.fill();
+  ctx.fillStyle = '#a0b8d0';
+  ctx.beginPath(); ctx.moveTo(s*0.25, s); ctx.lineTo(s*0.55, s*0.45); ctx.lineTo(s*0.85, s); ctx.closePath(); ctx.fill();
+
+  // Snow cap
+  ctx.fillStyle = '#fff';
+  ctx.beginPath(); ctx.moveTo(s*0.35, s*0.3); ctx.lineTo(s*0.28, s*0.48); ctx.lineTo(s*0.42, s*0.48); ctx.closePath(); ctx.fill();
+
+  // Ground
+  ctx.fillStyle = '#6abf69';
+  ctx.fillRect(0, s*0.78, s, s*0.22);
+
+  // Tree trunk
+  ctx.fillStyle = '#8B5E3C';
+  ctx.fillRect(s*0.14, s*0.65, s*0.04, s*0.14);
+
+  // Tree top
+  ctx.fillStyle = '#2e7d32';
+  ctx.beginPath(); ctx.moveTo(s*0.16, s*0.42); ctx.lineTo(s*0.07, s*0.68); ctx.lineTo(s*0.25, s*0.68); ctx.closePath(); ctx.fill();
+
+  // House body
+  ctx.fillStyle = '#e8c97a';
+  ctx.fillRect(s*0.55, s*0.62, s*0.22, s*0.18);
+
+  // Roof
+  ctx.fillStyle = '#c0392b';
+  ctx.beginPath(); ctx.moveTo(s*0.52, s*0.62); ctx.lineTo(s*0.66, s*0.5); ctx.lineTo(s*0.8, s*0.62); ctx.closePath(); ctx.fill();
+
+  // Door
+  ctx.fillStyle = '#8B5E3C';
+  ctx.fillRect(s*0.63, s*0.7, s*0.06, s*0.1);
+
+  // Window
+  ctx.fillStyle = '#aee6ff';
+  ctx.fillRect(s*0.57, s*0.65, s*0.05, s*0.05);
+
+  return oc;
+}
+
+// ── RASTER: bake scene into a small bitmap, then scale up (pixelated) ──
+const RASTER_BASE = 280 / PIXEL_SIZE; // ~70px source
+const rasterSource = buildSourceScene(RASTER_BASE);
+
+function drawRaster(zoom) {
+  const canvas = document.getElementById('rasterCanvas');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, W, H);
+
+  // Show only the zoomed-in center crop of the raster bitmap
+  const visibleFraction = 1 / zoom;
+  const srcSize = RASTER_BASE * visibleFraction;
+  const srcX = (RASTER_BASE - srcSize) / 2;
+  const srcY = (RASTER_BASE - srcSize) / 2;
+
+  ctx.imageSmoothingEnabled = false; // ← key: no anti-aliasing = pixelated
+  ctx.drawImage(rasterSource, srcX, srcY, srcSize, srcSize, 0, 0, W, H);
+
+  // Overlay pixel grid at high zoom to emphasize pixelation
+  if (zoom >= 3) {
+    const cellW = W / (srcSize);
+    ctx.strokeStyle = 'rgba(0,0,0,0.15)';
+    ctx.lineWidth = 0.5;
+    for (let x = 0; x <= W; x += cellW) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+    for (let y = 0; y <= H; y += cellW) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+  }
+}
+
+// ── VECTOR: redraw scene using math at any zoom (always sharp) ──
+function drawVector(zoom) {
+  const canvas = document.getElementById('vectorCanvas');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, W, H);
+
+  // Zoom into center: translate so center stays fixed, scale up
+  ctx.save();
+  ctx.translate(W / 2, H / 2);
+  ctx.scale(zoom, zoom);
+  ctx.translate(-W / 2, -H / 2);
+
+  // Redraw the SAME scene using vector (canvas 2D) commands — always sharp
+  const s = W;
+
+  ctx.fillStyle = '#f0f4ff'; ctx.fillRect(0, 0, s, s);
+
+  ctx.fillStyle = '#FFD700';
+  ctx.beginPath(); ctx.arc(s*0.75, s*0.18, s*0.1, 0, Math.PI*2); ctx.fill();
+
+  ctx.fillStyle = '#7c9cbf';
+  ctx.beginPath(); ctx.moveTo(0, s); ctx.lineTo(s*0.35, s*0.3); ctx.lineTo(s*0.7, s); ctx.closePath(); ctx.fill();
+  ctx.fillStyle = '#a0b8d0';
+  ctx.beginPath(); ctx.moveTo(s*0.25, s); ctx.lineTo(s*0.55, s*0.45); ctx.lineTo(s*0.85, s); ctx.closePath(); ctx.fill();
+
+  ctx.fillStyle = '#fff';
+  ctx.beginPath(); ctx.moveTo(s*0.35, s*0.3); ctx.lineTo(s*0.28, s*0.48); ctx.lineTo(s*0.42, s*0.48); ctx.closePath(); ctx.fill();
+
+  ctx.fillStyle = '#6abf69'; ctx.fillRect(0, s*0.78, s, s*0.22);
+
+  ctx.fillStyle = '#8B5E3C'; ctx.fillRect(s*0.14, s*0.65, s*0.04, s*0.14);
+  ctx.fillStyle = '#2e7d32';
+  ctx.beginPath(); ctx.moveTo(s*0.16, s*0.42); ctx.lineTo(s*0.07, s*0.68); ctx.lineTo(s*0.25, s*0.68); ctx.closePath(); ctx.fill();
+
+  ctx.fillStyle = '#e8c97a'; ctx.fillRect(s*0.55, s*0.62, s*0.22, s*0.18);
+  ctx.fillStyle = '#c0392b';
+  ctx.beginPath(); ctx.moveTo(s*0.52, s*0.62); ctx.lineTo(s*0.66, s*0.5); ctx.lineTo(s*0.8, s*0.62); ctx.closePath(); ctx.fill();
+  ctx.fillStyle = '#8B5E3C'; ctx.fillRect(s*0.63, s*0.7, s*0.06, s*0.1);
+  ctx.fillStyle = '#aee6ff'; ctx.fillRect(s*0.57, s*0.65, s*0.05, s*0.05);
+
+  ctx.restore();
+}
+
+function render(zoom) {
+  drawRaster(zoom);
+  drawVector(zoom);
+  document.getElementById('zoomVal').textContent = zoom.toFixed(1) + '×';
+}
+
+function resetZoom() {
+  document.getElementById('zoomSlider').value = 1;
+  render(1);
+}
+
+document.getElementById('zoomSlider').addEventListener('input', e => render(parseFloat(e.target.value)));
+
+render(1);
+</script>
+</body>
+</html>
