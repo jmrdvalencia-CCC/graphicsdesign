@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pixelated vs Coordinate Rearranged Image Zoom</title>
+  <title>Raster vs Vector Image Zoom</title>
 
   <style>
     * {
@@ -102,7 +102,7 @@
       line-height: 1.45;
     }
 
-    canvas {
+    canvas, #vectorSvg {
       display: block;
       width: 100%;
       aspect-ratio: 1 / 1;
@@ -110,6 +110,7 @@
       border-radius: 12px;
       border: 2px solid #4b5563;
       cursor: crosshair;
+      overflow: hidden;
     }
 
     .note {
@@ -135,8 +136,8 @@
 
 <body>
   <header>
-    <h1>Image Zoom Comparison Activity</h1>
-    <p>Compare how an image behaves when zoomed using two different rendering methods.</p>
+    <h1>Raster vs Vector Zoom Activity</h1>
+    <p>Compare how a <strong>raster (canvas)</strong> image pixelates vs a <strong>vector (SVG)</strong> image stays sharp when zoomed.</p>
   </header>
 
   <section class="controls">
@@ -146,48 +147,77 @@
       <span id="zoomValue">1.0x</span>
     </div>
 
-    <div class="control-row">
-      <label for="tileRange">Tile Size</label>
-      <input id="tileRange" type="range" min="20" max="100" step="5" value="50" />
-      <span id="tileValue">50px</span>
-    </div>
-
     <button id="resetButton">Reset Activity</button>
   </section>
 
   <main class="comparison">
     <section class="panel">
-      <h2>Left</h2>
+
       <canvas id="pixelCanvas" width="520" height="520"></canvas>
     </section>
 
     <section class="panel">
-      <h2>Right</h2>
-      <canvas id="rearrangeCanvas" width="520" height="520"></canvas>
+
+      <svg id="vectorSvg" viewBox="0 0 520 520" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#60a5fa"/>
+            <stop offset="50%" stop-color="#f472b6"/>
+            <stop offset="100%" stop-color="#facc15"/>
+          </linearGradient>
+          <clipPath id="svgClip">
+            <rect width="520" height="520"/>
+          </clipPath>
+        </defs>
+        <g id="svgScene" clip-path="url(#svgClip)">
+          <!-- background -->
+          <rect width="520" height="520" fill="url(#bgGrad)"/>
+          <!-- grid lines -->
+          <g id="gridLines" stroke="rgba(255,255,255,0.22)" stroke-width="2"></g>
+          <!-- face circle -->
+          <circle cx="260" cy="260" r="130" fill="#111827"/>
+          <!-- eyes white -->
+          <circle cx="210" cy="225" r="28" fill="#f9fafb"/>
+          <circle cx="310" cy="225" r="28" fill="#f9fafb"/>
+          <!-- pupils -->
+          <circle cx="220" cy="230" r="10" fill="#111827"/>
+          <circle cx="300" cy="230" r="10" fill="#111827"/>
+          <!-- smile -->
+          <path d="M 201 275 A 60 60 0 0 0 319 275" stroke="#f9fafb" stroke-width="14" stroke-linecap="round" fill="none"/>
+          <!-- title text -->
+         
+          <!-- sharp text -->
+          <text x="260" y="445" text-anchor="middle" font-family="Arial" font-size="46" font-weight="bold" fill="#ffffff">SHARP IMAGE</text>
+          <!-- crosshair -->
+        </g>
+        <g id="svgCrosshair">
+          <line id="chH" stroke="rgba(17,24,39,0.8)" stroke-width="3"/>
+          <line id="chV" stroke="rgba(17,24,39,0.8)" stroke-width="3"/>
+          <line id="chH2" stroke="rgba(255,255,255,0.9)" stroke-width="1"/>
+          <line id="chV2" stroke="rgba(255,255,255,0.9)" stroke-width="1"/>
+        </g>
+      </svg>
     </section>
   </main>
 
   <p class="note">
-    Move your mouse over either canvas to choose the zoom center. Increase the zoom slider to see the difference
+    Move your mouse over either panel to choose the zoom center. Increase the zoom slider — notice the left side pixelates while the right side stays crisp.
   </p>
 
   <script>
     const pixelCanvas = document.getElementById("pixelCanvas");
-    const rearrangeCanvas = document.getElementById("rearrangeCanvas");
+    const vectorSvg = document.getElementById("vectorSvg");
+    const svgScene = document.getElementById("svgScene");
 
     const pixelCtx = pixelCanvas.getContext("2d");
-    const rearrangeCtx = rearrangeCanvas.getContext("2d");
 
     const zoomRange = document.getElementById("zoomRange");
-    const tileRange = document.getElementById("tileRange");
     const zoomValue = document.getElementById("zoomValue");
-    const tileValue = document.getElementById("tileValue");
     const resetButton = document.getElementById("resetButton");
 
     const size = 520;
 
     let zoom = 1;
-    let tileSize = 50;
     let focus = {
       x: size / 2,
       y: size / 2
@@ -197,6 +227,22 @@
     sourceCanvas.width = size;
     sourceCanvas.height = size;
     const sourceCtx = sourceCanvas.getContext("2d");
+
+    function buildSvgGrid() {
+      const g = document.getElementById("gridLines");
+      for (let y = 0; y < size; y += 26) {
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("x1", 0); line.setAttribute("y1", y);
+        line.setAttribute("x2", size); line.setAttribute("y2", y);
+        g.appendChild(line);
+      }
+      for (let x = 0; x < size; x += 26) {
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("x1", x); line.setAttribute("y1", 0);
+        line.setAttribute("x2", x); line.setAttribute("y2", size);
+        g.appendChild(line);
+      }
+    }
 
     function createSourceImage() {
       sourceCtx.clearRect(0, 0, size, size);
@@ -249,7 +295,7 @@
 
       sourceCtx.fillStyle = "#111827";
       sourceCtx.font = "bold 24px Arial";
-      sourceCtx.fillText("Canvas Activity", 260, 72);
+      sourceCtx.fillText("", 260, 72);
     }
 
     function getZoomSourceRectangle() {
@@ -292,81 +338,23 @@
       drawCrosshair(pixelCtx);
     }
 
-    function drawRearrangedZoom() {
-      rearrangeCtx.clearRect(0, 0, size, size);
+    function drawSvgZoom() {
+      const tx = -(focus.x * zoom - size / 2);
+      const ty = -(focus.y * zoom - size / 2);
+      const clamped = {
+        x: Math.max(size - size * zoom, Math.min(0, tx)),
+        y: Math.max(size - size * zoom, Math.min(0, ty))
+      };
+      svgScene.setAttribute("transform", `translate(${clamped.x},${clamped.y}) scale(${zoom})`);
 
-      const rect = getZoomSourceRectangle();
+      // crosshair stays in SVG viewport coords (unscaled)
+      const cx = (focus.x * zoom + clamped.x);
+      const cy = (focus.y * zoom + clamped.y);
+      document.getElementById("chH").setAttribute("x1", cx - 15); document.getElementById("chH").setAttribute("y1", cy); document.getElementById("chH").setAttribute("x2", cx + 15); document.getElementById("chH").setAttribute("y2", cy);
+      document.getElementById("chV").setAttribute("x1", cx); document.getElementById("chV").setAttribute("y1", cy - 15); document.getElementById("chV").setAttribute("x2", cx); document.getElementById("chV").setAttribute("y2", cy + 15);
+      document.getElementById("chH2").setAttribute("x1", cx - 15); document.getElementById("chH2").setAttribute("y1", cy); document.getElementById("chH2").setAttribute("x2", cx + 15); document.getElementById("chH2").setAttribute("y2", cy);
+      document.getElementById("chV2").setAttribute("x1", cx); document.getElementById("chV2").setAttribute("y1", cy - 15); document.getElementById("chV2").setAttribute("x2", cx); document.getElementById("chV2").setAttribute("y2", cy + 15);
 
-      rearrangeCtx.imageSmoothingEnabled = true;
-      rearrangeCtx.imageSmoothingQuality = "high";
-
-      if (zoom === 1) {
-        rearrangeCtx.drawImage(sourceCanvas, 0, 0, size, size);
-      } else {
-        const cols = Math.ceil(size / tileSize);
-        const rows = Math.ceil(size / tileSize);
-
-        for (let row = 0; row < rows; row++) {
-          for (let col = 0; col < cols; col++) {
-            const dx = col * tileSize;
-            const dy = row * tileSize;
-
-            const dw = Math.min(tileSize, size - dx);
-            const dh = Math.min(tileSize, size - dy);
-
-            const baseSx = rect.sx + (dx / size) * rect.sw;
-            const baseSy = rect.sy + (dy / size) * rect.sh;
-
-            const sourceTileW = (dw / size) * rect.sw;
-            const sourceTileH = (dh / size) * rect.sh;
-
-            const waveX = Math.sin(row * 1.2 + zoom) * 22 * (zoom - 1);
-            const waveY = Math.cos(col * 1.2 + zoom) * 22 * (zoom - 1);
-
-            let shiftedSx = baseSx + waveX;
-            let shiftedSy = baseSy + waveY;
-
-            shiftedSx = wrapCoordinate(shiftedSx, 0, size - sourceTileW);
-            shiftedSy = wrapCoordinate(shiftedSy, 0, size - sourceTileH);
-
-            rearrangeCtx.drawImage(
-              sourceCanvas,
-              shiftedSx,
-              shiftedSy,
-              sourceTileW,
-              sourceTileH,
-              dx,
-              dy,
-              dw,
-              dh
-            );
-
-            rearrangeCtx.strokeStyle = "rgba(255, 255, 255, 0.28)";
-            rearrangeCtx.lineWidth = 1;
-            rearrangeCtx.strokeRect(dx, dy, dw, dh);
-          }
-        }
-      }
-
-      drawCrosshair(rearrangeCtx);
-    }
-
-    function wrapCoordinate(value, min, max) {
-      const range = max - min;
-
-      if (range <= 0) {
-        return min;
-      }
-
-      while (value < min) {
-        value += range;
-      }
-
-      while (value > max) {
-        value -= range;
-      }
-
-      return value;
     }
 
     function drawCrosshair(ctx) {
@@ -397,58 +385,42 @@
 
     function render() {
       zoom = Number(zoomRange.value);
-      tileSize = Number(tileRange.value);
-
       zoomValue.textContent = zoom.toFixed(1) + "x";
-      tileValue.textContent = tileSize + "px";
-
       drawPixelatedZoom();
-      drawRearrangedZoom();
+      drawSvgZoom();
     }
 
     function updateFocusFromPointer(event) {
       const rect = event.currentTarget.getBoundingClientRect();
-
       const scaleX = size / rect.width;
       const scaleY = size / rect.height;
-
-      focus.x = (event.clientX - rect.left) * scaleX;
-      focus.y = (event.clientY - rect.top) * scaleY;
-
-      focus.x = Math.max(0, Math.min(size, focus.x));
-      focus.y = Math.max(0, Math.min(size, focus.y));
-
+      focus.x = Math.max(0, Math.min(size, (event.clientX - rect.left) * scaleX));
+      focus.y = Math.max(0, Math.min(size, (event.clientY - rect.top) * scaleY));
       render();
     }
 
     pixelCanvas.addEventListener("mousemove", updateFocusFromPointer);
-    rearrangeCanvas.addEventListener("mousemove", updateFocusFromPointer);
+    vectorSvg.addEventListener("mousemove", updateFocusFromPointer);
 
     pixelCanvas.addEventListener("touchmove", function(event) {
       event.preventDefault();
       updateFocusFromPointer(event.touches[0]);
     }, { passive: false });
 
-    rearrangeCanvas.addEventListener("touchmove", function(event) {
+    vectorSvg.addEventListener("touchmove", function(event) {
       event.preventDefault();
       updateFocusFromPointer(event.touches[0]);
     }, { passive: false });
 
     zoomRange.addEventListener("input", render);
-    tileRange.addEventListener("input", render);
 
     resetButton.addEventListener("click", function() {
       zoomRange.value = 1;
-      tileRange.value = 50;
-
-      focus = {
-        x: size / 2,
-        y: size / 2
-      };
-
+      focus = { x: size / 2, y: size / 2 };
       render();
     });
 
+    buildSvgGrid();
     createSourceImage();
     render();
   </script>
