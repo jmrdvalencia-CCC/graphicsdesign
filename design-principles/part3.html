@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Part 3 – Application & Analysis</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', sans-serif; background: #0f0f1a; color: #fff; min-height: 100vh; display: flex; flex-direction: column; }
+
+  header {
+    background: rgba(255,255,255,0.04);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding: 14px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .header-left { display: flex; align-items: center; gap: 14px; }
+  .part-badge { background: #2a9d8f; font-size: 0.68rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 4px 14px; border-radius: 20px; }
+  .header-title { font-size: 0.95rem; font-weight: 600; color: #ccc; }
+
+
+  .slides { flex: 1; }
+  .slide { display: none; min-height: calc(100vh - 56px - 60px); padding: 44px 60px; animation: fadeIn 0.4s ease; flex-direction: column; overflow-y: auto; }
+  .slide.active { display: flex; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; } }
+
+  .slide-label { font-size: 0.85rem; letter-spacing: 3px; text-transform: uppercase; color: #2a9d8f; font-weight: 700; margin-bottom: 10px; }
+  h2 { font-size: 2.6rem; font-weight: 800; margin-bottom: 8px; line-height: 1.15; }
+  .slide-sub { font-size: 1.05rem; color: #888; margin-bottom: 30px; }
+
+  /* ── GROUP ACTIVITY ── */
+  .activity-header {
+    background: rgba(42,157,143,0.1);
+    border: 1px solid rgba(42,157,143,0.25);
+    border-radius: 14px;
+    padding: 22px 28px;
+    margin-bottom: 28px;
+    font-size: 1.05rem;
+    color: #ddd;
+    line-height: 1.8;
+  }
+  .activity-header strong { color: #2a9d8f; }
+
+  .groups-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: 24px; }
+  .group-card {
+    border-radius: 14px;
+    padding: 22px 18px;
+    border: 1px solid;
+  }
+  .group-card.g1 { background: rgba(168,218,220,0.07); border-color: rgba(168,218,220,0.25); }
+  .group-card.g2 { background: rgba(230,57,70,0.07); border-color: rgba(230,57,70,0.25); }
+  .group-card.g3 { background: rgba(255,183,3,0.07); border-color: rgba(255,183,3,0.25); }
+  .group-num { font-size: 0.82rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+  .g1 .group-num { color: #a8dadc; }
+  .g2 .group-num { color: #e63946; }
+  .g3 .group-num { color: #ffb703; }
+  .group-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; }
+  .group-desc { font-size: 0.95rem; color: #bbb; line-height: 1.7; }
+
+  .questions-box {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 20px 24px;
+  }
+  .questions-box h4 { font-size: 0.9rem; letter-spacing: 2px; text-transform: uppercase; color: #888; margin-bottom: 16px; }
+  .q-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .q-list li { display: flex; gap: 14px; font-size: 1.05rem; color: #ddd; line-height: 1.7; }
+  .q-num { background: #2a9d8f; color: #fff; font-weight: 700; font-size: 0.9rem; min-width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+
+  /* ── COMMON MISTAKES ── */
+  .mistakes-grid { display: grid; grid-template-columns: repeat(1, 1fr); gap: 12px; }
+  .mistake-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+    background: rgba(230,57,70,0.06);
+    border: 1px solid rgba(230,57,70,0.15);
+    border-radius: 14px;
+    padding: 20px 24px;
+    font-size: 1.05rem;
+    color: #ddd;
+    line-height: 1.8;
+  }
+  .mistake-icon { font-size: 1.6rem; flex-shrink: 0; margin-top: 2px; }
+  .mistake-item strong { color: #e63946; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: rgba(255,255,255,0.03);
+    border-top: 1px solid rgba(255,255,255,0.07);
+    padding: 12px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-btn {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: #fff; padding: 8px 22px; border-radius: 8px;
+    cursor: pointer; font-size: 0.82rem; font-family: inherit;
+    transition: all 0.2s; text-decoration: none; display: inline-block;
+  }
+  .nav-btn:hover { background: rgba(255,255,255,0.14); }
+  .nav-btn.primary { background: #2a9d8f; border-color: #2a9d8f; }
+  .nav-btn.primary:hover { background: #1a7a6e; }
+  .slide-counter { font-size: 0.78rem; color: #555; }
+  .dots { display: flex; gap: 6px; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.2); cursor: pointer; transition: background 0.2s; }
+  .dot.active { background: #2a9d8f; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <span class="part-badge">Part 3</span>
+    <span class="header-title">Application &amp; Analysis</span>
+  </div>
+
+</header>
+
+<div class="slides">
+
+  <!-- SLIDE 1: Group Activity -->
+  <div class="slide active" id="slide-1">
+    <div class="slide-label">3.1 — Group Activity</div>
+    <h2>Design Critique</h2>
+    <p class="slide-sub">Analyzing balance in real design samples</p>
+
+    <div class="activity-header">
+      <strong>📋 Instructions:</strong> Divide the class into 3 groups. Each group receives a printed or projected design sample and analyzes it using the questions below.
+    </div>
+
+    <div class="groups-grid">
+      <div class="group-card g1">
+        <div class="group-num">Group 1</div>
+        <div class="group-title">⚖️ Symmetrical Design</div>
+        <div class="group-desc">Analyze a corporate logo or formal poster. Identify the axis of symmetry and how mirror elements create stability.</div>
+      </div>
+      <div class="group-card g2">
+        <div class="group-num">Group 2</div>
+        <div class="group-title">🎨 Asymmetrical Design</div>
+        <div class="group-desc">Analyze a magazine cover or web layout. Identify how different elements achieve equal visual weight without mirroring.</div>
+      </div>
+      <div class="group-card g3">
+        <div class="group-num">Group 3</div>
+        <div class="group-title">🌀 Radial Design</div>
+        <div class="group-desc">Analyze a mandala or circular poster. Identify the central focal point and how elements radiate outward.</div>
+      </div>
+    </div>
+
+    <div class="questions-box">
+      <h4>Each Group Answers:</h4>
+      <ul class="q-list">
+        <li><span class="q-num">1</span>What type of balance is used in this design?</li>
+        <li><span class="q-num">2</span>What elements contribute to the visual weight?</li>
+        <li><span class="q-num">3</span>Does the design feel balanced? Why or why not?</li>
+        <li><span class="q-num">4</span>How would you improve the balance if needed?</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: Common Mistakes -->
+  <div class="slide" id="slide-2">
+    <div class="slide-label">3.2 — Common Mistakes</div>
+    <h2>Common Mistakes in Balance</h2>
+    <p class="slide-sub">What to avoid when designing for balance</p>
+
+    <div class="mistakes-grid">
+      <div class="mistake-item">
+        <span class="mistake-icon">⚠️</span>
+        <div><strong>Heavy elements on one side</strong> — Placing all large or dark elements on one side without any compensation on the other creates an unstable, uncomfortable composition.</div>
+      </div>
+      <div class="mistake-item">
+        <span class="mistake-icon">⚠️</span>
+        <div><strong>Too many competing focal points</strong> — When multiple elements fight for attention equally, the viewer's eye has no clear path and the design feels chaotic.</div>
+      </div>
+      <div class="mistake-item">
+        <span class="mistake-icon">⚠️</span>
+        <div><strong>Ignoring negative/white space</strong> — Empty space is a powerful balancing element. Failing to use it intentionally leads to cluttered, unbalanced layouts.</div>
+      </div>
+      <div class="mistake-item">
+        <span class="mistake-icon">⚠️</span>
+        <div><strong>Over-relying on symmetry</strong> — Using only symmetrical balance when asymmetry would be more effective results in designs that feel rigid and uninspired.</div>
+      </div>
+      <div class="mistake-item">
+        <span class="mistake-icon">⚠️</span>
+        <div><strong>Forgetting color and texture weight</strong> — A small dark element can outweigh a large light one. Ignoring this leads to unintended visual imbalance.</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /slides -->
+
+<footer>
+  <a class="nav-btn" href="part2.html">← Part 2</a>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+    <div class="dots">
+      <div class="dot active" onclick="goTo(1)"></div>
+      <div class="dot" onclick="goTo(2)"></div>
+    </div>
+    <span class="slide-counter" id="counter">Slide 1 of 2</span>
+  </div>
+  <div style="display:flex;gap:10px;">
+    <button class="nav-btn" onclick="prev()">← Prev</button>
+    <button class="nav-btn primary" onclick="next()" id="nextBtn">Next →</button>
+    <a class="nav-btn" href="index.html">🏠 Home</a>
+  </div>
+</footer>
+
+<script>
+  let current = 1;
+  const total = 2;
+  function goTo(n) {
+    document.getElementById('slide-' + current).classList.remove('active');
+    document.querySelectorAll('.dot')[current - 1].classList.remove('active');
+    current = n;
+    document.getElementById('slide-' + current).classList.add('active');
+    document.querySelectorAll('.dot')[current - 1].classList.add('active');
+    document.getElementById('counter').textContent = 'Slide ' + current + ' of ' + total;
+    const btn = document.getElementById('nextBtn');
+    btn.textContent = current === total ? 'Part 4 →' : 'Next →';
+    btn.onclick = current === total ? () => location.href = 'part4.html' : next;
+  }
+  function next() { if (current < total) goTo(current + 1); else location.href = 'part4.html'; }
+  function prev() { if (current > 1) goTo(current - 1); }
+  document.addEventListener('keydown', e => { if (e.key === 'ArrowRight') next(); if (e.key === 'ArrowLeft') prev(); });
+</script>
+</body>
+</html>

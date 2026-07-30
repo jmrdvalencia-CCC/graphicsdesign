@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design Principles & Elements – Balance</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Inter',sans-serif;background:#0a0a14;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;position:relative;}
+
+  /* ── BG CANVAS ── */
+  #bgCanvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
+
+  /* ── CONTENT ── */
+  .content{position:relative;z-index:1;text-align:center;width:100%;max-width:960px;padding:0 24px;}
+
+  .badge{display:inline-block;background:linear-gradient(135deg,#e63946,#c1121f);font-size:0.7rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;padding:6px 22px;border-radius:20px;margin-bottom:20px;animation:slideDown 0.6s ease both;}
+
+  h1{font-size:3.4rem;font-weight:900;line-height:1.05;margin-bottom:10px;animation:slideDown 0.7s 0.1s ease both;}
+  h1 .grad{background:linear-gradient(135deg,#fff 40%,#a8dadc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+
+  .focus{font-size:1rem;color:#a8dadc;margin-bottom:10px;animation:slideDown 0.7s 0.2s ease both;}
+  .focus span{color:#e63946;font-weight:700;}
+
+  .ref-line{font-size:0.72rem;color:#444;margin-bottom:36px;animation:slideDown 0.7s 0.25s ease both;}
+
+  /* ── PROGRESS BAR ── */
+  .progress-wrap{margin-bottom:32px;animation:slideDown 0.7s 0.3s ease both;}
+  .progress-label{font-size:0.7rem;color:#555;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;}
+  .progress-bar{height:4px;background:rgba(255,255,255,0.07);border-radius:4px;overflow:hidden;max-width:400px;margin:0 auto;}
+  .progress-fill{height:100%;background:linear-gradient(90deg,#e63946,#ffb703);border-radius:4px;transition:width 0.5s ease;}
+
+  /* ── CARDS ── */
+  .nav-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px;animation:slideUp 0.7s 0.35s ease both;}
+  .nav-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:22px 16px;text-decoration:none;color:#fff;transition:all 0.3s;cursor:pointer;position:relative;overflow:hidden;}
+  .nav-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent,rgba(255,255,255,0.03));opacity:0;transition:opacity 0.3s;}
+  .nav-card:hover{transform:translateY(-6px);border-color:var(--c);}
+  .nav-card:hover::before{opacity:1;}
+  .nav-card .part-num{font-size:0.65rem;letter-spacing:2px;color:var(--c);font-weight:700;text-transform:uppercase;margin-bottom:8px;}
+  .nav-card .part-title{font-size:0.86rem;font-weight:700;line-height:1.35;margin-bottom:8px;}
+  .nav-card .part-time{font-size:0.7rem;color:#666;}
+  .nav-card .done-badge{position:absolute;top:10px;right:10px;background:var(--c);color:#000;font-size:0.6rem;font-weight:700;padding:2px 8px;border-radius:10px;opacity:0;transition:opacity 0.3s;}
+  .nav-card.done .done-badge{opacity:1;}
+  .nav-card .progress-mini{height:3px;background:rgba(255,255,255,0.08);border-radius:3px;margin-top:10px;overflow:hidden;}
+  .nav-card .progress-mini-fill{height:100%;background:var(--c);border-radius:3px;width:0%;transition:width 0.6s ease;}
+
+  .c1{--c:#e63946;} .c2{--c:#457b9d;} .c3{--c:#2a9d8f;} .c4{--c:#f4a261;}
+
+
+  @keyframes slideDown{from{opacity:0;transform:translateY(-16px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes slideUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+</style>
+</head>
+<body>
+<canvas id="bgCanvas"></canvas>
+
+<div class="content">
+  <div class="badge">Graphics Design · 2-Hour Module</div>
+  <h1><span class="grad">Design Principles<br>&amp; Elements</span></h1>
+  <p class="focus">Focus: <span>BALANCE</span> &nbsp;·&nbsp; 3G Handy Guide Reference</p>
+  <p class="ref-line">Mrantinkovic, Piestun, Fouda, Killings, Hajj, Parveen, Krunic, Pehcevski, Nur, Stephen &amp; Michelle (2020)</p>
+
+  <div class="progress-wrap">
+    <div class="progress-label">Module Progress</div>
+    <div class="progress-bar"><div class="progress-fill" id="totalProgress" style="width:0%"></div></div>
+  </div>
+
+  <div class="nav-grid">
+    <a class="nav-card c1" href="part1.html" id="card1">
+      <div class="done-badge">✓ Done</div>
+      <div class="part-num">Part 1</div>
+      <div class="part-title">Elements &amp; Principles Overview</div>
+      <div class="part-time"></div>
+      <div class="progress-mini"><div class="progress-mini-fill" id="p1fill"></div></div>
+    </a>
+    <a class="nav-card c2" href="part2.html" id="card2">
+      <div class="done-badge">✓ Done</div>
+      <div class="part-num">Part 2</div>
+      <div class="part-title">Balance in Graphic Design</div>
+      <div class="part-time"></div>
+      <div class="progress-mini"><div class="progress-mini-fill" id="p2fill"></div></div>
+    </a>
+    <a class="nav-card c3" href="part3.html" id="card3">
+      <div class="done-badge">✓ Done</div>
+      <div class="part-num">Part 3</div>
+      <div class="part-title">Application &amp; Analysis</div>
+      <div class="part-time"></div>
+      <div class="progress-mini"><div class="progress-mini-fill" id="p3fill"></div></div>
+    </a>
+    <a class="nav-card c4" href="part4.html" id="card4">
+      <div class="done-badge">✓ Done</div>
+      <div class="part-num">Part 4</div>
+      <div class="part-title">Summary &amp; Assessment</div>
+      <div class="part-time"></div>
+      <div class="progress-mini"><div class="progress-mini-fill" id="p4fill"></div></div>
+    </a>
+  </div>
+
+
+</div>
+
+<script>
+  // ── Animated BG particles ──
+  const canvas = document.getElementById('bgCanvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+  function resize(){ W = canvas.width = innerWidth; H = canvas.height = innerHeight; }
+  resize(); window.addEventListener('resize', resize);
+  for(let i=0;i<60;i++) particles.push({x:Math.random()*2000,y:Math.random()*1200,r:Math.random()*1.5+0.3,vx:(Math.random()-0.5)*0.3,vy:(Math.random()-0.5)*0.3,a:Math.random()*0.4+0.05});
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    particles.forEach(p=>{
+      p.x+=p.vx; p.y+=p.vy;
+      if(p.x<0)p.x=W; if(p.x>W)p.x=0;
+      if(p.y<0)p.y=H; if(p.y>H)p.y=0;
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(168,218,220,${p.a})`; ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+
+  // ── Progress from localStorage ──
+  const prog = {
+    p1: parseInt(localStorage.getItem('p1')||0),
+    p2: parseInt(localStorage.getItem('p2')||0),
+    p3: parseInt(localStorage.getItem('p3')||0),
+    p4: parseInt(localStorage.getItem('p4')||0),
+  };
+  const totals = {p1:3,p2:6,p3:2,p4:4};
+  setTimeout(()=>{
+    ['p1','p2','p3','p4'].forEach((k,i)=>{
+      const pct = Math.round((prog[k]/totals[k])*100);
+      document.getElementById(k+'fill').style.width = pct+'%';
+      if(prog[k]>=totals[k]) document.getElementById('card'+(i+1)).classList.add('done');
+    });
+    const total = (prog.p1+prog.p2+prog.p3+prog.p4);
+    const totalMax = 15;
+    document.getElementById('totalProgress').style.width = Math.round((total/totalMax)*100)+'%';
+  }, 600);
+</script>
+</body>
+</html>

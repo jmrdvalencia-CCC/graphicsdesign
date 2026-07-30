@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Part 1 – Elements & Principles</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Inter',sans-serif;background:#0a0a14;color:#fff;min-height:100vh;display:flex;flex-direction:column;}
+
+  header{background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(255,255,255,0.07);padding:12px 36px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+  .hd-left{display:flex;align-items:center;gap:12px;}
+  .part-badge{background:#e63946;font-size:0.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:4px 14px;border-radius:20px;}
+  .hd-title{font-size:0.9rem;font-weight:600;color:#bbb;}
+
+
+  .slides{flex:1;}
+  .slide{display:none;min-height:calc(100vh - 54px - 58px);padding:40px 56px;flex-direction:column;animation:fadeIn 0.4s ease;overflow-y:auto;}
+  .slide.active{display:flex;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+  .slide-label{font-size:0.85rem;letter-spacing:3px;text-transform:uppercase;color:#e63946;font-weight:700;margin-bottom:8px;}
+  h2{font-size:2.6rem;font-weight:800;margin-bottom:6px;line-height:1.15;}
+  .slide-sub{font-size:1.05rem;color:#888;margin-bottom:28px;}
+
+  /* ── OBJECTIVES ── */
+  .obj-list{list-style:none;display:flex;flex-direction:column;gap:12px;}
+  .obj-item{display:flex;align-items:flex-start;gap:16px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:18px 22px;font-size:1.1rem;line-height:1.8;color:#ddd;opacity:0;transform:translateX(-20px);transition:all 0.4s ease;}
+  .obj-item.visible{opacity:1;transform:translateX(0);}
+  .obj-num{background:#e63946;color:#fff;font-weight:800;font-size:1rem;min-width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .obj-item:hover{background:rgba(230,57,70,0.07);border-color:rgba(230,57,70,0.2);}
+
+  /* ── FLIP CARDS ── */
+  .flip-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px;}
+  .flip-card{height:170px;perspective:800px;cursor:pointer;}
+  .flip-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform 0.5s ease;}
+  .flip-card.flipped .flip-inner{transform:rotateY(180deg);}
+  .flip-front,.flip-back{position:absolute;inset:0;backface-visibility:hidden;border-radius:14px;padding:14px;display:flex;flex-direction:column;justify-content:center;}
+  .flip-front{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);}
+  .flip-back{background:rgba(168,218,220,0.1);border:1px solid rgba(168,218,220,0.25);transform:rotateY(180deg);}
+  .flip-icon{font-size:2rem;margin-bottom:8px;}
+  .flip-icon img{width:56px;height:56px;object-fit:contain;display:block;margin:0 auto 8px;}
+  .flip-name{font-size:1.05rem;font-weight:700;color:#a8dadc;}
+  .flip-hint{font-size:0.8rem;color:#666;margin-top:6px;}
+  .flip-back-text{font-size:0.88rem;color:#ddd;line-height:1.6;text-align:left;}
+  .flip-ex{font-size:0.8rem;color:#a8dadc;margin-top:8px;display:none;}
+  .flip-think{font-size:0.78rem;color:#e63946;margin-top:6px;font-style:italic;display:none;}
+  .flip-all-btn{font-size:0.72rem;color:#a8dadc;background:rgba(168,218,220,0.08);border:1px solid rgba(168,218,220,0.15);padding:5px 16px;border-radius:20px;cursor:pointer;font-family:inherit;transition:all 0.2s;margin-bottom:14px;align-self:flex-start;}
+  .flip-all-btn:hover{background:rgba(168,218,220,0.15);}
+
+  /* ── PRINCIPLES GRID ── */
+  .pr-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+  .pr-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:20px 18px;cursor:pointer;transition:all 0.25s;position:relative;overflow:hidden;}
+  .pr-card img{width:52px;height:52px;object-fit:contain;display:block;margin:0 auto 10px;background:#fff;border-radius:8px;padding:4px;}
+  .pr-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--c,#e63946);transform:scaleX(0);transition:transform 0.3s;transform-origin:left;}
+  .pr-card:hover::after,.pr-card.active-pr::after{transform:scaleX(1);}
+  .pr-card:hover,.pr-card.active-pr{background:rgba(255,255,255,0.07);border-color:var(--c,#e63946);}
+  .pr-card.highlight{background:rgba(230,57,70,0.1);border-color:#e63946;}
+  .pr-card.highlight::after{transform:scaleX(1);}
+  .pr-name{font-size:1.05rem;font-weight:700;margin-bottom:5px;}
+  .pr-desc{font-size:0.92rem;color:#999;line-height:1.6;}
+  .pr-card.highlight .pr-name{color:#e63946;}
+
+  /* ── TOOLTIP POPUP ── */
+  #prTooltip{position:fixed;background:#1a1a2e;border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:16px 22px;font-size:1rem;color:#ddd;max-width:320px;pointer-events:none;opacity:0;transition:opacity 0.2s;z-index:100;line-height:1.6;}
+  #prTooltip.show{opacity:1;}
+
+  /* ── SAMPLE IMAGES ── */
+  .sample-label{font-size:0.82rem;letter-spacing:1px;text-transform:uppercase;color:#e63946;font-weight:700;margin-top:18px;margin-bottom:10px;}
+  .sample-row{display:flex;gap:14px;flex-wrap:wrap;}
+  .sample-img-wrap{flex:1;min-width:150px;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.1);background:#fff;}
+  .sample-img-wrap img{width:100%;height:130px;object-fit:contain;display:block;padding:10px;}
+  .sample-caption{font-size:0.78rem;color:#888;padding:7px 10px;text-align:center;line-height:1.4;background:rgba(255,255,255,0.04);}
+
+  /* ── NOTE / DISCUSS ── */
+  .note-box{background:rgba(168,218,220,0.07);border-left:4px solid #a8dadc;border-radius:0 10px 10px 0;padding:18px 24px;font-size:1rem;color:#ddd;margin-top:18px;line-height:1.8;}
+  .note-box strong{color:#a8dadc;}
+  .discuss-box{background:rgba(230,57,70,0.07);border-left:4px solid #e63946;border-radius:0 10px 10px 0;padding:18px 24px;font-size:1rem;color:#ddd;margin-top:16px;line-height:1.8;}
+  .discuss-box strong{color:#e63946;}
+
+  /* ── FOOTER ── */
+  footer{background:rgba(255,255,255,0.02);border-top:1px solid rgba(255,255,255,0.06);padding:10px 36px;display:flex;align-items:center;justify-content:space-between;}
+  .nav-btn{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#fff;padding:7px 20px;border-radius:8px;cursor:pointer;font-size:0.8rem;font-family:inherit;transition:all 0.2s;text-decoration:none;display:inline-block;}
+  .nav-btn:hover{background:rgba(255,255,255,0.12);}
+  .nav-btn.primary{background:#e63946;border-color:#e63946;}
+  .nav-btn.primary:hover{background:#c1121f;}
+  .dots{display:flex;gap:6px;}
+  .dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.18);cursor:pointer;transition:all 0.2s;}
+  .dot.active{background:#e63946;width:20px;border-radius:4px;}
+  .slide-counter{font-size:0.75rem;color:#444;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hd-left">
+    <span class="part-badge">Part 1</span>
+    <span class="hd-title">Design Elements &amp; Principles Overview</span>
+  </div>
+
+</header>
+
+<div class="slides">
+
+  <!-- SLIDE 1: Objectives -->
+  <div class="slide active" id="slide-1">
+    <div class="slide-label">Learning Objectives</div>
+    <h2>What You Will Learn</h2>
+    <p class="slide-sub">By the end of this module, students will be able to:</p>
+    <ul class="obj-list" id="objList">
+      <li class="obj-item"><span class="obj-num">1</span>Identify and describe the basic elements and principles of design.</li>
+      <li class="obj-item"><span class="obj-num">2</span>Define and explain the concept of balance in graphic design.</li>
+      <li class="obj-item"><span class="obj-num">3</span>Distinguish between the three types of balance: symmetrical, asymmetrical, and radial.</li>
+      <li class="obj-item"><span class="obj-num">4</span>Apply balance principles in evaluating and creating design compositions.</li>
+    </ul>
+  </div>
+
+  <!-- SLIDE 2: Design Elements (Flip Cards) -->
+  <div class="slide" id="slide-2">
+    <div class="slide-label">1.1 — Design Elements</div>
+    <h2>What Are Design Elements?</h2>
+    <p class="slide-sub">Click each card to reveal the description. <em style="color:#555">(Mrantinkovic et al., 2020)</em></p>
+    <button class="flip-all-btn" onclick="flipAll()">↻ Flip All Cards</button>
+    <div class="flip-grid" id="flipGrid">
+      <div class="flip-card" onclick="this.classList.toggle('flipped')">
+        <div class="flip-inner">
+          <div class="flip-front"><div class="flip-name">Line</div><div class="flip-hint">Tap to reveal →</div></div>
+          <div class="flip-back"><div class="flip-back-text">Connects two points; creates direction, movement, and structure.</div><div class="flip-ex">📌 The curved ribbon lines in the Coca-Cola logo.</div><div class="flip-think">💭 What feeling does a diagonal line give vs. a horizontal line?</div></div>
+        </div>
+      </div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')">
+        <div class="flip-inner">
+          <div class="flip-front"><div class="flip-name">Shape</div><div class="flip-hint">Tap to reveal →</div></div>
+          <div class="flip-back"><div class="flip-back-text">A 2D enclosed area defined by lines or color boundaries.</div><div class="flip-ex">📌 The smile/arrow shape in the Amazon logo.</div><div class="flip-think">💭 Why do circles feel friendlier than sharp triangles?</div></div>
+        </div>
+      </div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')">
+        <div class="flip-inner">
+          <div class="flip-front"><div class="flip-name">Color</div><div class="flip-hint">Tap to reveal →</div></div>
+          <div class="flip-back"><div class="flip-back-text">Hue is the color itself. Saturation is its intensity. Value is its lightness or darkness.</div><div class="flip-ex">📌 Coca-Cola's high-saturation red creates urgency and energy.</div><div class="flip-think">💭 How would Coca-Cola feel if its red were replaced with pale pink?</div></div>
+        </div>
+      </div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')">
+        <div class="flip-inner">
+          <div class="flip-front"><div class="flip-name">Texture</div><div class="flip-hint">Tap to reveal →</div></div>
+          <div class="flip-back"><div class="flip-back-text">The visual or tactile surface quality of a design element.</div><div class="flip-ex">📌 A rough stone texture in a poster vs. a smooth gradient background.</div><div class="flip-think">💭 Can texture exist in a digital design? How?</div></div>
+        </div>
+      </div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')">
+        <div class="flip-inner">
+          <div class="flip-front"><div class="flip-name">Space</div><div class="flip-hint">Tap to reveal →</div></div>
+          <div class="flip-back"><div class="flip-back-text">Area around, between, or within elements — both positive and negative space.</div><div class="flip-ex">📌 The generous white space around the Apple logo signals premium quality.</div><div class="flip-think">💭 What happens to a design that has no negative space at all?</div></div>
+        </div>
+      </div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')">
+        <div class="flip-inner">
+          <div class="flip-front"><div class="flip-name">Form</div><div class="flip-hint">Tap to reveal →</div></div>
+          <div class="flip-back"><div class="flip-back-text">3D representation of shape — has height, width, and depth.</div><div class="flip-ex">📌 A product package box or a 3D rendered logo with shadows and highlights.</div><div class="flip-think">💭 How does adding depth (form) change how a viewer perceives a flat shape?</div></div>
+        </div>
+      </div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')">
+        <div class="flip-inner">
+          <div class="flip-front"><div class="flip-name">Value</div><div class="flip-hint">Tap to reveal →</div></div>
+          <div class="flip-back"><div class="flip-back-text">The lightness or darkness of a color or tone in a composition.</div><div class="flip-ex">📌 Samsung's deep navy blue has a low value, conveying authority and trust.</div><div class="flip-think">💭 How does value create the illusion of depth in a flat design?</div></div>
+        </div>
+      </div>
+      <div class="flip-card" onclick="this.classList.toggle('flipped')">
+        <div class="flip-inner">
+          <div class="flip-front"><div class="flip-name">Typography</div><div class="flip-hint">Tap to reveal →</div></div>
+          <div class="flip-back"><div class="flip-back-text">The style, arrangement, and appearance of text in a design.</div><div class="flip-ex">📌 Amazon's bold lowercase font feels approachable; a serif font feels formal.</div><div class="flip-think">💭 If you changed a logo's font, would it still feel like the same brand?</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="discuss-box"><strong>💬</strong> Identify design elements in each logo below. Which elements stand out most?</div>
+   <div style="margin-top:12px;">
+     <button class="flip-all-btn" onclick="var p=this.nextElementSibling;var o=p.style.display==='flex';p.style.display=o?'none':'flex';this.textContent=o?'▶ Show Notes':'▼ Hide Notes';">▶ Show Notes</button>
+     <div style="display:none;flex-direction:column;gap:10px;margin-top:10px;">
+       <div class="obj-item visible"><span class="obj-num" style="background:#e63946;">1</span><div><strong>Emphasis</strong> — The bold red color and large script text immediately draw the viewer’s eye to the brand name.</div></div>
+       <div class="obj-item visible"><span class="obj-num" style="background:#e63946;">2</span><div><strong>Contrast</strong> — White text on red background creates strong contrast for readability and visual impact.</div></div>
+       <div class="obj-item visible"><span class="obj-num" style="background:#e63946;">3</span><div><strong>Unity</strong> — The consistent use of red, white, and the script font creates a cohesive, unified identity.</div></div>
+     </div>
+   </div>
+  </div>
+
+  <!-- SLIDE 3: Coca-Cola -->
+  <div class="slide" id="slide-3">
+    <div class="slide-label">1.1A — Sample Logo</div>
+    <h2>Coca-Cola</h2>
+    <p class="slide-sub">Design elements spotted in this logo</p>
+    <div style="display:flex;gap:32px;align-items:flex-start;">
+      <div style="flex:1;background:#fff;border-radius:16px;padding:32px;display:flex;align-items:center;justify-content:center;min-height:260px;">
+        <img src="icons/designElement/cocacola.jpeg" alt="Coca-Cola" style="max-width:100%;max-height:220px;object-fit:contain;">
+      </div>
+  
+    </div>
+  </div>
+
+  <!-- SLIDE 4: Amazon -->
+  <div class="slide" id="slide-4">
+    <div class="slide-label">1.1B — Sample Logo</div>
+    <h2>Amazon</h2>
+    <p class="slide-sub">Design elements spotted in this logo</p>
+    <div style="display:flex;gap:32px;align-items:flex-start;">
+      <div style="flex:1;background:#fff;border-radius:16px;padding:32px;display:flex;align-items:center;justify-content:center;min-height:260px;">
+        <img src="icons/designElement/amazon.jpeg" alt="Amazon" style="max-width:100%;max-height:220px;object-fit:contain;">
+      </div>
+    
+    </div>
+  </div>
+
+  <!-- SLIDE 5: Samsung -->
+  <div class="slide" id="slide-5">
+    <div class="slide-label">1.1C — Sample Logo</div>
+    <h2>Samsung</h2>
+    <p class="slide-sub">Design elements spotted in this logo</p>
+    <div style="display:flex;gap:32px;align-items:flex-start;">
+      <div style="flex:1;background:#fff;border-radius:16px;padding:32px;display:flex;align-items:center;justify-content:center;min-height:260px;">
+        <img src="icons/designElement/samsungjpeg.jpeg" alt="Samsung" style="max-width:100%;max-height:220px;object-fit:contain;">
+      </div>
+    
+    </div>
+  </div>
+
+  <!-- SLIDE 6: Apple -->
+  <div class="slide" id="slide-6">
+    <div class="slide-label">1.1D — Sample Logo</div>
+    <h2>Apple</h2>
+    <p class="slide-sub">Design elements spotted in this logo</p>
+    <div style="display:flex;gap:32px;align-items:flex-start;">
+      <div style="flex:1;background:#fff;border-radius:16px;padding:32px;display:flex;align-items:center;justify-content:center;min-height:260px;">
+        <img src="icons/designElement/iphone.png" alt="Apple" style="max-width:100%;max-height:220px;object-fit:contain;">
+      </div>
+    
+    </div>
+</div>
+
+  <!-- SLIDE 7: Design Principles (Hover Tooltip) -->
+  <div class="slide" id="slide-7">
+    <div class="slide-label">1.2 — Design Principles</div>
+    <h2>What Are Design Principles?</h2>
+    <p class="slide-sub">Hover over each card to learn more. <em style="color:#555">(Mrantinkovic et al., 2020)</em></p>
+    <div class="pr-grid">
+      <div class="pr-card highlight" style="--c:#e63946" onmouseenter="showTip(event,'Balance is the equal distribution of visual weight. Creates stability and harmony. Three types: symmetrical (mirrored), asymmetrical (different but equal weight), and radial (radiating from a center point). It is the most fundamental design principle.')" onmouseleave="hideTip()">
+        <div class="pr-name">Balance</div><div class="pr-desc">Equal visual weight distribution.</div>
+      </div>
+      <div class="pr-card" style="--c:#a8dadc" onmouseenter="showTip(event,'Contrast uses opposing elements — dark vs. light, large vs. small, rough vs. smooth — to create visual interest and hierarchy. Without contrast, nothing stands out. It is the primary tool for guiding where the viewer looks first.')" onmouseleave="hideTip()">
+        <div class="pr-name">Contrast</div><div class="pr-desc">Difference to create visual interest.</div>
+      </div>
+      <div class="pr-card" style="--c:#ffb703" onmouseenter="showTip(event,'Emphasis makes one element the focal point through size, color, placement, or contrast. Every design needs a clear entry point — emphasis answers: Where should the viewer look first?')" onmouseleave="hideTip()">
+        <div class="pr-name">Emphasis</div><div class="pr-desc">Drawing attention to a focal point.</div>
+      </div>
+      <div class="pr-card" style="--c:#2a9d8f" onmouseenter="showTip(event,'Movement is the path the viewer\'s eye travels through a design. Lines, shapes, color gradients, and directional cues like arrows or a person\'s gaze create implied movement, guiding the viewer through content in a deliberate order.')" onmouseleave="hideTip()">
+        <div class="pr-name">Movement</div><div class="pr-desc">Guiding the viewer's eye.</div>
+      </div>
+      <div class="pr-card" style="--c:#457b9d" onmouseenter="showTip(event,'Repetition of visual elements — colors, fonts, shapes, patterns — creates consistency and rhythm. It builds brand identity and makes a design feel unified rather than random.')" onmouseleave="hideTip()">
+        <div class="pr-name">Repetition</div><div class="pr-desc">Repeating elements for consistency.</div>
+      </div>
+      <div class="pr-card" style="--c:#e9c46a" onmouseenter="showTip(event,'Proportion is the size relationship between elements relative to each other and the whole. Correct proportion creates harmony; intentional mis-proportion creates drama. The Golden Ratio (1:1.618) is a classic proportion used widely in design.')" onmouseleave="hideTip()">
+        <div class="pr-name">Proportion</div><div class="pr-desc">Size relationship between elements.</div>
+      </div>
+      <div class="pr-card" style="--c:#f4a261" onmouseenter="showTip(event,'Unity is the sense that all elements belong together — forming one cohesive whole rather than unrelated parts. Achieved through consistent use of color, style, spacing, and repetition across all elements.')" onmouseleave="hideTip()">
+        <div class="pr-name">Unity</div><div class="pr-desc">All elements working as a whole.</div>
+      </div>
+      <div class="pr-card" style="--c:#ccc" onmouseenter="showTip(event,'White space is the empty area around, between, and within elements. It is not wasted space — it gives elements room to breathe, improves readability, and directs focus. Designs with generous white space feel premium and modern.')" onmouseleave="hideTip()">
+        <div class="pr-name">White Space</div><div class="pr-desc">Strategic use of empty space.</div>
+      </div>
+    </div>
+    <div class="sample-label">📌 Sample Logos — Spot the Design Principles</div>
+  </div>
+
+  <!-- SLIDE 8: IBMPrinciples -->
+  <div class="slide" id="slide-8">
+    <div class="slide-label">1.2A — Sample Logo</div>
+    <h2>IBM</h2>
+    <p class="slide-sub">Design principles spotted in this logo</p>
+    <div style="display:flex;gap:32px;align-items:flex-start;">
+      <div style="flex:1;background:#fff;border-radius:16px;padding:32px;display:flex;align-items:center;justify-content:center;min-height:260px;">
+        <img src="icons/designPrinciple/IBM_logo.svg" alt="Coca-Cola" style="max-width:100%;max-height:220px;object-fit:contain;">
+      </div>
+    
+    </div>
+  </div>
+
+  <!-- SLIDE 9: Amazon Principles -->
+  <div class="slide" id="slide-9">
+    <div class="slide-label">1.2B — Sample Logo</div>
+    <h2>Nike</h2>
+    <p class="slide-sub">Design principles spotted in this logo</p>
+    <div style="display:flex;gap:32px;align-items:flex-start;">
+      <div style="flex:1;background:#fff;border-radius:16px;padding:32px;display:flex;align-items:center;justify-content:center;min-height:260px;">
+        <img src="icons/designPrinciple/Nike.png" alt="Amazon" style="max-width:100%;max-height:220px;object-fit:contain;">
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 10: Samsung Principles -->
+  <div class="slide" id="slide-10">
+    <div class="slide-label">1.2C — Sample Logo</div>
+    <h2>Spotify</h2>
+    <p class="slide-sub">Design principles spotted in this logo</p>
+    <div style="display:flex;gap:32px;align-items:flex-start;">
+      <div style="flex:1;background:#fff;border-radius:16px;padding:32px;display:flex;align-items:center;justify-content:center;min-height:260px;">
+        <img src="icons/designPrinciple/sporify.png" alt="Samsung" style="max-width:100%;max-height:220px;object-fit:contain;">
+      </div>
+    </div>
+  </div>
+
+
+</div>
+
+<div id="prTooltip"></div>
+
+<footer>
+  <a class="nav-btn" href="index.html">← Home</a>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:7px;">
+    <div class="dots" id="dots">
+      <div class="dot active" onclick="goTo(1)"></div>
+      <div class="dot" onclick="goTo(2)"></div>
+      <div class="dot" onclick="goTo(3)"></div>
+      <div class="dot" onclick="goTo(4)"></div>
+      <div class="dot" onclick="goTo(5)"></div>
+      <div class="dot" onclick="goTo(6)"></div>
+      <div class="dot" onclick="goTo(7)"></div>
+      <div class="dot" onclick="goTo(8)"></div>
+      <div class="dot" onclick="goTo(9)"></div>
+      <div class="dot" onclick="goTo(10)"></div>
+      <div class="dot" onclick="goTo(11)"></div>
+    </div>
+    <span class="slide-counter" id="counter">Slide 1 of 3</span>
+  </div>
+  <div style="display:flex;gap:10px;">
+    <button class="nav-btn" onclick="prev()">← Prev</button>
+    <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+  </div>
+</footer>
+
+<script>
+  let current = 1, total = 11;
+
+  // ── Save progress ──
+  function saveProgress(n){ localStorage.setItem('p1', Math.max(parseInt(localStorage.getItem('p1')||0), n)); }
+
+  function goTo(n){
+    document.getElementById('slide-'+current).classList.remove('active');
+    document.querySelectorAll('.dot')[current-1].classList.remove('active');
+    current = n;
+    document.getElementById('slide-'+current).classList.add('active');
+    document.querySelectorAll('.dot')[current-1].classList.add('active');
+    document.getElementById('counter').textContent = 'Slide '+current+' of '+total;
+    const btn = document.getElementById('nextBtn');
+    btn.textContent = current===total ? 'Part 2 →' : 'Next →';
+    btn.onclick = current===total ? ()=>location.href='part2.html' : next;
+    saveProgress(current);
+    if(current===1) animateObjectives();
+  }
+  function next(){ if(current<total) goTo(current+1); else location.href='part2.html'; }
+  function prev(){ if(current>1) goTo(current-1); }
+  document.addEventListener('keydown',e=>{ if(e.key==='ArrowRight') next(); if(e.key==='ArrowLeft') prev(); });
+
+  // ── Animate objectives on slide 1 ──
+  function animateObjectives(){
+    document.querySelectorAll('.obj-item').forEach((el,i)=>{
+      el.classList.remove('visible');
+      setTimeout(()=>el.classList.add('visible'), i*150+100);
+    });
+  }
+  animateObjectives();
+
+  // ── Flip all cards ──
+  let allFlipped = false;
+  function flipAll(){
+    allFlipped = !allFlipped;
+    document.querySelectorAll('.flip-card').forEach(c=>{ allFlipped ? c.classList.add('flipped') : c.classList.remove('flipped'); });
+    document.querySelector('.flip-all-btn').textContent = allFlipped ? '↺ Unflip All' : '↻ Flip All Cards';
+  }
+
+  // ── Tooltip ──
+  const tip = document.getElementById('prTooltip');
+  function showTip(e, text){
+    tip.textContent = text;
+    tip.classList.add('show');
+    moveTip(e);
+  }
+  function moveTip(e){ tip.style.left=(e.clientX+14)+'px'; tip.style.top=(e.clientY-10)+'px'; }
+  function hideTip(){ tip.classList.remove('show'); }
+  document.querySelectorAll('.pr-card').forEach(c=>c.addEventListener('mousemove',moveTip));
+
+
+</script>
+</body>
+</html>

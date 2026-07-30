@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Part 2 – Balance in Graphic Design</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', sans-serif; background: #0f0f1a; color: #fff; min-height: 100vh; display: flex; flex-direction: column; }
+
+  header {
+    background: rgba(255,255,255,0.04);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding: 14px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .header-left { display: flex; align-items: center; gap: 14px; }
+  .part-badge { background: #457b9d; font-size: 0.68rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 4px 14px; border-radius: 20px; }
+  .header-title { font-size: 0.95rem; font-weight: 600; color: #ccc; }
+
+
+  .slides { flex: 1; }
+  .slide { display: none; min-height: calc(100vh - 56px - 60px); padding: 44px 60px; animation: fadeIn 0.4s ease; flex-direction: column; overflow-y: auto; }
+  .slide.active { display: flex; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; } }
+
+  .slide-label { font-size: 0.85rem; letter-spacing: 3px; text-transform: uppercase; color: #457b9d; font-weight: 700; margin-bottom: 10px; }
+  h2 { font-size: 2.6rem; font-weight: 800; margin-bottom: 8px; line-height: 1.15; }
+  .slide-sub { font-size: 1.05rem; color: #888; margin-bottom: 30px; }
+
+  /* ── WHAT IS BALANCE ── */
+  .balance-def {
+    background: rgba(69,123,157,0.12);
+    border: 1px solid rgba(69,123,157,0.3);
+    border-radius: 16px;
+    padding: 28px 32px;
+    margin-bottom: 28px;
+    font-size: 1.2rem;
+    line-height: 1.85;
+    color: #e8e8e8;
+  }
+  .balance-def strong { color: #a8dadc; }
+
+  .weight-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 20px; }
+  .weight-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 14px;
+    padding: 22px 14px;
+    text-align: center;
+  }
+  .weight-icon { font-size: 2.2rem; margin-bottom: 10px; }
+  .weight-name { font-size: 1rem; font-weight: 700; color: #a8dadc; margin-bottom: 6px; }
+  .weight-desc { font-size: 0.9rem; color: #bbb; line-height: 1.6; }
+
+  .key-box {
+    background: rgba(230,57,70,0.08);
+    border-left: 4px solid #e63946;
+    border-radius: 0 10px 10px 0;
+    padding: 20px 26px;
+    font-size: 1.05rem;
+    color: #ddd;
+    line-height: 1.8;
+  }
+  .key-box strong { color: #e63946; }
+
+  /* ── BALANCE TYPE SLIDES ── */
+  .type-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start; }
+  .type-info h3 { font-size: 1.3rem; font-weight: 800; margin-bottom: 6px; }
+  .type-info .tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 3px 12px;
+    border-radius: 20px;
+    margin-bottom: 14px;
+  }
+  .tag-sym { background: rgba(168,218,220,0.15); color: #a8dadc; border: 1px solid #a8dadc; }
+  .tag-asym { background: rgba(230,57,70,0.15); color: #e63946; border: 1px solid #e63946; }
+  .tag-rad { background: rgba(255,183,3,0.15); color: #ffb703; border: 1px solid #ffb703; }
+
+  .type-info ul { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+  .type-info ul li { font-size: 1rem; color: #ddd; padding-left: 20px; position: relative; line-height: 1.8; }
+  .type-info ul li::before { content: '▸'; position: absolute; left: 0; color: #a8dadc; }
+
+  .activity-box {
+    background: rgba(255,183,3,0.07);
+    border-left: 4px solid #ffb703;
+    border-radius: 0 10px 10px 0;
+    padding: 18px 22px;
+    font-size: 1rem;
+    color: #ddd;
+    line-height: 1.75;
+  }
+  .activity-box strong { color: #ffb703; }
+
+  /* ── VISUAL DEMOS ── */
+  .demo-canvas {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    position: relative;
+  }
+  /* Symmetrical demo */
+  .sym-demo { display: flex; align-items: center; gap: 0; width: 100%; justify-content: center; }
+  .sym-side { display: flex; flex-direction: column; gap: 10px; align-items: center; flex: 1; }
+  .sym-axis { width: 2px; background: rgba(168,218,220,0.4); height: 220px; margin: 0 20px; }
+  .sym-box { background: #457b9d; border-radius: 10px; }
+  .sym-circle { background: #a8dadc; border-radius: 50%; }
+
+  /* Asymmetrical demo */
+  .asym-demo { display: flex; align-items: center; gap: 16px; width: 100%; justify-content: center; }
+  .asym-left { display: flex; flex-direction: column; gap: 0; align-items: center; justify-content: center; }
+  .asym-right { display: flex; flex-direction: column; gap: 8px; align-items: center; justify-content: center; }
+  .big-block { width: 120px; height: 180px; background: #e63946; border-radius: 12px; }
+  .sm-block { width: 95px; height: 52px; background: rgba(230,57,70,0.4); border-radius: 10px; }
+  .sm-block2 { width: 95px; height: 52px; background: rgba(230,57,70,0.25); border-radius: 10px; }
+  .sm-block3 { width: 95px; height: 52px; background: rgba(230,57,70,0.15); border-radius: 10px; }
+  .asym-axis { width: 2px; background: rgba(230,57,70,0.3); height: 220px; }
+
+  /* Radial demo */
+  .radial-demo { position: relative; width: 260px; height: 260px; }
+  .radial-center {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px; height: 40px;
+    background: #ffb703; border-radius: 50%;
+    z-index: 2;
+  }
+  .radial-spoke {
+    position: absolute; top: 50%; left: 50%;
+    width: 100px; height: 4px;
+    background: rgba(255,183,3,0.5);
+    transform-origin: left center;
+    border-radius: 2px;
+  }
+  .radial-dot {
+    position: absolute; top: 50%; left: 50%;
+    width: 20px; height: 20px;
+    background: rgba(255,183,3,0.7);
+    border-radius: 50%;
+    transform-origin: center center;
+  }
+
+  /* ── COMPARISON TABLE ── */
+  .comp-table { width: 100%; border-collapse: collapse; font-size: 1rem; }
+  .comp-table th {
+    padding: 14px 18px;
+    text-align: left;
+    font-size: 0.88rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #999;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .comp-table td {
+    padding: 16px 18px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    color: #ddd;
+    vertical-align: top;
+    font-size: 1rem;
+  }
+  .comp-table tr:hover td { background: rgba(255,255,255,0.03); }
+  .comp-table td:first-child { color: #fff; font-weight: 600; }
+  .badge-sym { color: #a8dadc; font-weight: 700; }
+  .badge-asym { color: #e63946; font-weight: 700; }
+  .badge-rad { color: #ffb703; font-weight: 700; }
+
+  /* ── VISUAL WEIGHT SLIDE ── */
+  .vw-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-bottom: 20px; }
+  .vw-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 14px;
+    padding: 24px 14px;
+    text-align: center;
+  }
+  .vw-num { font-size: 1.8rem; font-weight: 800; color: #457b9d; margin-bottom: 8px; }
+  .vw-name { font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: 6px; }
+  .vw-desc { font-size: 0.9rem; color: #bbb; line-height: 1.6; }
+  .cite-box {
+    background: rgba(69,123,157,0.08);
+    border-left: 4px solid #457b9d;
+    border-radius: 0 10px 10px 0;
+    padding: 18px 24px;
+    font-size: 1rem;
+    color: #ccc;
+    font-style: italic;
+    line-height: 1.8;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: rgba(255,255,255,0.03);
+    border-top: 1px solid rgba(255,255,255,0.07);
+    padding: 12px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-btn {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: #fff; padding: 8px 22px; border-radius: 8px;
+    cursor: pointer; font-size: 0.82rem; font-family: inherit;
+    transition: all 0.2s; text-decoration: none; display: inline-block;
+  }
+  .nav-btn:hover { background: rgba(255,255,255,0.14); }
+  .nav-btn.primary { background: #457b9d; border-color: #457b9d; }
+  .nav-btn.primary:hover { background: #1d3557; }
+  .slide-counter { font-size: 0.78rem; color: #555; }
+  .dots { display: flex; gap: 6px; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.2); cursor: pointer; transition: background 0.2s; }
+  .dot.active { background: #457b9d; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <span class="part-badge">Part 2</span>
+    <span class="header-title">Balance in Graphic Design</span>
+  </div>
+
+</header>
+
+<div class="slides">
+
+  <!-- SLIDE 1: What is Balance -->
+  <div class="slide active" id="slide-1">
+    <div class="slide-label">2.1 — Definition</div>
+    <h2>What Is Balance?</h2>
+    <p class="slide-sub">The equal distribution of visual weight within a composition. <em>(Mrantinkovic et al., 2020)</em></p>
+    <div class="balance-def">
+      <strong>Balance</strong> is the principle of design that refers to the <strong>equal distribution of visual weight</strong> within a composition. It creates a sense of <strong>stability, harmony, and order</strong>.
+    </div>
+    <p style="font-size:1rem;color:#999;margin-bottom:16px;font-weight:600;letter-spacing:1px;text-transform:uppercase;">Visual weight is determined by:</p>
+    <div class="weight-grid">
+      <div class="weight-card"><div class="weight-icon">📏</div><div class="weight-name">Size</div><div class="weight-desc">Larger elements feel heavier.</div></div>
+      <div class="weight-card"><div class="weight-icon">🎨</div><div class="weight-name">Color</div><div class="weight-desc">Dark or saturated colors feel heavier.</div></div>
+      <div class="weight-card"><div class="weight-icon">🪨</div><div class="weight-name">Texture</div><div class="weight-desc">Textured areas attract more attention.</div></div>
+      <div class="weight-card"><div class="weight-icon">📍</div><div class="weight-name">Position</div><div class="weight-desc">Elements far from center carry more weight.</div></div>
+      <div class="weight-card"><div class="weight-icon">🔢</div><div class="weight-name">Quantity</div><div class="weight-desc">Many small elements can balance one large one.</div></div>
+    </div>
+    <div class="key-box"><strong>🔑 Key Concept:</strong> Balance does <strong>NOT</strong> mean everything must be equal in size or placement — it means the overall composition <strong>feels visually stable</strong>.</div>
+  </div>
+
+  <!-- SLIDE 2: Symmetrical Balance -->
+  <div class="slide" id="slide-2">
+    <div class="slide-label">2.2A — Types of Balance</div>
+    <h2>Symmetrical Balance</h2>
+    <p class="slide-sub">Also called <em>Formal Balance</em></p>
+    <div class="type-layout">
+      <div class="type-info">
+        <span class="tag tag-sym">Formal / Symmetrical</span>
+        <p style="font-size:1rem;color:#ccc;margin-bottom:16px;line-height:1.75;">Elements on <strong>both sides of a central axis are mirror images</strong> of each other.</p>
+        <ul>
+          <li>Creates a sense of <strong>formality, stability, and elegance</strong></li>
+          <li>Used in: logos, formal invitations, government seals, religious art</li>
+          <li>Can feel <strong>static or rigid</strong> if overused</li>
+          <li>Example: butterfly wings, human face, Taj Mahal facade</li>
+        </ul>
+        <br>
+        <div class="activity-box"><strong>✏️ Activity:</strong> Show 3 examples of symmetrical designs. Ask students to identify the axis of symmetry.</div>
+      </div>
+      <div>
+        <div class="demo-canvas">
+          <div class="sym-demo">
+            <div class="sym-side">
+              <div class="sym-box" style="width:95px;height:95px;"></div>
+              <div class="sym-circle" style="width:56px;height:56px;"></div>
+              <div class="sym-box" style="width:70px;height:26px;border-radius:4px;"></div>
+            </div>
+            <div class="sym-axis"></div>
+            <div class="sym-side">
+              <div class="sym-box" style="width:95px;height:95px;"></div>
+              <div class="sym-circle" style="width:56px;height:56px;"></div>
+              <div class="sym-box" style="width:70px;height:26px;border-radius:4px;"></div>
+            </div>
+          </div>
+        </div>
+        <p style="text-align:center;font-size:0.9rem;color:#666;margin-top:12px;">← Mirror image on both sides of the axis →</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: Asymmetrical Balance -->
+  <div class="slide" id="slide-3">
+    <div class="slide-label">2.2B — Types of Balance</div>
+    <h2>Asymmetrical Balance</h2>
+    <p class="slide-sub">Also called <em>Informal Balance</em></p>
+    <div class="type-layout">
+      <div class="type-info">
+        <span class="tag tag-asym">Informal / Asymmetrical</span>
+        <p style="font-size:1rem;color:#ccc;margin-bottom:16px;line-height:1.75;"><strong>Different elements</strong> on each side have <strong>equal visual weight</strong> but are not mirror images.</p>
+        <ul>
+          <li>Creates a sense of <strong>dynamism, energy, and modernity</strong></li>
+          <li>More complex and visually interesting</li>
+          <li>Used in: magazine layouts, web design, modern advertising</li>
+        </ul>
+        <br>
+        <p style="font-size:0.95rem;color:#bbb;margin-bottom:10px;font-weight:600;">How to achieve it:</p>
+        <ul>
+          <li>Large element balanced by several small elements</li>
+          <li>Dark color balanced by a larger light-colored element</li>
+          <li>Textured area balanced by large white space</li>
+        </ul>
+        <br>
+        <div class="activity-box"><strong>✏️ Activity:</strong> Sketch an asymmetrical layout using basic shapes (circle, square, triangle). Share and discuss.</div>
+      </div>
+      <div>
+        <div class="demo-canvas">
+          <div class="asym-demo">
+            <div class="asym-left">
+              <div class="big-block"></div>
+            </div>
+            <div class="asym-axis"></div>
+            <div class="asym-right">
+              <div class="sm-block"></div>
+              <div class="sm-block2"></div>
+              <div class="sm-block3"></div>
+            </div>
+          </div>
+        </div>
+        <p style="text-align:center;font-size:0.9rem;color:#666;margin-top:12px;">One large element balanced by multiple smaller ones</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: Radial Balance -->
+  <div class="slide" id="slide-4">
+    <div class="slide-label">2.2C — Types of Balance</div>
+    <h2>Radial Balance</h2>
+    <p class="slide-sub">Elements radiate outward from a central point</p>
+    <div class="type-layout">
+      <div class="type-info">
+        <span class="tag tag-rad">Radial</span>
+        <p style="font-size:1rem;color:#ccc;margin-bottom:16px;line-height:1.75;">Elements <strong>radiate outward from a central point</strong>, like spokes on a wheel.</p>
+        <ul>
+          <li>Creates a sense of <strong>movement, energy, and focus</strong></li>
+          <li>The center becomes the natural <strong>focal point</strong></li>
+          <li>Used in: mandalas, sunburst designs, circular logos, clock faces</li>
+          <li>Example: sunflower, dartboard, compass rose</li>
+        </ul>
+        <br>
+        <div class="activity-box"><strong>💬 Discussion:</strong> Where do you commonly see radial balance in everyday life? (Wheels, flowers, pizza slices, etc.)</div>
+      </div>
+      <div>
+        <div class="demo-canvas">
+          <div class="radial-demo" id="radialDemo"></div>
+        </div>
+        <p style="text-align:center;font-size:0.9rem;color:#666;margin-top:12px;">Elements radiating from a central focal point</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: Comparison Table -->
+  <div class="slide" id="slide-5">
+    <div class="slide-label">2.3 — Comparison</div>
+    <h2>Types of Balance: At a Glance</h2>
+    <p class="slide-sub">A side-by-side comparison of all three balance types</p>
+    <table class="comp-table">
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th class="badge-sym">Symmetrical</th>
+          <th class="badge-asym">Asymmetrical</th>
+          <th class="badge-rad">Radial</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Mirror Image?</td><td>Yes</td><td>No</td><td>No</td></tr>
+        <tr><td>Axis</td><td>Vertical / Horizontal</td><td>Any direction</td><td>Central point</td></tr>
+        <tr><td>Mood / Feel</td><td>Formal, stable</td><td>Dynamic, modern</td><td>Energetic, focused</td></tr>
+        <tr><td>Complexity</td><td>Simple</td><td>Complex</td><td>Moderate</td></tr>
+        <tr><td>Common Use</td><td>Logos, formal design</td><td>Web, editorial</td><td>Circular designs</td></tr>
+        <tr><td>Examples</td><td>Taj Mahal, butterfly</td><td>Magazine covers</td><td>Sunflower, mandala</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SLIDE 6: Visual Weight -->
+  <div class="slide" id="slide-6">
+    <div class="slide-label">2.4 — Visual Weight</div>
+    <h2>Balance &amp; Visual Weight</h2>
+    <p class="slide-sub">Understanding what makes elements feel "heavy" or "light"</p>
+    <div class="vw-grid">
+      <div class="vw-card"><div class="vw-num">1</div><div class="vw-name">Size</div><div class="vw-desc">A large shape appears heavier than a small one.</div></div>
+      <div class="vw-card"><div class="vw-num">2</div><div class="vw-name">Color</div><div class="vw-desc">Warm, dark, or saturated colors feel heavier.</div></div>
+      <div class="vw-card"><div class="vw-num">3</div><div class="vw-name">Isolation</div><div class="vw-desc">An element surrounded by space draws more attention.</div></div>
+      <div class="vw-card"><div class="vw-num">4</div><div class="vw-name">Complexity</div><div class="vw-desc">Detailed or textured elements feel heavier.</div></div>
+      <div class="vw-card"><div class="vw-num">5</div><div class="vw-name">Position</div><div class="vw-desc">Elements at the top or edges feel heavier.</div></div>
+    </div>
+    <div class="cite-box">
+      "A designer must develop an intuitive sense of visual weight to create compositions that feel naturally balanced without being rigid."
+      <br><strong style="color:#457b9d;font-style:normal;">— Mrantinkovic et al. (2020), 3G Handy Guide: Graphic Designing</strong>
+    </div>
+  </div>
+
+</div><!-- /slides -->
+
+<footer>
+  <a class="nav-btn" href="part1.html">← Part 1</a>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+    <div class="dots">
+      <div class="dot active" onclick="goTo(1)"></div>
+      <div class="dot" onclick="goTo(2)"></div>
+      <div class="dot" onclick="goTo(3)"></div>
+      <div class="dot" onclick="goTo(4)"></div>
+      <div class="dot" onclick="goTo(5)"></div>
+      <div class="dot" onclick="goTo(6)"></div>
+    </div>
+    <span class="slide-counter" id="counter">Slide 1 of 6</span>
+  </div>
+  <div style="display:flex;gap:10px;">
+    <button class="nav-btn" onclick="prev()">← Prev</button>
+    <button class="nav-btn primary" onclick="next()" id="nextBtn">Next →</button>
+    <a class="nav-btn" href="index.html">🏠 Home</a>
+  </div>
+</footer>
+
+<script>
+  let current = 1;
+  const total = 6;
+
+  // Build radial demo
+  const rd = document.getElementById('radialDemo');
+  const center = document.createElement('div');
+  center.className = 'radial-center';
+  rd.appendChild(center);
+  for (let i = 0; i < 8; i++) {
+    const spoke = document.createElement('div');
+    spoke.className = 'radial-spoke';
+    spoke.style.transform = `translateY(-50%) rotate(${i * 45}deg)`;
+    rd.appendChild(spoke);
+    const dot = document.createElement('div');
+    const angle = i * 45 * Math.PI / 180;
+    const r = 110;
+    dot.className = 'radial-dot';
+    dot.style.marginLeft = (Math.cos(angle) * r - 10) + 'px';
+    dot.style.marginTop = (Math.sin(angle) * r - 10) + 'px';
+    rd.appendChild(dot);
+  }
+
+  function goTo(n) {
+    document.getElementById('slide-' + current).classList.remove('active');
+    document.querySelectorAll('.dot')[current - 1].classList.remove('active');
+    current = n;
+    document.getElementById('slide-' + current).classList.add('active');
+    document.querySelectorAll('.dot')[current - 1].classList.add('active');
+    document.getElementById('counter').textContent = 'Slide ' + current + ' of ' + total;
+    const btn = document.getElementById('nextBtn');
+    btn.textContent = current === total ? 'Part 3 →' : 'Next →';
+    btn.onclick = current === total ? () => location.href = 'part3.html' : next;
+  }
+  function next() { if (current < total) goTo(current + 1); else location.href = 'part3.html'; }
+  function prev() { if (current > 1) goTo(current - 1); }
+  document.addEventListener('keydown', e => { if (e.key === 'ArrowRight') next(); if (e.key === 'ArrowLeft') prev(); });
+</script>
+</body>
+</html>
