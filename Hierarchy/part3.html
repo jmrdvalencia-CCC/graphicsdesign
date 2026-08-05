@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Part 3 – Group Activity: Design Critique &amp; Redesign</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body { font-family: 'Inter', sans-serif; background: #07070f; color: #fff; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+
+  /* HEADER */
+  header {
+    background: rgba(255,255,255,0.02);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    padding: 0 36px;
+    height: 54px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .hd-left { display: flex; align-items: center; gap: 12px; }
+  .part-badge {
+    background: #7c3aed; font-size: 0.62rem; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    padding: 4px 14px; border-radius: 20px;
+  }
+  .hd-title { font-size: 0.85rem; font-weight: 600; color: #6b7280; }
+  .hd-right { font-size: 0.72rem; color: #374151; }
+
+  /* SLIDES CONTAINER */
+  .slides { flex: 1; overflow: hidden; position: relative; }
+
+  .slide {
+    display: none;
+    position: absolute; inset: 0;
+    padding: 40px 60px;
+    flex-direction: column;
+    overflow-y: auto;
+    animation: fadeIn 0.35s ease;
+  }
+  .slide.active { display: flex; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* SLIDE LABELS */
+  .slide-tag {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 3px;
+    text-transform: uppercase; color: #7c3aed; margin-bottom: 6px;
+  }
+  h2 { font-size: 2.1rem; font-weight: 900; line-height: 1.1; margin-bottom: 6px; }
+  .lead { font-size: 0.95rem; color: #6b7280; margin-bottom: 22px; }
+
+  /* BOXES */
+  .note-box {
+    background: rgba(167,139,250,0.07); border-left: 4px solid #a78bfa;
+    border-radius: 0 10px 10px 0; padding: 16px 22px;
+    font-size: 0.92rem; color: #d1d5db; line-height: 1.75;
+  }
+  .note-box strong { color: #a78bfa; }
+  .discuss-box {
+    background: rgba(124,58,237,0.07); border-left: 4px solid #7c3aed;
+    border-radius: 0 10px 10px 0; padding: 16px 22px;
+    font-size: 0.92rem; color: #d1d5db; line-height: 1.75;
+  }
+  .discuss-box strong { color: #a78bfa; }
+  .warn-box {
+    background: rgba(251,191,36,0.07); border-left: 4px solid #fbbf24;
+    border-radius: 0 10px 10px 0; padding: 16px 22px;
+    font-size: 0.92rem; color: #d1d5db; line-height: 1.75;
+  }
+  .warn-box strong { color: #fbbf24; }
+
+  .two-col { display: flex; gap: 36px; align-items: flex-start; flex: 1; min-height: 0; }
+  .col { flex: 1; min-width: 0; }
+  .col p { font-size: 0.94rem; color: #d1d5db; line-height: 1.8; margin-bottom: 14px; }
+  .col-label { font-size: 0.7rem; color: #4b5563; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 14px; }
+
+  ul.points { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+  ul.points li {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 0.9rem; color: #d1d5db; line-height: 1.65;
+  }
+  ul.points li::before { content: '→'; color: #7c3aed; flex-shrink: 0; }
+
+  /* Overview / clickable group cards */
+  .obj-list { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+  .obj-item {
+    display: flex; align-items: center; gap: 16px;
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px; padding: 14px 20px;
+    font-size: 0.98rem; line-height: 1.6; color: #d1d5db;
+    opacity: 0; transform: translateX(-18px); transition: all 0.4s ease, background 0.2s, border-color 0.2s;
+    cursor: pointer;
+  }
+  .obj-item.visible { opacity: 1; transform: translateX(0); }
+  .obj-item:hover { background: rgba(124,58,237,0.1); border-color: rgba(124,58,237,0.35); }
+  .obj-item:hover .obj-arrow { opacity: 1; transform: translateX(3px); }
+  .obj-num {
+    background: #7c3aed; color: #fff; font-weight: 800; font-size: 0.85rem;
+    min-width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .obj-arrow { margin-left: auto; color: #4b5563; opacity: 0; transition: all 0.2s; flex-shrink: 0; }
+  .obj-item strong { color: #fff; }
+
+  /* Task list (numbered, static) */
+  .task-list { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+  .task-item {
+    display: flex; align-items: flex-start; gap: 14px;
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 12px; padding: 12px 16px;
+    font-size: 0.88rem; color: #d1d5db; line-height: 1.6;
+  }
+  .task-num {
+    background: #7c3aed; color: #fff; font-weight: 800; font-size: 0.76rem;
+    min-width: 24px; height: 24px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;
+  }
+
+  /* Sample box */
+  .sample-box {
+    background: rgba(251,191,36,0.07); border: 1px dashed rgba(251,191,36,0.4);
+    border-radius: 12px; padding: 14px 20px; margin-bottom: 18px;
+    font-size: 0.88rem; color: #d1d5db; line-height: 1.65;
+  }
+  .sample-box .sample-tag { font-size: 0.66rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #fbbf24; margin-bottom: 6px; display: block; }
+
+  /* Group nav cards (why-grid style, clickable) */
+  .why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 18px; }
+  .why-card {
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px; padding: 18px 16px; text-align: left;
+    transition: border-color 0.25s, background 0.25s, transform 0.2s;
+    cursor: pointer;
+  }
+  .why-card:hover { background: rgba(124,58,237,0.08); border-color: rgba(124,58,237,0.3); transform: translateY(-2px); }
+  .why-tag { font-size: 0.62rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #7c3aed; margin-bottom: 8px; }
+  .why-title { font-size: 0.95rem; font-weight: 800; color: #fff; margin-bottom: 6px; }
+  .why-desc { font-size: 0.78rem; color: #6b7280; line-height: 1.55; }
+
+  /* Timer */
+  .timer-panel {
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 16px; padding: 24px 26px; margin-bottom: 18px;
+  }
+  .timer-top { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 14px; }
+  .timer-phase { font-size: 0.72rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #a78bfa; }
+  .timer-clock { font-size: 2.4rem; font-weight: 900; font-variant-numeric: tabular-nums; }
+  .timer-bar {
+    height: 14px; border-radius: 8px; background: rgba(255,255,255,0.06);
+    overflow: hidden; display: flex; margin-bottom: 8px; position: relative;
+  }
+  .timer-seg { height: 100%; position: relative; overflow: hidden; }
+  .timer-seg.work { width: 60%; background: rgba(124,58,237,0.18); }
+  .timer-seg.present { width: 40%; background: rgba(251,191,36,0.18); }
+  .timer-fill { position: absolute; top: 0; left: 0; height: 100%; width: 0%; background: #7c3aed; transition: width 0.3s linear; }
+  .timer-seg.present .timer-fill { background: #fbbf24; }
+  .timer-labels { display: flex; justify-content: space-between; font-size: 0.68rem; color: #4b5563; margin-bottom: 18px; }
+  .timer-labels span:last-child { text-align: right; }
+  .timer-controls { display: flex; gap: 10px; }
+  .timer-btn {
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.09);
+    color: #9ca3af; padding: 9px 20px; border-radius: 10px; font-family: inherit;
+    font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
+  }
+  .timer-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+  .timer-btn.primary { background: #7c3aed; border-color: #7c3aed; color: #fff; }
+  .timer-btn.primary:hover { background: #6d28d9; }
+
+  /* Presentation format checklist */
+  .format-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 18px; }
+  .format-card {
+    display: flex; align-items: flex-start; gap: 14px;
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px; padding: 16px 18px;
+  }
+  .format-num {
+    background: #7c3aed; color: #fff; font-weight: 800; font-size: 0.85rem;
+    min-width: 30px; height: 30px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .format-title { font-size: 0.88rem; font-weight: 700; color: #fff; margin-bottom: 3px; }
+  .format-desc { font-size: 0.78rem; color: #6b7280; line-height: 1.5; }
+
+  /* FOOTER */
+  footer {
+    background: rgba(255,255,255,0.02);
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding: 0 36px; height: 58px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .nav-btn {
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.09);
+    color: #9ca3af; padding: 7px 20px; border-radius: 8px;
+    cursor: pointer; font-size: 0.78rem; font-family: inherit;
+    transition: all 0.2s; text-decoration: none; display: inline-block;
+  }
+  .nav-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+  .nav-btn.primary { background: #7c3aed; border-color: #7c3aed; color: #fff; }
+  .nav-btn.primary:hover { background: #6d28d9; }
+  .dots { display: flex; gap: 6px; align-items: center; }
+  .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: rgba(255,255,255,0.15); cursor: pointer; transition: all 0.25s;
+  }
+  .dot.active { background: #7c3aed; width: 22px; border-radius: 4px; }
+  .slide-counter { font-size: 0.72rem; color: #374151; margin-top: 5px; text-align: center; }
+
+  /* LIGHTBOX */
+  #lightbox {
+    display: none; position: fixed; inset: 0; z-index: 999;
+    background: rgba(0,0,0,0.88); align-items: center; justify-content: center; cursor: zoom-out;
+  }
+  #lightbox.open { display: flex; }
+  #lightbox img { max-width: 90vw; max-height: 90vh; border-radius: 10px; box-shadow: 0 0 60px rgba(0,0,0,0.8); }
+  #lightbox-close {
+    position: fixed; top: 20px; right: 28px; font-size: 1.8rem; color: #fff;
+    cursor: pointer; opacity: 0.7; transition: opacity 0.2s; line-height: 1;
+  }
+  #lightbox-close:hover { opacity: 1; }
+
+  @media (max-width: 900px) {
+    .slide { padding: 28px 24px; }
+    .two-col { flex-direction: column; }
+    .why-grid { grid-template-columns: 1fr; }
+    .format-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hd-left">
+    <span class="part-badge">Part 3</span>
+    <span class="hd-title">Group Activity: Design Critique &amp; Redesign · 20 min</span>
+  </div>
+  <span class="hd-right">Mrantinkovic et al. (2020)</span>
+</header>
+
+<div class="slides">
+
+  <!-- ══ SLIDE 1: OVERVIEW ══ -->
+  <div class="slide active" id="slide-1">
+    <div class="slide-tag">Activity Overview</div>
+    <h2>Critique It. Redesign It. Present It.</h2>
+    <p class="lead">Students split into 3 groups, each working with a different design sample. Every group applies the six tools from Part 2 to diagnose — and fix — a real hierarchy problem. Click a group below to jump straight to its brief.</p>
+
+    <div class="why-grid" id="groupNav">
+      <div class="why-card" onclick="goTo(2)">
+        <div class="why-tag">Group 1</div>
+        <div class="why-title">Poster — Weak Hierarchy</div>
+        <div class="why-desc">A community event flyer where everything is the same size and color. Diagnose the problem and sketch a 3-level fix.</div>
+      </div>
+      <div class="why-card" onclick="goTo(3)">
+        <div class="why-tag">Group 2</div>
+        <div class="why-title">Website — Strong Hierarchy</div>
+        <div class="why-desc">A well-designed landing page. Map the levels, name the tools at work, and find the one weak spot.</div>
+      </div>
+      <div class="why-card" onclick="goTo(4)">
+        <div class="why-tag">Group 3</div>
+        <div class="why-title">Magazine Cover Analysis</div>
+        <div class="why-desc">A fashion, news, or lifestyle cover. Rank the typographic levels and test them in greyscale.</div>
+      </div>
+    </div>
+
+    <div class="col-label">Activity Timer</div>
+    <div class="timer-panel">
+      <div class="timer-top">
+        <span class="timer-phase" id="timerPhase">Group Work</span>
+        <span class="timer-clock" id="timerClock">12:00</span>
+      </div>
+      <div class="timer-bar">
+        <div class="timer-seg work"><div class="timer-fill" id="fillWork"></div></div>
+        <div class="timer-seg present"><div class="timer-fill" id="fillPresent"></div></div>
+      </div>
+      <div class="timer-labels"><span>12 min — Group Work</span><span>8 min — Presentations</span></div>
+      <div class="timer-controls">
+        <button class="timer-btn primary" id="timerStartBtn" onclick="timerStart()">Start</button>
+        <button class="timer-btn" onclick="timerPause()">Pause</button>
+        <button class="timer-btn" onclick="timerReset()">Reset</button>
+      </div>
+    </div>
+
+    <div class="note-box"><strong>Setup:</strong> Give each group a printed or projected sample. Assign one note-taker and one presenter per group before the timer starts.</div>
+  </div>
+
+  <!-- ══ SLIDE 2: GROUP 1 ══ -->
+  <div class="slide" id="slide-2">
+    <div class="slide-tag">Group 1</div>
+    <h2>Poster with Weak Hierarchy</h2>
+    <div class="sample-box">
+      <span class="sample-tag">Sample</span>
+      A community event flyer where all text is the same size and color.
+      <img src="assets/poster.png" alt="Poster with Weak Hierarchy" onclick="openLightbox(this.src)" style="display:block;width:100%;max-height:220px;object-fit:contain;margin-top:12px;border-radius:8px;border:1px solid rgba(251,191,36,0.2);cursor:zoom-in;" title="Click to enlarge">
+      <span style="font-size:0.65rem;color:#6b7280;margin-top:6px;display:block;">🔍 Click image to enlarge</span>
+    </div>
+    <div class="two-col">
+      <div class="col">
+        <div class="col-label">Tasks</div>
+        <ol class="task-list">
+          <li class="task-item"><span class="task-num">1</span><span>Identify which element should be the most important (event name, date, or venue).</span></li>
+          <li class="task-item"><span class="task-num">2</span><span>List which of the six tools are missing or misused.</span></li>
+          <li class="task-item"><span class="task-num">3</span><span>Sketch or describe a redesign that establishes a clear 3-level hierarchy.</span></li>
+          <li class="task-item"><span class="task-num">4</span><span>Present: <em>"The hierarchy problem was ___ and we fixed it by ___."</em></span></li>
+        </ol>
+      </div>
+      <div class="col">
+        <div class="col-label">Guide Questions</div>
+        <div class="discuss-box" style="margin-bottom:14px;"><strong>💬</strong> What is the viewer supposed to do after reading this flyer?</div>
+        <div class="discuss-box" style="margin-bottom:14px;"><strong>💬</strong> Can you tell what the event is within 3 seconds?</div>
+        <div class="discuss-box"><strong>💬</strong> Which tool would have the biggest impact if applied?</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 3: GROUP 2 ══ -->
+  <div class="slide" id="slide-3">
+    <div class="slide-tag">Group 2</div>
+    <h2>Website with Strong Hierarchy</h2>
+    <div class="sample-box">
+      <span class="sample-tag">Sample</span>
+      A well-designed landing page — <strong style="color:#fbbf24;">National Book Store (nationalbookstore.com)</strong>
+      <img src="assets/website.png" alt="National Book Store Website" onclick="openLightbox(this.src)" style="display:block;width:100%;max-height:280px;object-fit:cover;object-position:top;margin-top:12px;border-radius:8px;border:1px solid rgba(251,191,36,0.2);cursor:zoom-in;" title="Click to enlarge">
+      <span style="font-size:0.65rem;color:#6b7280;margin-top:6px;display:block;">🔍 Click image to enlarge &nbsp;·&nbsp; <a href="https://nationalbookstore.com/" target="_blank" style="color:#fbbf24;text-decoration:none;">🌐 Visit nationalbookstore.com ↗</a></span>
+    </div>
+    <div class="two-col">
+      <div class="col">
+        <div class="col-label">Tasks</div>
+        <ol class="task-list">
+          <li class="task-item"><span class="task-num">1</span><span>Map the hierarchy — identify at least 4 distinct levels of importance.</span></li>
+          <li class="task-item"><span class="task-num">2</span><span>For each level, identify which of the six tools are being used.</span></li>
+          <li class="task-item"><span class="task-num">3</span><span>Find one element where the hierarchy could be improved and explain why.</span></li>
+          <li class="task-item"><span class="task-num">4</span><span>Present: <em>"The hierarchy works because ___ and could be improved by ___."</em></span></li>
+        </ol>
+      </div>
+      <div class="col">
+        <div class="col-label">Guide Questions</div>
+        <div class="discuss-box" style="margin-bottom:14px;"><strong>💬</strong> Where does your eye go first? Second? Third?</div>
+        <div class="discuss-box" style="margin-bottom:14px;"><strong>💬</strong> Which tool is doing the most work in this design?</div>
+        <div class="discuss-box"><strong>💬</strong> Is there any element that feels out of place in the hierarchy?</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 4: GROUP 3 ══ -->
+  <div class="slide" id="slide-4">
+    <div class="slide-tag">Group 3</div>
+    <h2>Magazine Cover Analysis</h2>
+    <div class="sample-box">
+      <span class="sample-tag">Sample</span>
+      A magazine cover (fashion, news, or lifestyle).
+      <img src="assets/Magazine.jpeg" alt="Magazine Cover" onclick="openLightbox(this.src)" style="display:block;width:100%;max-height:220px;object-fit:contain;margin-top:12px;border-radius:8px;border:1px solid rgba(251,191,36,0.2);cursor:zoom-in;" title="Click to enlarge">
+      <span style="font-size:0.65rem;color:#6b7280;margin-top:6px;display:block;">🔍 Click image to enlarge</span>
+    </div>
+    <div class="two-col">
+      <div class="col">
+        <div class="col-label">Tasks</div>
+        <ol class="task-list">
+          <li class="task-item"><span class="task-num">1</span><span>Identify the masthead, cover line, and secondary text — rank them by hierarchy level.</span></li>
+          <li class="task-item"><span class="task-num">2</span><span>Analyze how typography alone creates the hierarchy (size, weight, color, style).</span></li>
+          <li class="task-item"><span class="task-num">3</span><span>Identify how placement reinforces the hierarchy (what is above the fold, what is centered).</span></li>
+          <li class="task-item"><span class="task-num">4</span><span>Present: <em>"The typographic hierarchy is achieved through ___ and placement reinforces it by ___."</em></span></li>
+        </ol>
+      </div>
+      <div class="col">
+        <div class="col-label">Guide Questions</div>
+        <div class="discuss-box" style="margin-bottom:14px;"><strong>💬</strong> If you removed all color, would the hierarchy still be clear?</div>
+        <div class="discuss-box" style="margin-bottom:14px;"><strong>💬</strong> How many typographic levels can you count?</div>
+        <div class="discuss-box"><strong>💬</strong> Does the image compete with or support the text hierarchy?</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 5: PRESENTATION FORMAT ══ -->
+  <div class="slide" id="slide-5">
+    <div class="slide-tag">Wrap-Up</div>
+    <h2>Presentation Format</h2>
+    <p class="lead">2–3 minutes per group. Each group shares four things — in this order.</p>
+    <div class="format-grid">
+      <div class="format-card"><span class="format-num">1</span><div><div class="format-title">The Design They Analyzed</div><div class="format-desc">Show or describe the sample the group worked with.</div></div></div>
+      <div class="format-card"><span class="format-num">2</span><div><div class="format-title">Their Hierarchy Map</div><div class="format-desc">Drawn or described — which levels exist and in what order.</div></div></div>
+      <div class="format-card"><span class="format-num">3</span><div><div class="format-title">One Strength, One Weakness</div><div class="format-desc">A single clear win and a single clear problem — no more.</div></div></div>
+      <div class="format-card"><span class="format-num">4</span><div><div class="format-title">Their Proposed Improvement</div><div class="format-desc">What would change, and which of the six tools makes it happen.</div></div></div>
+    </div>
+    <div class="note-box"><strong>Facilitator Tip:</strong> Keep each group to their fill-in-the-blank sentence first, then open the floor for one follow-up question from the class before moving on.</div>
+  </div>
+
+</div>
+
+<!-- LIGHTBOX -->
+<div id="lightbox" onclick="closeLightbox()">
+  <span id="lightbox-close" onclick="closeLightbox()">✕</span>
+  <img id="lightbox-img" src="" alt="Enlarged view">
+</div>
+
+<footer>
+  <a class="nav-btn" href="part2.html">← Part 2</a>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:5px;">
+    <div class="dots" id="dots">
+      <div class="dot active" onclick="goTo(1)"></div>
+      <div class="dot" onclick="goTo(2)"></div>
+      <div class="dot" onclick="goTo(3)"></div>
+      <div class="dot" onclick="goTo(4)"></div>
+      <div class="dot" onclick="goTo(5)"></div>
+    </div>
+    <span class="slide-counter" id="counter">Slide 1 of 5</span>
+  </div>
+  <div style="display:flex;gap:10px;" id="footerRight">
+    <button class="nav-btn" onclick="prev()">← Prev</button>
+    <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+  </div>
+</footer>
+
+<script>
+  let current = 1;
+  const total = 5;
+
+  function saveProgress(n) {
+    localStorage.setItem('h_p3', Math.max(parseInt(localStorage.getItem('h_p3') || 0), n));
+  }
+
+  function goTo(n) {
+    document.getElementById('slide-' + current).classList.remove('active');
+    document.querySelectorAll('.dot')[current - 1].classList.remove('active');
+    current = n;
+    document.getElementById('slide-' + current).classList.add('active');
+    document.querySelectorAll('.dot')[current - 1].classList.add('active');
+    document.getElementById('counter').textContent = 'Slide ' + current + ' of ' + total;
+    const fr = document.getElementById('footerRight');
+    if (current === total) {
+      fr.innerHTML = '<a href="index.html" class="nav-btn">🏠 Home</a><a href="part4.html" class="nav-btn primary">Part 4 →</a>';
+    } else {
+      fr.innerHTML = '<button class="nav-btn" onclick="prev()">← Prev</button><button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>';
+    }
+    saveProgress(current);
+  }
+
+  function next() { if (current < total) goTo(current + 1); else goTo(1); }
+  function prev() { if (current > 1) goTo(current - 1); }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') next();
+    if (e.key === 'ArrowLeft') prev();
+  });
+
+  /* ---- ACTIVITY TIMER ---- */
+  const phases = [
+    { label: 'Group Work', seconds: 720, seg: 'fillWork', segTotal: 720 },
+    { label: 'Presentations', seconds: 480, seg: 'fillPresent', segTotal: 480 }
+  ];
+  let phaseIndex = 0;
+  let remaining = phases[0].seconds;
+  let timerInterval = null;
+
+  function formatTime(s) {
+    const m = Math.floor(s / 60);
+    const sec = s % 60;
+    return m + ':' + (sec < 10 ? '0' : '') + sec;
+  }
+
+  function renderTimer() {
+    const phase = phases[phaseIndex];
+    document.getElementById('timerPhase').textContent = phase.label;
+    document.getElementById('timerClock').textContent = formatTime(remaining);
+    const elapsed = phase.segTotal - remaining;
+    const pct = Math.min(100, (elapsed / phase.segTotal) * 100);
+    document.getElementById(phase.seg).style.width = pct + '%';
+    if (phaseIndex === 1) {
+      document.getElementById('fillWork').style.width = '100%';
+    }
+  }
+
+  function timerStart() {
+    if (timerInterval) return;
+    document.getElementById('timerStartBtn').textContent = 'Running…';
+    timerInterval = setInterval(() => {
+      remaining--;
+      if (remaining < 0) {
+        if (phaseIndex < phases.length - 1) {
+          phaseIndex++;
+          remaining = phases[phaseIndex].seconds;
+        } else {
+          clearInterval(timerInterval);
+          timerInterval = null;
+          document.getElementById('timerPhase').textContent = 'Complete!';
+          document.getElementById('timerClock').textContent = '0:00';
+          document.getElementById('timerStartBtn').textContent = 'Start';
+          return;
+        }
+      }
+      renderTimer();
+    }, 1000);
+  }
+
+  function timerPause() {
+    clearInterval(timerInterval);
+    timerInterval = null;
+    document.getElementById('timerStartBtn').textContent = 'Start';
+  }
+
+  function timerReset() {
+    clearInterval(timerInterval);
+    timerInterval = null;
+    phaseIndex = 0;
+    remaining = phases[0].seconds;
+    document.getElementById('timerStartBtn').textContent = 'Start';
+    document.getElementById('fillWork').style.width = '0%';
+    document.getElementById('fillPresent').style.width = '0%';
+    renderTimer();
+  }
+
+  renderTimer();
+
+  function openLightbox(src) {
+    document.getElementById('lightbox-img').src = src;
+    document.getElementById('lightbox').classList.add('open');
+  }
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+  }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeLightbox();
+  });
+</script>
+</body>
+</html>
