@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Two Colors, Eight Scenarios — A Design Personality Test</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Space+Mono:wght@400;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F2EEF8;
+    --paper-edge:#E7E0F2;
+    --ink:#2A2640;
+    --ink-soft:#5A5470;
+    --accent:#F2A93B;
+    --accent-dark:#D98E1F;
+    --card:#FFFDF9;
+    --line:#DAD2EC;
+
+    --red:#E4483A;    --red-soft:#F7C4BD;
+    --orange:#F2892E; --orange-soft:#FBD2A3;
+    --yellow:#EFB92E; --yellow-soft:#FAE49E;
+    --green:#469B5B;  --green-soft:#BEE3C4;
+    --blue:#3568B0;   --blue-soft:#BBD1EE;
+    --purple:#7B4FA0; --purple-soft:#DAC6EC;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    min-height:100vh;
+    background:var(--paper);
+    font-family:'Nunito',sans-serif;
+    color:var(--ink);
+    position:relative;
+    overflow-x:hidden;
+    padding:24px 16px 64px;
+  }
+
+  #bgCanvas{ position:fixed; inset:0; width:100%; height:100%; z-index:0; pointer-events:none; }
+
+  .wrap{ position:relative; z-index:1; max-width:700px; margin:0 auto; }
+
+  header{ text-align:center; margin-bottom:28px; }
+  .eyebrow{
+    font-family:'Space Mono',monospace;
+    font-size:12px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:var(--card);
+    border:1px solid var(--line);
+    padding:6px 14px;
+    border-radius:99px;
+    margin-bottom:16px;
+  }
+  .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);display:inline-block;animation:pulse 1.6s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.5);opacity:.5;}}
+
+  h1{
+    font-family:'Permanent Marker',cursive;
+    font-weight:400;
+    font-size:clamp(32px,6vw,50px);
+    line-height:1.08;
+    margin:0 0 10px;
+    color:var(--ink);
+    transform:rotate(-1deg);
+  }
+  h1 span{color:var(--accent-dark);}
+  .sub{ color:var(--ink-soft); font-size:15.5px; max-width:480px; margin:0 auto; font-weight:600; line-height:1.5; }
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:22px;
+    padding:30px 26px 32px;
+    box-shadow:0 18px 40px -20px rgba(42,38,64,.35), 0 2px 0 var(--line);
+    position:relative;
+  }
+
+  /* step progress */
+  .progress{ display:flex; justify-content:center; flex-wrap:wrap; gap:7px; margin-bottom:18px; }
+  .step-dot{
+    width:24px; height:8px; border-radius:99px;
+    background:var(--paper-edge);
+    border:1.5px solid var(--line);
+    transition:all .3s ease;
+  }
+  .step-dot.done{ background:var(--accent); border-color:var(--accent-dark); }
+  .step-dot.current{ background:var(--ink); border-color:var(--ink); }
+
+  .jar-row{ display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:18px; }
+  #mixJar{ display:block; border-radius:50%; background:#fff; border:2px solid var(--line); }
+  .jar-label{ font-family:'Space Mono',monospace; font-size:11px; color:var(--ink-soft); letter-spacing:.05em; }
+
+  .scenario-head{ display:flex; align-items:center; gap:14px; margin-bottom:18px; }
+  .scenario-icon{
+    width:56px; height:56px; min-width:56px;
+    border-radius:16px 16px 16px 4px;
+    background:var(--paper);
+    border:1.5px solid var(--line);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .scenario-icon svg{ width:30px; height:30px; }
+  .scenario-eyebrow{ font-family:'Space Mono',monospace; font-size:11px; color:var(--accent-dark); font-weight:700; letter-spacing:.1em; margin-bottom:2px; }
+  .scenario-title{ font-weight:800; font-size:19px; margin:0; }
+
+  .prompt{ font-size:15px; line-height:1.55; color:var(--ink); margin:0 0 6px; }
+  .pick-count{ font-family:'Space Mono',monospace; font-size:12px; font-weight:700; color:var(--ink-soft); margin-bottom:20px; }
+  .pick-count b{ color:var(--accent-dark); }
+
+  #swatchGrid{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  @media(max-width:480px){ #swatchGrid{grid-template-columns:repeat(2,1fr);} }
+
+  .swatch{
+    position:relative;
+    aspect-ratio:1/1;
+    border-radius:26px 26px 26px 6px;
+    border:4px solid transparent;
+    cursor:pointer;
+    transition:transform .2s cubic-bezier(.34,1.56,.64,1), box-shadow .2s ease;
+    box-shadow:inset 0 -8px 0 rgba(0,0,0,.14), 0 10px 18px -10px rgba(0,0,0,.4);
+  }
+  .swatch:nth-child(2n){ border-radius:26px 26px 6px 26px; }
+  .swatch:hover{ transform:translateY(-4px) scale(1.04) rotate(-2deg); }
+  .swatch:active{ transform:scale(.96); }
+  .swatch.selected{
+    border-color:var(--ink);
+    box-shadow:0 0 0 4px rgba(42,38,64,.12), inset 0 -8px 0 rgba(0,0,0,.14);
+  }
+  .swatch .check{
+    position:absolute; top:6px; left:6px;
+    width:26px;height:26px;border-radius:50%;
+    background:var(--ink); color:#fff;
+    display:flex; align-items:center; justify-content:center;
+    opacity:0; transform:scale(.4);
+    transition:all .22s cubic-bezier(.34,1.56,.64,1);
+    font-size:14px; font-weight:900;
+  }
+  .swatch.selected .check{ opacity:1; transform:scale(1); }
+
+  /* results */
+  #resultCard{ display:none; text-align:center; }
+  #revealCanvas{ display:block; margin:0 auto 6px; border-radius:16px; }
+  .result-eyebrow{ font-family:'Space Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-soft); }
+  #resultTitle{
+    font-family:'Permanent Marker',cursive; font-weight:400;
+    font-size:clamp(30px,5.6vw,44px); margin:2px 0 4px; transform:rotate(-1deg);
+  }
+  #resultTagline{ font-size:15.5px; font-weight:700; color:var(--ink-soft); margin-bottom:16px; }
+  #resultDesc{ text-align:left; font-size:15.5px; line-height:1.65; color:var(--ink); max-width:520px; margin:0 auto 16px; }
+  #traits{ display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:22px; }
+  .trait{ font-family:'Space Mono',monospace; font-size:12px; font-weight:700; padding:6px 12px; border-radius:99px; border:1.5px solid var(--line); background:var(--paper); }
+
+  .side-notes{ display:grid; grid-template-columns:1fr 1fr; gap:12px; text-align:left; margin-bottom:22px; }
+  @media(max-width:520px){ .side-notes{grid-template-columns:1fr;} }
+  .note{ background:var(--paper); border:1.5px solid var(--line); border-radius:14px; padding:14px 16px; }
+  .note .label{ font-family:'Space Mono',monospace; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); display:flex; align-items:center; gap:6px; margin-bottom:6px; }
+  .note .chip{ width:12px;height:12px;border-radius:50%;display:inline-block; }
+  .note p{ margin:0; font-size:13.5px; line-height:1.5; }
+
+  .breakdown-label{ font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); margin:8px 0 8px; text-align:left; }
+  #scoreChart{ display:block; width:100%; height:auto; margin-bottom:20px; }
+
+  .scenario-log{
+    text-align:left;
+    font-family:'Space Mono',monospace;
+    font-size:11.5px;
+    color:var(--ink-soft);
+    margin-bottom:22px;
+    line-height:1.6;
+  }
+  .scenario-log b{ color:var(--ink); }
+
+  button{
+    font-family:'Nunito',sans-serif; font-weight:800; font-size:15px; border:none; border-radius:99px;
+    padding:13px 26px; cursor:pointer; background:var(--ink); color:var(--paper); transition:transform .15s ease;
+  }
+  button:hover{ transform:translateY(-2px); }
+  button:active{ transform:translateY(0); }
+
+  footer{ text-align:center; margin-top:26px; font-size:12.5px; color:var(--ink-soft); font-family:'Space Mono',monospace; }
+
+  @media (prefers-reduced-motion: reduce){ *{ animation-duration:.001s !important; transition-duration:.001s !important; } }
+</style>
+</head>
+<body>
+
+<canvas id="bgCanvas"></canvas>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow"><span class="dot"></span> 8 OF 20 SCENARIOS · 2 COLORS EACH</div>
+    <h1>Design Your <span>Colors</span></h1>
+    <p class="sub">Eight quick design scenarios, drawn fresh each round from a pool of twenty — no repeats. Each time, pick the two colors you'd reach for first.</p>
+  </header>
+
+  <div class="card" id="quizCard">
+    <div class="progress" id="progress"></div>
+    <div class="jar-row">
+      <canvas id="mixJar" width="46" height="46"></canvas>
+      <span class="jar-label">your blend so far</span>
+    </div>
+
+    <div class="scenario-head">
+      <div class="scenario-icon" id="scenarioIcon"></div>
+      <div>
+        <div class="scenario-eyebrow" id="scenarioEyebrow">SCENARIO 1 OF 8</div>
+        <h2 class="scenario-title" id="scenarioTitle"></h2>
+      </div>
+    </div>
+    <p class="prompt" id="scenarioPrompt"></p>
+    <p class="pick-count"><b id="pickNum">0</b>/2 colors picked</p>
+    <div id="swatchGrid"></div>
+  </div>
+
+  <div class="card" id="resultCard">
+    <canvas id="revealCanvas" width="560" height="230"></canvas>
+    <div class="result-eyebrow">YOUR RESULT</div>
+    <h2 id="resultTitle"></h2>
+    <p id="resultTagline"></p>
+    <p id="resultDesc"></p>
+    <div id="traits"></div>
+
+    <div class="side-notes">
+      <div class="note">
+        <div class="label"><span class="chip" id="secondChip"></span>RUNNER-UP</div>
+        <p id="secondText"></p>
+      </div>
+      <div class="note">
+        <div class="label"><span class="chip" id="lastChip"></span>BARELY SHOWED UP</div>
+        <p id="lastText"></p>
+      </div>
+    </div>
+
+    <div class="breakdown-label">Every color you picked, tallied</div>
+    <canvas id="scoreChart" width="560" height="190"></canvas>
+
+    <div class="breakdown-label">This round's 8 scenarios</div>
+    <p class="scenario-log" id="scenarioLog"></p>
+
+    <button id="retakeBtn">Design a new round</button>
+  </div>
+
+  <footer>Inspired by color-association psychology — a fun design-based self-reflection prompt, not a clinical assessment.</footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const ROUND_SIZE = 8;
+
+  const COLORS = {
+    red:    { hex:'#E4483A', soft:'#F7C4BD', name:'The Igniter',
+      tagline:'Bold. Fast. First off the line.',
+      desc:"You kept reaching for red — the color of urgency and nerve. In class or on a team, you're the one who says \u201clet's just start\u201d, which is exactly the push a stalled group usually needs. You'd rather try something imperfectly today than plan it perfectly for next week. The growth edge: not every situation needs your top speed, and slowing down for input from quieter teammates usually makes the final result stronger.",
+      traits:['Competitive','Decisive','Fearless starter','Impatient with delay'],
+      light:"A little red means you know how to add urgency when a moment actually calls for it." },
+    orange: { hex:'#F2892E', soft:'#FBD2A3', name:'The Spark',
+      tagline:'Loud laugh, louder ideas.',
+      desc:"Orange kept showing up in your choices — the color of warmth and momentum. You collect people the way others collect playlists, and you're usually the reason a dull group project turns into something people actually enjoy showing up for. The growth edge: your energy is contagious, but it can also outrun your follow-through — pairing your spark with someone who tracks the details keeps momentum from fizzling.",
+      traits:['Sociable','Spontaneous','Magnetic energy','Idea-first'],
+      light:"A little orange means you can bring warmth into a room without needing to run it." },
+    yellow: { hex:'#EFB92E', soft:'#FAE49E', name:'The Sunbeam',
+      tagline:'Curious about literally everything.',
+      desc:"Yellow was your instinct again and again — the color of curiosity and optimism. You ask the questions other people are quietly thinking, and your outlook tends to be what keeps a group from spiraling before a deadline. The growth edge: your attention loves novelty, so finishing the tenth idea can matter more than starting the eleventh.",
+      traits:['Optimistic','Playful','Idea machine','Easily distracted'],
+      light:"A little yellow means you know how to lighten a heavy moment when it's needed." },
+    green:  { hex:'#469B5B', soft:'#BEE3C4', name:'The Anchor',
+      tagline:'The one who keeps the group steady.',
+      desc:"Green kept winning your picks — the color of balance and care. You're the quiet infrastructure of every friend group and every classroom, the person others check in with, and the one who notices when someone's gone unusually quiet. The growth edge: keeping the peace shouldn't mean disappearing your own opinion — your steady take is worth voicing, not just holding.",
+      traits:['Dependable','Caring','Peacemaker','Conflict-avoidant'],
+      light:"A little green means you can steady a room even when steadying isn't your main move." },
+    blue:   { hex:'#3568B0', soft:'#BBD1EE', name:'The Cartographer',
+      tagline:'Maps things out before moving.',
+      desc:"Blue was your recurring choice — the color of clarity and control. You're the reason group projects have an actual document instead of a group chat full of good intentions, and people trust your calm read of a stressful situation. The growth edge: not every moment needs a plan first; some of the best ideas only show up once you've let yourself act without one.",
+      traits:['Logical','Calm under pressure','Trustworthy','Slow to improvise'],
+      light:"A little blue means you bring a bit of order wherever you go, even without trying." },
+    purple: { hex:'#7B4FA0', soft:'#DAC6EC', name:'The Dreamweaver',
+      tagline:'Half here, half in an imagined world.',
+      desc:"Purple showed up most in your choices — the color of imagination and depth. You notice the version of things that doesn't exist yet, and you bring originality to work that would otherwise be forgettable. The growth edge: not every idea needs to be fully-formed before you share it — saying the half-baked version out loud is often exactly what a group needs to build on.",
+      traits:['Imaginative','Intuitive','Original','Prone to overthinking'],
+      light:"A little purple means an unexpected idea shows up in your work when you least plan for it." },
+  };
+  const ORDER = ['red','orange','yellow','green','blue','purple'];
+
+  const ICONS = {
+    poster: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="9" y="5" width="30" height="38" rx="2" stroke="#2A2640" stroke-width="2.4"/>
+      <path d="M9 5 L20 5 L9 16 Z" fill="#2A2640"/>
+      <line x1="15" y1="24" x2="33" y2="24" stroke="#2A2640" stroke-width="2.2" stroke-linecap="round"/>
+      <line x1="15" y1="30" x2="29" y2="30" stroke="#2A2640" stroke-width="2.2" stroke-linecap="round"/>
+      <circle cx="24" cy="38" r="2.4" fill="#2A2640"/>
+    </svg>`,
+    room: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M6 22 L24 8 L42 22" stroke="#2A2640" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M10 20 V41 H38 V20" stroke="#2A2640" stroke-width="2.4" stroke-linejoin="round"/>
+      <rect x="19" y="28" width="10" height="13" stroke="#2A2640" stroke-width="2.2"/>
+      <rect x="14" y="24" width="6" height="6" stroke="#2A2640" stroke-width="2"/>
+    </svg>`,
+    book: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M24 12 C20 9 12 8 7 9 V37 C12 36 20 37 24 40 C28 37 36 36 41 37 V9 C36 8 28 9 24 12 Z" stroke="#2A2640" stroke-width="2.2" stroke-linejoin="round"/>
+      <line x1="24" y1="12" x2="24" y2="40" stroke="#2A2640" stroke-width="2.2"/>
+    </svg>`,
+    phone: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="13" y="5" width="22" height="38" rx="4" stroke="#2A2640" stroke-width="2.4"/>
+      <line x1="19" y1="10" x2="29" y2="10" stroke="#2A2640" stroke-width="2.2" stroke-linecap="round"/>
+      <circle cx="24" cy="37" r="1.8" fill="#2A2640"/>
+    </svg>`,
+    shoe: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M6 32 C6 27 10 26 14 24 C18 22 20 16 24 16 C27 16 27 20 31 21 C36 22 42 23 42 30 C42 33 40 34 36 34 H8 C6.5 34 6 33 6 32 Z" stroke="#2A2640" stroke-width="2.2" stroke-linejoin="round"/>
+      <line x1="18" y1="21" x2="21" y2="27" stroke="#2A2640" stroke-width="2"/>
+      <line x1="23" y1="18" x2="26" y2="26" stroke="#2A2640" stroke-width="2"/>
+    </svg>`,
+    playlist: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="24" cy="24" r="17" stroke="#2A2640" stroke-width="2.4"/>
+      <path d="M20 17 L31 24 L20 31 Z" fill="#2A2640"/>
+    </svg>`,
+    journal: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="10" y="6" width="28" height="36" rx="2" stroke="#2A2640" stroke-width="2.4"/>
+      <line x1="10" y1="13" x2="15" y2="13" stroke="#2A2640" stroke-width="2"/>
+      <line x1="10" y1="19" x2="15" y2="19" stroke="#2A2640" stroke-width="2"/>
+      <path d="M29 6 V22 L33 18 L37 22 V6" stroke="#2A2640" stroke-width="2.2" stroke-linejoin="round"/>
+    </svg>`,
+    cake: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="24" y1="6" x2="24" y2="13" stroke="#2A2640" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M22 6 C22 4 26 4 26 6" stroke="#2A2640" stroke-width="2"/>
+      <path d="M10 42 V26 C10 23 14 23 16 21 C18 23 22 23 24 21 C26 23 30 23 32 21 C34 23 38 23 38 26 V42 Z" stroke="#2A2640" stroke-width="2.2" stroke-linejoin="round"/>
+      <line x1="10" y1="34" x2="38" y2="34" stroke="#2A2640" stroke-width="2"/>
+    </svg>`,
+    card: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="6" y="11" width="36" height="26" rx="2" stroke="#2A2640" stroke-width="2.4"/>
+      <path d="M6 13 L24 27 L42 13" stroke="#2A2640" stroke-width="2.2" stroke-linejoin="round"/>
+    </svg>`,
+    locker: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="12" y="5" width="24" height="38" rx="2" stroke="#2A2640" stroke-width="2.4"/>
+      <line x1="12" y1="24" x2="36" y2="24" stroke="#2A2640" stroke-width="1.8"/>
+      <circle cx="31" cy="24" r="1.8" fill="#2A2640"/>
+      <line x1="18" y1="12" x2="18" y2="18" stroke="#2A2640" stroke-width="1.6"/>
+      <line x1="24" y1="12" x2="24" y2="18" stroke="#2A2640" stroke-width="1.6"/>
+      <line x1="18" y1="30" x2="18" y2="36" stroke="#2A2640" stroke-width="1.6"/>
+      <line x1="24" y1="30" x2="24" y2="36" stroke="#2A2640" stroke-width="1.6"/>
+    </svg>`,
+  };
+
+  const SCENARIO_POOL = [
+    { key:'poster',   title:'The Event Poster',        prompt:"Your school is throwing a big event and you got asked to design the poster. Pick the two colors you'd reach for first." },
+    { key:'poster',   title:'The Hallway Mural',        prompt:"The art teacher hands your class a blank hallway wall. Pick the two colors you'd start painting with." },
+    { key:'room',     title:'The Dream Bedroom',        prompt:"You get to repaint your room from scratch, zero budget limit. Pick the two colors going straight on the walls." },
+    { key:'room',     title:'The Reading Nook',         prompt:"You're building a cozy fairy-light corner just for reading. Pick the two colors that set the mood." },
+    { key:'book',     title:'The Novel Cover',          prompt:"You're designing the cover for a story only you could write. Pick the two colors that carry the whole mood." },
+    { key:'book',     title:'The Zine Cover',           prompt:"You and your friends are self-publishing a zine. Pick the two colors for the front cover." },
+    { key:'phone',    title:'The Phone Case',           prompt:"You're designing your own phone case from scratch. Pick the two colors you'd actually use every day." },
+    { key:'phone',    title:'The Laptop Sticker Sheet', prompt:"You're filling a blank sticker sheet for your laptop lid. Pick the two colors that dominate it." },
+    { key:'shoe',     title:'The Custom Sneakers',      prompt:"An app lets you design your own pair of sneakers. Pick the two colors for the build." },
+    { key:'shoe',     title:'The Skateboard Deck',      prompt:"You're getting a skateboard deck custom-painted. Pick the two colors for the art." },
+    { key:'playlist', title:'The Playlist Cover',       prompt:"You're making cover art for your most-played playlist. Pick the two colors that fit its vibe." },
+    { key:'playlist', title:'The Podcast Cover',        prompt:"You and a friend are launching a podcast and need cover art. Pick the two colors for the logo." },
+    { key:'journal',  title:'The Diary Cover',          prompt:"You're picking the cover for a journal you'll actually write in. Pick the two colors that feel like you." },
+    { key:'journal',  title:'The Bracelet Pattern',     prompt:"You're weaving a friendship bracelet to give away. Pick the two colors for the pattern." },
+    { key:'cake',     title:'The Birthday Cake',        prompt:"You're decorating a cake for someone's birthday. Pick the two colors for the icing." },
+    { key:'cake',     title:'The Balloon Arch',         prompt:"You're building a balloon arch for a party entrance. Pick the two colors for the balloons." },
+    { key:'card',     title:'The Greeting Card',        prompt:"You're making a handmade card for a friend going through something big. Pick the two colors on the front." },
+    { key:'card',     title:'The Party Invitation',     prompt:"You're designing invitations for your own party. Pick the two colors that set the tone." },
+    { key:'locker',   title:'The Locker Decoration',    prompt:"You get to fully decorate the inside of your school locker. Pick the two colors you'd cover it in." },
+    { key:'locker',   title:'The Backpack Patch',       prompt:"You're designing an iron-on patch for your backpack. Pick the two colors that make it pop." },
+  ];
+
+  const quizCard = document.getElementById('quizCard');
+  const resultCard = document.getElementById('resultCard');
+  const swatchGrid = document.getElementById('swatchGrid');
+  const progressEl = document.getElementById('progress');
+  const pickNumEl = document.getElementById('pickNum');
+
+  let roundScenarios = [];
+  let stepIndex = 0;
+  let selected = [];         // colors selected in current step (max 2)
+  const scores = {};         // cumulative tally across this round
+
+  function shuffle(arr){
+    const a = arr.slice();
+    for(let i=a.length-1; i>0; i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [a[i],a[j]] = [a[j],a[i]];
+    }
+    return a;
+  }
+
+  function resetAll(){
+    roundScenarios = shuffle(SCENARIO_POOL).slice(0, ROUND_SIZE); // 8 of 20, no repeats
+    stepIndex = 0;
+    ORDER.forEach(k=> scores[k]=0);
+
+    progressEl.innerHTML = '';
+    roundScenarios.forEach(()=>{
+      const d = document.createElement('div');
+      d.className = 'step-dot';
+      progressEl.appendChild(d);
+    });
+
+    renderStep();
+  }
+
+  function updateProgress(){
+    [...progressEl.children].forEach((d,i)=>{
+      d.classList.toggle('done', i < stepIndex);
+      d.classList.toggle('current', i === stepIndex);
+    });
+  }
+
+  function renderStep(){
+    selected = [];
+    const s = roundScenarios[stepIndex];
+    document.getElementById('scenarioIcon').innerHTML = ICONS[s.key];
+    document.getElementById('scenarioEyebrow').textContent = `SCENARIO ${stepIndex+1} OF ${roundScenarios.length}`;
+    document.getElementById('scenarioTitle').textContent = s.title;
+    document.getElementById('scenarioPrompt').textContent = s.prompt;
+    pickNumEl.textContent = '0';
+    updateProgress();
+
+    swatchGrid.innerHTML = '';
+    ORDER.forEach(k=>{
+      const btn = document.createElement('button');
+      btn.className = 'swatch';
+      btn.style.background = COLORS[k].hex;
+      btn.dataset.color = k;
+      btn.innerHTML = `<span class="check">&#10003;</span>`;
+      btn.addEventListener('click', ()=> toggle(k, btn));
+      swatchGrid.appendChild(btn);
+    });
+    drawJar();
+  }
+
+  function toggle(colorKey, btnEl){
+    const already = selected.includes(colorKey);
+    if(already){
+      selected = selected.filter(c=>c!==colorKey);
+      btnEl.classList.remove('selected');
+    } else {
+      if(selected.length === 2){
+        const oldest = selected.shift();
+        const oldBtn = swatchGrid.querySelector(`[data-color="${oldest}"]`);
+        if(oldBtn) oldBtn.classList.remove('selected');
+      }
+      selected.push(colorKey);
+      btnEl.classList.add('selected');
+    }
+    pickNumEl.textContent = String(selected.length);
+
+    if(selected.length === 2){
+      selected.forEach(c=>{ scores[c]++; burstAtJar(c); });
+      drawJar();
+      setTimeout(()=>{
+        stepIndex++;
+        if(stepIndex < roundScenarios.length){
+          renderStep();
+        } else {
+          showResult();
+        }
+      }, 550);
+    }
+  }
+
+  // ---------- mix jar ----------
+  const jar = document.getElementById('mixJar');
+  const jctx = jar.getContext('2d');
+  function hexToRgb(hex){ const n=parseInt(hex.slice(1),16); return [(n>>16)&255,(n>>8)&255,n&255]; }
+  function mixedColor(){
+    let r=0,g=0,b=0,total=0;
+    ORDER.forEach(k=>{
+      if(scores[k]>0){
+        const [rr,gg,bb]=hexToRgb(COLORS[k].hex);
+        r+=rr*scores[k]; g+=gg*scores[k]; b+=bb*scores[k]; total+=scores[k];
+      }
+    });
+    if(total===0) return [230,225,240];
+    return [r/total,g/total,b/total];
+  }
+  function drawJar(){
+    const w=jar.width,h=jar.height;
+    jctx.clearRect(0,0,w,h);
+    const [r,g,b]=mixedColor();
+    const grad=jctx.createRadialGradient(w*0.35,h*0.32,2,w/2,h/2,w/2);
+    grad.addColorStop(0, `rgba(${Math.min(255,r+40)},${Math.min(255,g+40)},${Math.min(255,b+40)},1)`);
+    grad.addColorStop(1, `rgb(${r|0},${g|0},${b|0})`);
+    jctx.beginPath(); jctx.arc(w/2,h/2,w/2-2,0,Math.PI*2); jctx.fillStyle=grad; jctx.fill();
+  }
+  let jarParticles=[];
+  function burstAtJar(colorKey){
+    if(reduceMotion){ return; }
+    const hex=COLORS[colorKey].hex;
+    for(let i=0;i<10;i++){
+      jarParticles.push({x:jar.width/2,y:jar.height/2,vx:(Math.random()-0.5)*3,vy:(Math.random()-0.5)*3,life:1,color:hex,r:1.5+Math.random()*1.5});
+    }
+  }
+  function animateJar(){
+    drawJar();
+    jarParticles.forEach(p=>{
+      p.x+=p.vx; p.y+=p.vy; p.life-=0.045;
+      if(p.life>0){
+        jctx.globalAlpha=Math.max(p.life,0);
+        jctx.beginPath(); jctx.arc(p.x,p.y,p.r,0,Math.PI*2); jctx.fillStyle=p.color; jctx.fill();
+        jctx.globalAlpha=1;
+      }
+    });
+    jarParticles = jarParticles.filter(p=>p.life>0);
+    requestAnimationFrame(animateJar);
+  }
+  requestAnimationFrame(animateJar);
+
+  // ---------- ambient background ----------
+  const bg = document.getElementById('bgCanvas');
+  const bctx = bg.getContext('2d');
+  let W,H;
+  function resizeBg(){ W=bg.width=window.innerWidth; H=bg.height=window.innerHeight; }
+  resizeBg();
+  window.addEventListener('resize', resizeBg);
+  const blobs = ORDER.map(k=>({ a: Math.PI*2*Math.random(), r:90+Math.random()*90, color:COLORS[k].hex, speed:0.0015+Math.random()*0.0015 }));
+  function animateBg(){
+    bctx.clearRect(0,0,W,H);
+    blobs.forEach(b=>{
+      b.a += b.speed;
+      const cx = W*(0.2+0.6*((Math.sin(b.a*0.7)+1)/2));
+      const cy = H*(0.15+0.7*((Math.cos(b.a*0.9)+1)/2));
+      const grad = bctx.createRadialGradient(cx,cy,0,cx,cy,b.r);
+      grad.addColorStop(0, b.color+'33');
+      grad.addColorStop(1, b.color+'00');
+      bctx.beginPath(); bctx.arc(cx,cy,b.r,0,Math.PI*2); bctx.fillStyle=grad; bctx.fill();
+    });
+    if(!reduceMotion) requestAnimationFrame(animateBg);
+  }
+  animateBg();
+
+  // ---------- results ----------
+  function rankedColors(){
+    return ORDER.slice().sort((a,b)=> scores[b]-scores[a]);
+  }
+
+  function showResult(){
+    quizCard.style.display='none';
+    resultCard.style.display='block';
+
+    const ranked = rankedColors();
+    const winner = ranked[0];
+    const second = ranked[1];
+    const least = ranked[ranked.length-1];
+    const data = COLORS[winner];
+
+    document.getElementById('resultTitle').textContent = data.name;
+    document.getElementById('resultTitle').style.color = data.hex;
+    document.getElementById('resultTagline').textContent = data.tagline;
+    document.getElementById('resultDesc').textContent = data.desc;
+
+    const traitsEl = document.getElementById('traits');
+    traitsEl.innerHTML='';
+    data.traits.forEach(t=>{
+      const s=document.createElement('span');
+      s.className='trait'; s.textContent=t;
+      s.style.borderColor=data.hex; s.style.color=data.hex;
+      traitsEl.appendChild(s);
+    });
+
+    document.getElementById('secondChip').style.background = COLORS[second].hex;
+    document.getElementById('secondText').textContent = `${COLORS[second].name} showed up too (${scores[second]}x) — ${COLORS[second].tagline.toLowerCase()}`;
+
+    document.getElementById('lastChip').style.background = COLORS[least].hex;
+    document.getElementById('lastText').textContent = `${COLORS[least].name} barely made it in (${scores[least]}x). ${COLORS[least].light}`;
+
+    document.getElementById('scenarioLog').innerHTML =
+      roundScenarios.map((s,i)=> `<b>${i+1}.</b> ${s.title}`).join(' &nbsp;·&nbsp; ');
+
+    drawReveal(winner);
+    drawScoreChart();
+  }
+
+  function drawReveal(winner){
+    const cv = document.getElementById('revealCanvas');
+    const ctx = cv.getContext('2d');
+    const w=cv.width,h=cv.height;
+    const hex = COLORS[winner].hex;
+    const soft = COLORS[winner].soft;
+
+    let particles=[];
+    for(let i=0;i<16;i++){
+      const cx = w/2 + (Math.random()-0.5)*w*0.5;
+      const cy = h/2 + (Math.random()-0.5)*h*0.4;
+      particles.push({
+        x:cx,y:cy,r:0,
+        target: 20+Math.random()*46,
+        color: Math.random() < 0.55 ? hex : COLORS[ORDER[Math.floor(Math.random()*6)]].hex,
+        speed: 2+Math.random()*2
+      });
+    }
+    let frame=0;
+    const maxFrame = reduceMotion ? 1 : 42;
+    let t=0;
+
+    function paint(pulseVal){
+      ctx.clearRect(0,0,w,h);
+      ctx.fillStyle = soft; ctx.globalAlpha=0.35; ctx.fillRect(0,0,w,h); ctx.globalAlpha=1;
+      particles.forEach(p=>{
+        ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        ctx.fillStyle=p.color; ctx.globalAlpha=0.85; ctx.fill(); ctx.globalAlpha=1;
+      });
+      ctx.beginPath(); ctx.arc(w/2,h/2,46+pulseVal,0,Math.PI*2);
+      const grad = ctx.createRadialGradient(w/2-14,h/2-14,4,w/2,h/2,54);
+      grad.addColorStop(0,'#ffffff'); grad.addColorStop(0.25,hex); grad.addColorStop(1,hex);
+      ctx.fillStyle=grad; ctx.fill();
+      ctx.font = "700 13px 'Space Mono', monospace";
+      ctx.fillStyle='#ffffff'; ctx.textAlign='center';
+      ctx.fillText(COLORS[winner].name.toUpperCase(), w/2, h/2+5);
+    }
+
+    function grow(){
+      frame++;
+      particles.forEach(p=>{ if(p.r<p.target) p.r+=p.speed; });
+      paint(reduceMotion?0:Math.sin(frame*0.12)*3);
+      if(frame<maxFrame) requestAnimationFrame(grow);
+      else if(!reduceMotion) requestAnimationFrame(idle);
+    }
+    function idle(){ t+=0.02; paint(Math.sin(t*3)*3); requestAnimationFrame(idle); }
+    requestAnimationFrame(grow);
+  }
+
+  function drawScoreChart(){
+    const cv = document.getElementById('scoreChart');
+    const ctx = cv.getContext('2d');
+    const w=cv.width,h=cv.height;
+    const ranked = rankedColors();
+    const maxScore = Math.max(...ORDER.map(k=>scores[k]), 1);
+    const rowH = h/ranked.length;
+    let frame=0;
+    const maxFrame = reduceMotion ? 1 : 30;
+
+    function tick(){
+      frame++;
+      ctx.clearRect(0,0,w,h);
+      const p = reduceMotion ? 1 : Math.min(frame/maxFrame,1);
+      ranked.forEach((k,i)=>{
+        const y = i*rowH + rowH*0.22;
+        const barH = rowH*0.56;
+        const fullW = (w-150) * (scores[k]/maxScore);
+        const barW = fullW * p;
+
+        ctx.font = "700 13px 'Nunito', sans-serif";
+        ctx.fillStyle = '#2A2640'; ctx.textAlign='left';
+        ctx.fillText(COLORS[k].name.replace('The ',''), 0, y+barH*0.75);
+
+        ctx.fillStyle = COLORS[k].soft;
+        roundRect(ctx,150,y,w-150,barH,8); ctx.fill();
+        ctx.fillStyle = COLORS[k].hex;
+        roundRect(ctx,150,y,Math.max(barW,2),barH,8); ctx.fill();
+
+        ctx.font = "700 12px 'Space Mono', monospace";
+        ctx.fillStyle = '#2A2640'; ctx.textAlign='right';
+        ctx.fillText(`${scores[k]}x`, w-2, y+barH*0.75);
+      });
+      if(frame<maxFrame) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+  function roundRect(ctx,x,y,w,h,r){
+    ctx.beginPath();
+    ctx.moveTo(x+r,y);
+    ctx.arcTo(x+w,y,x+w,y+h,r);
+    ctx.arcTo(x+w,y+h,x,y+h,r);
+    ctx.arcTo(x,y+h,x,y,r);
+    ctx.arcTo(x,y,x+w,y,r);
+    ctx.closePath();
+  }
+
+  document.getElementById('retakeBtn').addEventListener('click', ()=>{
+    resultCard.style.display='none';
+    quizCard.style.display='block';
+    resetAll();
+  });
+
+  resetAll();
+})();
+</script>
+</body>
+</html>

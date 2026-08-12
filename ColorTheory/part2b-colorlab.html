@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Part 2b — Color Lab · Color Theory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+<div class="app">
+  <nav class="rail" aria-label="Module sections">
+    <div class="brand">
+      <span class="eyebrow">Graphic Design · Module 03</span>
+      <h1>Color&nbsp;Theory</h1>
+    </div>
+    <div class="wheel-wrap" aria-hidden="true">
+      <div class="wheel-disc"></div>
+      <div class="wheel-center-label" id="wheelCenterLabel"></div>
+    </div>
+    <div class="tabstrip" id="tabstrip"></div>
+    <ul class="navlist" id="navlist"></ul>
+    <div class="rail-foot">Ref. Mrantinkovic et al. (2020)<br>3G Handy Guide: Graphic Designing</div>
+  </nav>
+
+  <main>
+    <span class="kicker"><span class="sw"></span>Part 2 · Color Lab</span>
+    <h2>Try it — the color lab</h2>
+    <p class="sub">Drag the ring, then adjust value and saturation to see the four properties move independently.</p>
+
+    <div class="lab">
+      <div class="hue-wheel-outer"><div class="hue-ring" id="hueRing"></div><div class="hue-handle" id="hueHandle"></div></div>
+      <div class="lab-controls">
+        <label>Hue <span id="hueVal">0°</span></label>
+        <label>Value (light ↔ dark) <span id="lightVal">50%</span><input type="range" id="lightSlider" min="8" max="92" value="50"></label>
+        <label>Saturation (muted ↔ vivid) <span id="satVal">85%</span><input type="range" id="satSlider" min="6" max="100" value="85"></label>
+        <div class="swatch-big" id="labSwatch">#000000</div>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top:24px;"><b>Value — tint, tone &amp; shade</b>Adding <b>white</b> creates a <b>tint</b> (lighter). Adding <b>black</b> creates a <b>shade</b> (darker). Adding <b>grey</b> creates a <b>tone</b> (muted). Value contrast is the most important factor in readability — a design with strong value contrast stays legible even in greyscale.</div>
+
+    <div class="pager">
+      <a class="pagebtn prev" href="part2-properties.html"><span class="lbl">Back</span><span class="name">← Wheel &amp; Properties</span></a>
+      <a class="pagebtn next" href="part2c-temperature.html"><span class="lbl">Next</span><span class="name">Color Temperature →</span></a>
+    </div>
+  </main>
+</div>
+
+<script src="shared.js"></script>
+<script>
+buildRail('properties');
+
+const hueRing = document.getElementById('hueRing');
+const hueHandle = document.getElementById('hueHandle');
+const hueVal = document.getElementById('hueVal');
+const lightSlider = document.getElementById('lightSlider');
+const satSlider = document.getElementById('satSlider');
+const lightVal = document.getElementById('lightVal');
+const satVal = document.getElementById('satVal');
+const labSwatch = document.getElementById('labSwatch');
+let currentHue = 260;
+
+function hslToHex(h,s,l){
+  s/=100; l/=100;
+  const k = n => (n + h/30) % 12;
+  const a = s * Math.min(l, 1-l);
+  const f = n => l - a * Math.max(-1, Math.min(k(n)-3, Math.min(9-k(n), 1)));
+  const toHex = x => Math.round(255*x).toString(16).padStart(2,'0');
+  return `#${toHex(f(0))}${toHex(f(8))}${toHex(f(4))}`;
+}
+function updateLab(){
+  const l = +lightSlider.value, s = +satSlider.value;
+  hueVal.textContent = Math.round(currentHue)+'°';
+  lightVal.textContent = l+'%';
+  satVal.textContent = s+'%';
+  const hex = hslToHex(currentHue, s, l);
+  labSwatch.style.background = hex;
+  labSwatch.textContent = hex.toUpperCase();
+  labSwatch.style.color = l > 55 ? '#15131c' : '#efe9da';
+  const rad = (currentHue-90) * Math.PI/180;
+  const cx = 95 + 68*Math.cos(rad), cy = 95 + 68*Math.sin(rad);
+  hueHandle.style.left = cx+'px'; hueHandle.style.top = cy+'px';
+}
+function setHueFromEvent(e){
+  const rect = hueRing.getBoundingClientRect();
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+  const cx = rect.left + rect.width/2, cy = rect.top + rect.height/2;
+  let deg = Math.atan2(clientY-cy, clientX-cx) * 180/Math.PI + 90;
+  if(deg<0) deg+=360;
+  currentHue = deg;
+  updateLab();
+}
+let dragging = false;
+hueRing.addEventListener('mousedown', e=>{dragging=true; setHueFromEvent(e);});
+window.addEventListener('mousemove', e=>{if(dragging) setHueFromEvent(e);});
+window.addEventListener('mouseup', ()=>dragging=false);
+hueRing.addEventListener('touchstart', e=>{dragging=true; setHueFromEvent(e);});
+window.addEventListener('touchmove', e=>{if(dragging) setHueFromEvent(e);});
+window.addEventListener('touchend', ()=>dragging=false);
+lightSlider.addEventListener('input', updateLab);
+satSlider.addEventListener('input', updateLab);
+updateLab();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Part 2 — Wheel &amp; Properties · Color Theory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+<div class="app">
+  <nav class="rail" aria-label="Module sections">
+    <div class="brand">
+      <span class="eyebrow">Graphic Design · Module 03</span>
+      <h1>Color&nbsp;Theory</h1>
+    </div>
+    <div class="wheel-wrap" aria-hidden="true">
+      <div class="wheel-disc"></div>
+      <div class="wheel-center-label" id="wheelCenterLabel"></div>
+    </div>
+    <div class="tabstrip" id="tabstrip"></div>
+    <ul class="navlist" id="navlist"></ul>
+    <div class="rail-foot">Ref. Mrantinkovic et al. (2020)<br>3G Handy Guide: Graphic Designing</div>
+  </nav>
+
+  <main>
+    <span class="kicker"><span class="sw"></span>Part 1 · continued</span>
+    <h2>The wheel &amp; the four properties</h2>
+    <p class="sub">Every color a designer chooses can be described precisely along four axes. Master these and color stops being guesswork.</p>
+
+    <div class="grid2">
+      <div class="card">
+        <h3>Primary → secondary → tertiary</h3>
+        <p><b>Primary</b> — red, yellow, blue (RYB) cannot be mixed from anything else.</p>
+        <p><b>Secondary</b> — red+yellow=orange, yellow+blue=green, blue+red=violet.</p>
+        <p><b>Tertiary</b> — one primary + one adjacent secondary.</p>
+      </div>
+      <div class="card">
+        <h3>Three color models</h3>
+        <table class="data">
+          <tr><th>Model</th><th>Primaries</th><th>Used in</th></tr>
+          <tr><td>RYB</td><td>Red, Yellow, Blue</td><td>Traditional / fine art</td></tr>
+          <tr><td>RGB</td><td>Red, Green, Blue</td><td>Screens — additive light</td></tr>
+          <tr><td>CMYK</td><td>Cyan, Magenta, Yellow, Black</td><td>Print — subtractive ink</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="pager">
+      <a class="pagebtn prev" href="part1a2-pillars.html"><span class="lbl">Back</span><span class="name">← Three Pillars</span></a>
+      <a class="pagebtn next" href="part2b-colorlab.html"><span class="lbl">Next</span><span class="name">Color Lab →</span></a>
+    </div>
+  </main>
+</div>
+
+<script src="shared.js"></script>
+<script>buildRail('properties');</script>
+</body>
+</html>

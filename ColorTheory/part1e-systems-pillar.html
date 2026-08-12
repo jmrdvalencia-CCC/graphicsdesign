@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Part 1e — Color Systems Pillar · Color Theory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+<div class="app">
+  <nav class="rail" aria-label="Module sections">
+    <div class="brand">
+      <span class="eyebrow">Graphic Design · Module 03</span>
+      <h1>Color&nbsp;Theory</h1>
+    </div>
+    <div class="wheel-wrap" aria-hidden="true">
+      <div class="wheel-disc"></div>
+      <div class="wheel-center-label" id="wheelCenterLabel"></div>
+    </div>
+    <div class="tabstrip" id="tabstrip"></div>
+    <ul class="navlist" id="navlist"></ul>
+    <div class="rail-foot">Ref. Mrantinkovic et al. (2020)<br>3G Handy Guide: Graphic Designing</div>
+  </nav>
+
+  <main>
+    <span class="kicker"><span class="sw"></span>Part 1 · Pillar 3 of 3</span>
+    <h2>🖨️ Color systems</h2>
+    <p class="sub">How color is produced and reproduced across different media — the reason a vivid screen color can look dull once printed, and how to prevent it.</p>
+
+    <div class="card">
+      <h3>What it covers</h3>
+      <p>The technical models that define how color is created — either by combining light (additive) or by absorbing it with ink (subtractive). Graphic designers must understand both to ensure color consistency across all outputs.</p>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h3>RGB — additive light</h3>
+        <p>Used for <b>screens</b>: monitors, phones, tablets, projectors. Colors are created by adding light — combining all three at full intensity produces white.</p>
+        <p style="font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--ink-soft);">R + G + B = White<br>No light = Black</p>
+      </div>
+      <div class="card">
+        <h3>CMYK — subtractive ink</h3>
+        <p>Used for <b>print</b>: offset printing, packaging, physical media. Colors are created by subtracting light — ink absorbs certain wavelengths.</p>
+        <p style="font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--ink-soft);">C + M + Y = Dark brown<br>+ K (black) = True black</p>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top:20px;"><b>Critical rule</b>Always design in <b>RGB for screen</b> and convert to <b>CMYK for print</b>. A color that looks vivid on screen may appear dull when printed if not properly converted. Always request a physical proof before final printing.</div>
+
+    <table class="data" style="margin-top:26px;">
+      <tr><th>Model</th><th>Medium</th><th>How color is made</th><th>Gamut</th></tr>
+      <tr><td>RGB</td><td>Screens</td><td>Adding light</td><td>Wider — more vivid colors possible</td></tr>
+      <tr><td>CMYK</td><td>Print</td><td>Subtracting light (ink)</td><td>Narrower — some RGB colors can't be reproduced</td></tr>
+      <tr><td>RYB</td><td>Fine art / education</td><td>Mixing pigment</td><td>Traditional — basis of the color wheel</td></tr>
+    </table>
+
+    <div class="pager">
+      <a class="pagebtn prev" href="part1d-psychology-pillar.html"><span class="lbl">Back</span><span class="name">← Color Psychology</span></a>
+      <a class="pagebtn next" href="part1b-history.html"><span class="lbl">Next</span><span class="name">A Brief History →</span></a>
+    </div>
+  </main>
+</div>
+
+<script src="shared.js"></script>
+<script>buildRail('pillar-systems');</script>
+</body>
+</html>

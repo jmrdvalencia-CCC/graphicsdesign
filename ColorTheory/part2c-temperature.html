@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Part 2c — Color Temperature · Color Theory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+<div class="app">
+  <nav class="rail" aria-label="Module sections">
+    <div class="brand">
+      <span class="eyebrow">Graphic Design · Module 03</span>
+      <h1>Color&nbsp;Theory</h1>
+    </div>
+    <div class="wheel-wrap" aria-hidden="true">
+      <div class="wheel-disc"></div>
+      <div class="wheel-center-label" id="wheelCenterLabel"></div>
+    </div>
+    <div class="tabstrip" id="tabstrip"></div>
+    <ul class="navlist" id="navlist"></ul>
+    <div class="rail-foot">Ref. Mrantinkovic et al. (2020)<br>3G Handy Guide: Graphic Designing</div>
+  </nav>
+
+  <main>
+    <span class="kicker"><span class="sw"></span>Part 2 · Color Temperature</span>
+    <h2>Sort by temperature</h2>
+    <p class="sub">Colors carry a perceived warmth or coolness that affects how they feel spatially and emotionally. Tap a swatch to reveal its temperature.</p>
+
+    <table class="data" style="margin-bottom:16px;">
+      <tr><th>Temperature</th><th>Colors</th><th>Psychological effect</th></tr>
+      <tr><td>Warm</td><td>Red, Orange, Yellow, Yellow-Green</td><td>Energetic, urgent, passionate — feel closer (advancing)</td></tr>
+      <tr><td>Cool</td><td>Blue, Blue-Green, Violet, Blue-Violet</td><td>Calm, trustworthy — feel farther away (receding)</td></tr>
+      <tr><td>Neutral</td><td>Pure Green, Pure Red-Violet, Black, White, Grey</td><td>Balanced, versatile — neither advancing nor receding</td></tr>
+    </table>
+    <div class="temp-grid" id="tempGrid"></div>
+
+    <div class="pager">
+      <a class="pagebtn prev" href="part2b-colorlab.html"><span class="lbl">Back</span><span class="name">← Color Lab</span></a>
+      <a class="pagebtn next" href="part3-harmonies.html"><span class="lbl">Next</span><span class="name">Color Harmonies →</span></a>
+    </div>
+  </main>
+</div>
+
+<script src="shared.js"></script>
+<script>
+buildRail('properties');
+
+const TEMP_SWATCHES = [
+  { name:'Red',    hex:'#e23b3b', temp:'warm' },
+  { name:'Orange', hex:'#e0672c', temp:'warm' },
+  { name:'Yellow', hex:'#d6b31f', temp:'warm' },
+  { name:'Green',  hex:'#3f8a4d', temp:'neutral' },
+  { name:'Blue',   hex:'#3a6fc9', temp:'cool' },
+  { name:'Violet', hex:'#8a3ae8', temp:'cool' },
+];
+const tempGrid = document.getElementById('tempGrid');
+TEMP_SWATCHES.forEach(sw => {
+  const card = document.createElement('div');
+  card.className = 'flip-outer temp-card';
+  card.innerHTML = `
+    <div class="flip-inner">
+      <div class="flip-front" style="background:${sw.hex}">${sw.name}</div>
+      <div class="flip-back"><span class="temp-tag ${sw.temp}">${sw.temp}</span><span>${sw.temp==='warm' ? 'advances, feels closer' : sw.temp==='cool' ? 'recedes, feels farther' : 'balanced, versatile'}</span></div>
+    </div>`;
+  card.addEventListener('click', () => card.classList.toggle('flipped'));
+  tempGrid.appendChild(card);
+});
+</script>
+</body>
+</html>
