@@ -370,6 +370,43 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
 /* misc small utility */
 .row{display:flex;gap:14px;flex-wrap:wrap;align-items:center;}
 .pill{font-family:var(--mono);font-size:.68rem;padding:4px 10px;border-radius:20px;background:var(--panel2);border:1px solid var(--line);color:var(--muted);}
+
+/* ================= PS INFO CARD ================= */
+.ps-card{
+  display:flex;gap:clamp(20px,4vw,48px);align-items:stretch;flex-wrap:wrap;
+  width:100%;
+}
+.ps-card-left{
+  flex:0 0 auto;width:clamp(160px,18vw,220px);
+  background:var(--panel);border:1px solid var(--line);border-radius:18px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:14px;padding:24px 16px;
+}
+.ps-logo{
+  width:clamp(64px,8vw,96px);height:clamp(64px,8vw,96px);border-radius:18px;
+  background:linear-gradient(135deg,#001E36 0%,#0a2a42 100%);
+  border:2px solid var(--blue);display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-weight:700;font-size:clamp(1.4rem,2.5vw,2rem);color:var(--blue);
+  letter-spacing:-.02em;
+}
+.ps-badge{
+  font-family:var(--mono);font-size:.68rem;color:var(--muted);text-align:center;
+  line-height:1.6;
+}
+.ps-badge b{color:var(--blue);display:block;font-size:.8rem;}
+.ps-card-right{
+  flex:1 1 340px;display:flex;flex-direction:column;gap:14px;
+}
+.ps-fact-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:10px;
+}
+.ps-fact{
+  background:var(--panel);border:1px solid var(--line);border-radius:12px;
+  padding:12px 14px;display:flex;flex-direction:column;gap:4px;
+}
+.ps-fact .pf-label{font-family:var(--mono);font-size:.65rem;color:var(--blue);text-transform:uppercase;letter-spacing:.08em;}
+.ps-fact .pf-val{font-family:var(--display);font-weight:600;font-size:.95rem;color:#fff;}
+.ps-fact .pf-sub{font-size:.75rem;color:var(--muted);}
 </style>
 </head>
 <body>
@@ -409,6 +446,60 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
       </div>
     </div>
     <p class="pill" style="align-self:flex-start;">Use → / ← or swipe to navigate · each slide fits one screen</p>
+  </div>
+</section>
+
+<!-- 1.2 : WHAT IS PHOTOSHOP CARD -->
+<section class="slide">
+  <div class="stage">
+    <div class="eyebrow"><span class="line"></span>WHAT IS PHOTOSHOP?</div>
+    <h2>Adobe Photoshop CS6 at a glance</h2>
+    <div class="ps-card">
+      <div class="ps-card-left">
+        <div class="ps-logo">Ps</div>
+        <div class="ps-badge">
+          <b>CS6</b>
+          Released 2012<br>
+          Adobe Systems<br>
+          Raster Editor
+        </div>
+      </div>
+      <div class="ps-card-right">
+        <p class="lead">Photoshop is a <b>raster-based image editing application</b> used by photographers, designers, illustrators and digital artists worldwide. It is the industry standard for manipulating, compositing and retouching images at the pixel level.</p>
+        <div class="ps-fact-grid">
+          <div class="ps-fact">
+            <span class="pf-label">First Released</span>
+            <span class="pf-val">February 19, 1990</span>
+            <span class="pf-sub">by Thomas &amp; John Knoll</span>
+          </div>
+          <div class="ps-fact">
+            <span class="pf-label">CS6 Version</span>
+            <span class="pf-val">13.0 — May 2012</span>
+            <span class="pf-sub">Last perpetual license release</span>
+          </div>
+          <div class="ps-fact">
+            <span class="pf-label">File Format</span>
+            <span class="pf-val">.PSD / .PSB</span>
+            <span class="pf-sub">Preserves all layers &amp; edits</span>
+          </div>
+          <div class="ps-fact">
+            <span class="pf-label">Image Type</span>
+            <span class="pf-val">Raster (Pixels)</span>
+            <span class="pf-sub">Resolution-dependent</span>
+          </div>
+          <div class="ps-fact">
+            <span class="pf-label">Primary Use</span>
+            <span class="pf-val">Photo Editing</span>
+            <span class="pf-sub">Retouching, compositing, painting</span>
+          </div>
+          <div class="ps-fact">
+            <span class="pf-label">Color Modes</span>
+            <span class="pf-val">RGB · CMYK · Lab</span>
+            <span class="pf-sub">Screen &amp; print workflows</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
