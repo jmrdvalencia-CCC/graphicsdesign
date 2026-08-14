@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Photoshop Essentials — Interactive Module</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#001E36;
+  --panel:#0a2a42;
+  --panel2:#0d3352;
+  --line:#1a4a6a;
+  --blue:#31A8FF;
+  --blue-dim:#1a6aaa;
+  --amber:#ffb020;
+  --ants:#ffd166;
+  --text:#E0E0E0;
+  --muted:#8fa3b3;
+  --good:#5fd39a;
+  --display:'Source Sans Pro',sans-serif;
+  --body:'Source Sans Pro',sans-serif;
+  --mono:'JetBrains Mono',monospace;
+}
+*{box-sizing:border-box;}
+html,body{height:100%;margin:0;overflow:hidden;background:var(--bg);}
+body{
+  font-family:var(--body);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:"";
+  position:fixed;inset:0;
+  background:
+    radial-gradient(1200px 700px at 85% -10%, rgba(49,168,255,.10), transparent 60%),
+    radial-gradient(900px 600px at -10% 110%, rgba(49,168,255,.06), transparent 55%);
+  pointer-events:none;z-index:0;
+}
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important;}
+}
+
+/* ---------- deck / paging ---------- */
+.deck{
+  height:100vh;height:100dvh;
+  display:flex;
+  transition:transform .55s cubic-bezier(.65,0,.35,1);
+  will-change:transform;
+}
+.slide{
+  flex:0 0 100vw;
+  width:100vw;height:100vh;height:100dvh;
+  display:flex;align-items:center;justify-content:center;
+  padding:clamp(18px,4vh,48px) clamp(20px,6vw,90px);
+  position:relative;overflow:hidden;
+}
+.stage{
+  width:100%;max-width:1180px;
+  display:flex;flex-direction:column;
+  gap:clamp(10px,2vh,22px);
+  position:relative;z-index:1;
+}
+.eyebrow{
+  font-family:var(--mono);
+  font-size:clamp(.65rem,1.1vw,.8rem);
+  letter-spacing:.16em;text-transform:uppercase;
+  color:var(--blue);
+  display:flex;align-items:center;gap:10px;
+}
+.eyebrow .line{flex:0 0 26px;height:1px;background:var(--blue-dim);}
+h1{
+  font-family:var(--display);
+  font-weight:700;
+  font-size:clamp(2.1rem,5.4vw,4.2rem);
+  line-height:1.03;
+  margin:0;letter-spacing:-.01em;
+  color:#FFFFFF;
+}
+h2{
+  font-family:var(--display);
+  font-weight:700;
+  font-size:clamp(1.7rem,3.6vw,2.7rem);
+  line-height:1.05;margin:0;letter-spacing:-.01em;
+  color:#FFFFFF;
+}
+h3{font-family:var(--display);font-weight:600;font-size:clamp(1rem,1.6vw,1.25rem);margin:0;color:#FFFFFF;}
+p{margin:0;color:var(--muted);line-height:1.5;}
+.lead{color:var(--text);font-size:clamp(.95rem,1.5vw,1.15rem);}
+kbd{
+  font-family:var(--mono);font-size:.82em;font-weight:700;
+  background:var(--panel2);border:1px solid var(--line);
+  border-bottom-width:3px;
+  padding:.15em .5em;border-radius:6px;color:var(--text);
+}
+.mono{font-family:var(--mono);}
+
+/* ---------- chrome: progress / counter / nav ---------- */
+.progress{position:fixed;top:0;left:0;right:0;height:3px;background:var(--line);z-index:50;}
+.progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--blue),#FFFFFF);transition:width .5s ease;}
+.counter{
+  position:fixed;top:16px;right:20px;z-index:50;
+  font-family:var(--mono);font-size:.72rem;color:var(--muted);letter-spacing:.08em;
+}
+.brandmark{
+  position:fixed;top:14px;left:20px;z-index:50;
+  font-family:var(--mono);font-size:.72rem;color:var(--muted);letter-spacing:.1em;
+  display:flex;align-items:center;gap:8px;
+}
+.brandmark .dot{width:7px;height:7px;border-radius:2px;background:var(--blue);}
+.nav-btn{
+  position:fixed;top:50%;transform:translateY(-50%);z-index:50;
+  width:42px;height:42px;border-radius:50%;
+  background:var(--panel);border:1px solid var(--line);color:var(--text);
+  font-size:1.3rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:background .2s, border-color .2s, opacity .2s;
+  opacity:.75;
+}
+.nav-btn:hover{background:var(--panel2);border-color:var(--blue-dim);opacity:1;}
+.nav-btn:disabled{opacity:.25;cursor:default;}
+.nav-btn.prev{left:16px;}
+.nav-btn.next{right:16px;}
+.dots{
+  position:fixed;bottom:14px;left:50%;transform:translateX(-50%);z-index:50;
+  display:flex;gap:6px;padding:8px 10px;background:rgba(20,29,37,.6);
+  border:1px solid var(--line);border-radius:20px;backdrop-filter:blur(6px);
+  max-width:min(80vw,900px);overflow-x:auto;
+}
+.dot{
+  width:6px;height:6px;border-radius:50%;background:var(--line);
+  cursor:pointer;flex:0 0 auto;transition:background .2s,transform .2s;
+  position:relative;
+}
+.dot:hover{background:var(--muted);}
+.dot.active{background:var(--blue);transform:scale(1.5);}
+
+/* ---------- marching ants signature ---------- */
+.ants-frame{position:relative;}
+.ants-frame > svg.ants-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
+.ants-svg rect{fill:none;stroke:var(--ants);stroke-width:2;stroke-dasharray:7 6;animation:march .55s linear infinite;}
+@keyframes march{to{stroke-dashoffset:-26;}}
+
+/* ---------- reusable card look ---------- */
+.card{
+  background:var(--panel);border:1px solid var(--line);border-radius:16px;
+  padding:clamp(14px,2vh,22px);
+}
+
+/* ================= TITLE SLIDE ================= */
+.title-slide .stage{align-items:flex-start;}
+.title-top{display:flex;justify-content:space-between;align-items:flex-start;width:100%;gap:24px;flex-wrap:wrap;}
+.title-meta{font-family:var(--mono);font-size:clamp(.7rem,1.1vw,.85rem);color:var(--muted);line-height:1.9;}
+.title-meta b{color:var(--text);}
+.hero-row{display:flex;align-items:center;gap:clamp(20px,4vw,56px);width:100%;flex-wrap:wrap;}
+.hero-text{flex:1 1 380px;}
+.hero-text .sub{margin-top:14px;max-width:480px;}
+.stat-row{display:flex;gap:clamp(16px,3vw,34px);margin-top:22px;flex-wrap:wrap;}
+.stat b{font-family:var(--display);font-size:clamp(1.4rem,2.6vw,2rem);color:var(--blue);display:block;}
+.stat span{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;}
+.hero-art{flex:0 0 auto;width:clamp(200px,26vw,320px);}
+
+/* abstract PS canvas illustration */
+.canvas-illustration{
+  width:100%;aspect-ratio:1/1;border-radius:18px;background:var(--panel);
+  border:1px solid var(--line);position:relative;overflow:hidden;
+}
+.canvas-illustration .bar{position:absolute;background:var(--panel2);border-bottom:1px solid var(--line);}
+.ci-menu{top:0;left:0;right:0;height:9%;}
+.ci-tools{top:9%;left:0;bottom:0;width:11%;border-right:1px solid var(--line);border-bottom:none;}
+.ci-panel{top:9%;right:0;bottom:0;width:22%;border-left:1px solid var(--line);border-bottom:none;}
+.ci-canvas{position:absolute;top:9%;left:11%;right:22%;bottom:0;background:
+  linear-gradient(135deg,#001E36,#001020);
+  display:flex;align-items:center;justify-content:center;}
+.ci-shape{width:46%;height:46%;border-radius:8px;background:linear-gradient(135deg,var(--blue),var(--amber));opacity:.85;animation:floaty 4s ease-in-out infinite;}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(0deg);}50%{transform:translateY(-6%) rotate(3deg);}}
+.ci-tools .dot-tool{width:40%;aspect-ratio:1;background:var(--line);border-radius:4px;margin:14% auto 0;}
+.ci-tools .dot-tool:nth-child(2){background:var(--blue-dim);}
+
+/* ================= INTERFACE ANATOMY (interactive) ================= */
+.mock{
+  width:100%;background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;
+  display:grid;grid-template-columns:9% 1fr 24%;grid-template-rows:auto auto 1fr;
+  height:clamp(280px,48vh,460px);
+}
+.mock-menu{grid-column:1/4;background:var(--panel2);border-bottom:1px solid var(--line);display:flex;gap:14px;align-items:center;padding:0 14px;font-family:var(--mono);font-size:.68rem;color:var(--muted);}
+.mock-optbar{grid-column:1/4;background:var(--panel);border-bottom:1px solid var(--line);display:flex;gap:18px;align-items:center;padding:0 14px;font-family:var(--mono);font-size:.66rem;color:var(--muted);min-height:28px;}
+.mock-tools{grid-column:1;background:var(--panel2);border-right:1px solid var(--line);display:flex;flex-direction:column;align-items:center;padding:10px 0;gap:8px;}
+.mock-tools .ti{width:60%;aspect-ratio:1;border-radius:5px;background:var(--line);}
+.mock-canvas{grid-column:2;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 40% 30%, #001E36, #000d1a);}
+.mock-panels{grid-column:3;background:var(--panel2);border-left:1px solid var(--line);padding:10px;display:flex;flex-direction:column;gap:8px;}
+.mock-panels .pl{height:16%;border:1px solid var(--line);border-radius:6px;background:var(--panel);}
+.zone{cursor:pointer;transition:outline .15s, background .15s;outline:2px solid transparent;outline-offset:-2px;}
+.zone:hover, .zone.active{outline-color:var(--blue);background:rgba(62,198,255,.06);}
+.zone-info{
+  margin-top:2px;min-height:64px;
+  display:flex;align-items:center;gap:14px;
+}
+.zone-info .zi-label{font-family:var(--mono);font-size:.75rem;color:var(--blue);letter-spacing:.05em;white-space:nowrap;}
+.zone-info p{margin:0;font-size:.88rem;}
+
+/* ================= OPTIONS BAR DEMO ================= */
+.tabs{display:flex;gap:8px;flex-wrap:wrap;}
+.tab-btn{
+  font-family:var(--mono);font-size:.78rem;padding:9px 16px;border-radius:9px;
+  background:var(--panel2);border:1px solid var(--line);color:var(--muted);cursor:pointer;
+  transition:all .15s;
+}
+.tab-btn:hover{color:var(--text);}
+.tab-btn.active{background:var(--blue);color:#001E36;border-color:var(--blue);font-weight:700;}
+.opt-bar{
+  background:var(--panel);border:1px solid var(--line);border-radius:12px;
+  padding:16px 18px;display:flex;gap:26px;flex-wrap:wrap;align-items:center;min-height:78px;
+}
+.opt-item{display:flex;flex-direction:column;gap:4px;}
+.opt-item .ol{font-size:.66rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);}
+.opt-item .ov{font-family:var(--mono);font-size:.85rem;color:var(--text);}
+.opt-item .swatch-mini{width:26px;height:26px;border-radius:6px;border:1px solid var(--line);}
+
+/* ================= TOOL SLIDE TEMPLATE ================= */
+.tool-grid{display:flex;gap:clamp(24px,5vw,60px);align-items:center;flex-wrap:wrap;}
+.tool-visual{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:10px;}
+.key-cap{
+  font-family:var(--mono);font-weight:700;font-size:1.1rem;
+  width:40px;height:40px;border-radius:9px;
+  background:var(--panel2);border:1px solid var(--line);border-bottom-width:3px;
+  display:flex;align-items:center;justify-content:center;color:var(--blue);
+}
+.icon-stage{
+  width:clamp(140px,17vw,210px);height:clamp(140px,17vw,210px);
+  border-radius:22px;background:var(--panel);border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;
+}
+.tool-info{flex:1 1 380px;display:flex;flex-direction:column;gap:12px;}
+.facts{margin:0;padding-left:18px;color:var(--text);font-size:.94rem;line-height:1.55;display:flex;flex-direction:column;gap:6px;}
+.facts li::marker{color:var(--blue);}
+.tip{
+  font-size:.86rem;color:var(--muted);border-left:2px solid var(--amber);padding-left:12px;
+}
+
+/* icon shape helpers */
+.shape-outline{border:2px solid var(--blue);}
+.dashed{border-style:dashed;}
+.pulse{animation:pulse 2.2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.08);opacity:.75;}}
+.bob{animation:bob 2.4s ease-in-out infinite;}
+@keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+
+/* move */
+.mv-box{width:44px;height:44px;border-radius:8px;background:linear-gradient(135deg,var(--blue),var(--blue-dim));animation:mvslide 2.6s ease-in-out infinite;}
+@keyframes mvslide{0%,100%{transform:translate(-22px,-10px);}50%{transform:translate(22px,10px);}}
+.mv-arrow{position:absolute;color:var(--muted);font-size:1.1rem;}
+
+/* marquee */
+.mq-rect{width:70%;height:60%;border:2px dashed var(--ants);border-radius:4px;animation:march .5s linear infinite,pulse 2.4s ease-in-out infinite;}
+
+/* lasso */
+.ls-blob{width:64%;height:56%;border:2px dashed var(--ants);border-radius:52% 48% 60% 40% / 46% 55% 45% 54%;animation:march .5s linear infinite;}
+
+/* crop brackets */
+.crop-wrap{width:60%;height:60%;position:relative;}
+.crop-b{position:absolute;width:22px;height:22px;border:3px solid var(--blue);animation:cropp 2.4s ease-in-out infinite;}
+.crop-b.tl{top:0;left:0;border-right:none;border-bottom:none;}
+.crop-b.tr{top:0;right:0;border-left:none;border-bottom:none;}
+.crop-b.bl{bottom:0;left:0;border-right:none;border-top:none;}
+.crop-b.br{bottom:0;right:0;border-left:none;border-top:none;}
+@keyframes cropp{0%,100%{opacity:.55;}50%{opacity:1;}}
+
+/* brush stroke */
+.brush-track{width:70%;height:14px;border-radius:8px;background:var(--panel2);overflow:hidden;transform:rotate(-8deg);}
+.brush-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--amber),var(--blue));animation:brushdraw 2.4s ease-in-out infinite;}
+@keyframes brushdraw{0%{width:0%;}55%{width:100%;}100%{width:100%;}}
+
+/* clone / heal / patch (source -> target) */
+.cl-wrap{display:flex;align-items:center;gap:14px;}
+.cl-dot{width:34px;height:34px;border-radius:50%;}
+.cl-src{border:2px dashed var(--ants);background:transparent;}
+.cl-tgt{background:linear-gradient(135deg,var(--blue),var(--blue-dim));}
+.cl-arrow{color:var(--muted);font-size:1.3rem;animation:pulse 2s ease-in-out infinite;}
+
+/* eraser */
+.er-wrap{width:66%;height:56%;border-radius:8px;position:relative;overflow:hidden;
+  background:repeating-conic-gradient(#0d3352 0% 25%, #0a2a42 0% 50%) 0 0/16px 16px;}
+.er-cover{position:absolute;inset:0;background:linear-gradient(135deg,var(--amber),#ffdca0);animation:erase 2.6s ease-in-out infinite;}
+@keyframes erase{0%,15%{clip-path:inset(0 0% 0 0);}85%,100%{clip-path:inset(0 100% 0 0);}}
+
+/* gradient */
+.gr-bar{width:70%;height:44px;border-radius:10px;background:linear-gradient(90deg,var(--blue),var(--amber),var(--good),var(--blue));background-size:300% 100%;animation:gsweep 3s linear infinite;}
+@keyframes gsweep{to{background-position:300% 0;}}
+
+/* pen path */
+.pen-wrap{width:70%;height:60%;position:relative;}
+.pen-dot{position:absolute;width:8px;height:8px;border-radius:50%;background:var(--blue);animation:pulse 2s ease-in-out infinite;}
+.pen-line{position:absolute;height:2px;background:var(--blue-dim);transform-origin:left center;}
+
+/* text */
+.tx-wrap{display:flex;align-items:baseline;gap:4px;}
+.tx-aa{font-family:var(--display);font-weight:700;font-size:clamp(2.4rem,5vw,3.2rem);color:var(--blue);}
+.tx-cursor{width:3px;height:clamp(2rem,4vw,2.6rem);background:var(--amber);animation:blink 1s steps(1) infinite;}
+@keyframes blink{50%{opacity:0;}}
+
+/* magic wand */
+.mw-wrap{position:relative;width:70%;height:70%;display:flex;align-items:center;justify-content:center;}
+.mw-star{font-size:2.4rem;color:var(--amber);animation:pulse 1.8s ease-in-out infinite;}
+.mw-ring{position:absolute;border:2px solid var(--blue);border-radius:50%;width:40%;height:40%;animation:ring 2.4s ease-out infinite;}
+@keyframes ring{0%{transform:scale(.6);opacity:.9;}100%{transform:scale(1.8);opacity:0;}}
+
+/* eyedropper */
+.ey-wrap{display:flex;flex-direction:column;align-items:center;gap:16px;}
+.ey-drop{width:16px;height:26px;border-radius:0 0 50% 50%/0 0 60% 60%;background:var(--blue);animation:bob 2s ease-in-out infinite;}
+.ey-row{display:flex;gap:8px;}
+.ey-sw{width:20px;height:20px;border-radius:5px;}
+
+/* dodge/burn */
+.db-wrap{width:70%;height:70%;border-radius:50%;background:linear-gradient(135deg,#fff6dd 0%, #7a5a20 50%, #001E36 100%);position:relative;overflow:hidden;}
+.db-sweep{position:absolute;inset:0;background:linear-gradient(100deg,transparent 40%, rgba(255,255,255,.35) 50%, transparent 60%);animation:dbsweep 2.6s ease-in-out infinite;}
+@keyframes dbsweep{0%{transform:translateX(-60%);}100%{transform:translateX(60%);}}
+
+/* history brush */
+.hy-arrow{font-size:2.6rem;color:var(--blue);display:inline-block;animation:spin 2.4s linear infinite;}
+@keyframes spin{to{transform:rotate(-360deg);}}
+
+/* paint bucket */
+.pb-wrap{width:56%;height:66%;position:relative;border:2px solid var(--panel2);clip-path:polygon(15% 0,85% 0,100% 100%,0 100%);overflow:hidden;background:var(--panel2);}
+.pb-fill{position:absolute;left:0;right:0;bottom:0;height:0%;background:linear-gradient(0deg,var(--blue),var(--amber));animation:pbfill 2.6s ease-in-out infinite;}
+@keyframes pbfill{0%,10%{height:0%;}80%,100%{height:85%;}}
+
+/* ================= grid / table slides ================= */
+.notable-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.notable-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:4px;}
+.notable-card .nk{font-family:var(--mono);color:var(--blue);font-size:.75rem;}
+.notable-card .nn{font-family:var(--display);font-weight:600;font-size:.95rem;}
+.notable-card .nd{font-size:.78rem;color:var(--muted);}
+
+/* ================= flip cards (mix-ups / quick check) ================= */
+.flip-row{display:flex;gap:18px;flex-wrap:wrap;}
+.flip-card{width:clamp(210px,26vw,320px);height:190px;perspective:1000px;cursor:pointer;}
+.flip-inner{position:relative;width:100%;height:100%;transition:transform .55s;transform-style:preserve-3d;}
+.flip-card.flipped .flip-inner{transform:rotateY(180deg);}
+.flip-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:14px;border:1px solid var(--line);padding:16px;display:flex;flex-direction:column;justify-content:center;gap:8px;}
+.flip-front{background:var(--panel);}
+.flip-back{background:var(--panel2);transform:rotateY(180deg);border-color:var(--good);}
+.flip-face .fk{font-family:var(--mono);font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;}
+.flip-face .ft{font-size:.92rem;color:var(--text);line-height:1.4;}
+.flip-hint{font-size:.68rem;color:var(--blue);}
+
+/* ================= raster vs vector interactive ================= */
+.rv-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+.rv-box{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px;align-items:center;}
+.rv-frame{width:150px;height:150px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#000d1a;border-radius:10px;border:1px solid var(--line);}
+.rv-frame canvas{image-rendering:pixelated;image-rendering:crisp-edges;}
+.rv-label{font-family:var(--mono);font-size:.72rem;color:var(--muted);}
+.rv-slider{width:100%;}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:2px;background:var(--line);outline:none;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--blue);cursor:pointer;border:2px solid #001E36;}
+input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--blue);cursor:pointer;border:2px solid #001E36;}
+
+/* ================= takeaways / closing ================= */
+.take-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.take-item{display:flex;gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;align-items:flex-start;}
+.take-item .tn{font-family:var(--mono);color:var(--blue);font-weight:700;font-size:.85rem;}
+.take-item p{font-size:.86rem;color:var(--text);}
+
+.check-list{display:flex;flex-direction:column;gap:10px;}
+.check-item{display:flex;gap:12px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 14px;}
+.check-box{width:20px;height:20px;border-radius:5px;border:2px solid var(--blue-dim);flex:0 0 auto;}
+.check-item p{color:var(--text);font-size:.88rem;}
+
+/* misc small utility */
+.row{display:flex;gap:14px;flex-wrap:wrap;align-items:center;}
+.pill{font-family:var(--mono);font-size:.68rem;padding:4px 10px;border-radius:20px;background:var(--panel2);border:1px solid var(--line);color:var(--muted);}
+</style>
+</head>
+<body>
+
+<div class="progress"><div class="progress-fill" id="progressFill"></div></div>
+<div class="brandmark"><span class="dot"></span>PHOTOSHOP ESSENTIALS</div>
+<div class="counter" id="counter">01 / 27</div>
+<button class="nav-btn prev" id="prevBtn" aria-label="Previous slide">‹</button>
+<button class="nav-btn next" id="nextBtn" aria-label="Next slide">›</button>
+
+<div class="deck" id="deck">
+
+<!-- 1 : TITLE -->
+<section class="slide title-slide">
+  <div class="stage">
+    <div class="title-top">
+      <div class="eyebrow"><span class="line"></span>MODULE · GRAPHICS DESIGN</div>
+      <div class="title-meta">VERSION <b>CS6</b>  &nbsp;·&nbsp; FOCUS <b>TOOLS &amp; INTERFACE</b></div>
+    </div>
+    <div class="hero-row">
+      <div class="hero-text">
+        <h1>Photoshop<br>Essentials</h1>
+        <p class="sub">Adobe Photoshop CS6 — the industry‑standard raster editor, broken down: five interface zones, seventeen essential tools, and the one raster‑vs‑vector rule that saves every project.</p>
+        <div class="stat-row">
+          <div class="stat"><b>5</b><span>Interface zones</span></div>
+          <div class="stat"><b>17</b><span>Essential tools</span></div>
+          <div class="stat"><b>1</b><span>Rule that saves logos</span></div>
+        </div>
+      </div>
+      <div class="hero-art">
+        <div class="canvas-illustration">
+          <div class="bar ci-menu"></div>
+          <div class="bar ci-tools zone"><div class="dot-tool"></div><div class="dot-tool"></div><div class="dot-tool"></div></div>
+          <div class="ci-canvas"><div class="ci-shape"></div></div>
+          <div class="bar ci-panel"></div>
+        </div>
+      </div>
+    </div>
+    <p class="pill" style="align-self:flex-start;">Use → / ← or swipe to navigate · each slide fits one screen</p>
+  </div>
+</section>
+
+<!-- 1.5 : AI vs PHOTOSHOP PRE-INTRO -->
+<section class="slide">
+  <div class="stage" style="align-items:center;text-align:center;">
+    <div class="eyebrow" style="justify-content:center;"><span class="line"></span>BEFORE WE BEGIN<span class="line"></span></div>
+    <h1>AI Tools vs. Photoshop</h1>
+    <p class="lead" style="max-width:580px;margin:0 auto;">Everyone's talking about AI image generators. So why learn Photoshop at all in 2026?</p>
+  </div>
+</section>
+
+<!-- 1.6 : WHAT AI DOES -->
+<section class="slide">
+  <div class="stage">
+    <div class="eyebrow"><span class="line"></span>THE LANDSCAPE TODAY</div>
+    <h2>What AI image tools do well</h2>
+    <p class="lead" style="max-width:680px;">Tools like Midjourney, DALL·E, Firefly and Stable Diffusion generate images from text prompts in seconds.</p>
+    <div class="notable-grid" style="grid-template-columns:repeat(2,1fr);">
+      <div class="notable-card">
+        <span class="nk" style="color:var(--good);">✔ AI STRENGTH</span>
+        <span class="nn">Rapid concept generation</span>
+        <span class="nd">Turn a text prompt into a full image in under 10 seconds — great for mood boards and ideation.</span>
+      </div>
+      <div class="notable-card">
+        <span class="nk" style="color:var(--good);">✔ AI STRENGTH</span>
+        <span class="nn">Style exploration</span>
+        <span class="nd">Instantly try dozens of visual styles — oil painting, flat design, cinematic — without manual skill.</span>
+      </div>
+      <div class="notable-card">
+        <span class="nk" style="color:var(--good);">✔ AI STRENGTH</span>
+        <span class="nn">Background generation</span>
+        <span class="nd">Generate realistic or fantastical backgrounds on demand, no photography needed.</span>
+      </div>
+      <div class="notable-card">
+        <span class="nk" style="color:var(--good);">✔ AI STRENGTH</span>
+        <span class="nn">Texture &amp; pattern creation</span>
+        <span class="nd">Produce seamless textures and complex patterns that would take hours to paint manually.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 1.7 : WHERE AI FALLS SHORT -->
+<section class="slide">
+  <div class="stage">
+    <div class="eyebrow"><span class="line"></span>THE LANDSCAPE TODAY</div>
+    <h2>Where AI still falls short</h2>
+    <p class="lead" style="max-width:680px;">AI generates — it doesn't precisely edit. The moment you need pixel-level control, it hands the job back to Photoshop.</p>
+    <div class="notable-grid" style="grid-template-columns:repeat(2,1fr);">
+      <div class="notable-card">
+        <span class="nk" style="color:var(--amber);">✘ AI WEAKNESS</span>
+        <span class="nn">Exact retouching</span>
+        <span class="nd">Removing a specific blemish, scar or object from a real photo requires manual precision — AI guesses.</span>
+      </div>
+      <div class="notable-card">
+        <span class="nk" style="color:var(--amber);">✘ AI WEAKNESS</span>
+        <span class="nn">Brand-accurate output</span>
+        <span class="nd">AI can't reliably reproduce exact brand colors, logos or typography — Photoshop gives you full control.</span>
+      </div>
+      <div class="notable-card">
+        <span class="nk" style="color:var(--amber);">✘ AI WEAKNESS</span>
+        <span class="nn">Text rendering</span>
+        <span class="nd">AI image generators still struggle with legible, correctly spelled text inside images.</span>
+      </div>
+      <div class="notable-card">
+        <span class="nk" style="color:var(--amber);">✘ AI WEAKNESS</span>
+        <span class="nn">Print-ready production</span>
+        <span class="nd">CMYK color modes, bleed, resolution control and layer comps are Photoshop-only territory.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 1.8 : THE VERDICT -->
+<section class="slide">
+  <div class="stage">
+    <div class="eyebrow"><span class="line"></span>THE VERDICT</div>
+    <h2>They're better together</h2>
+    <p class="lead" style="max-width:680px;">The modern workflow isn't AI <i>or</i> Photoshop — it's AI <i>then</i> Photoshop. Professionals use AI to generate raw material, then Photoshop to refine, correct and deliver.</p>
+    <div class="take-grid">
+      <div class="take-item"><span class="tn">01</span><p><b>Generate</b> a concept or background with Midjourney or Firefly.</p></div>
+      <div class="take-item"><span class="tn">02</span><p><b>Open</b> the result in Photoshop for retouching, compositing and color correction.</p></div>
+      <div class="take-item"><span class="tn">03</span><p><b>Add</b> brand-accurate text, logos and UI elements that AI can't reliably produce.</p></div>
+      <div class="take-item"><span class="tn">04</span><p><b>Export</b> print-ready or screen-ready files with precise resolution and color settings.</p></div>
+    </div>
+    <div class="tip" style="border-color:var(--blue);color:var(--blue);">💡 Knowing Photoshop makes you a better AI user — you understand what to fix and how.</div>
+  </div>
+</section>
+
+<!-- EXPLORING PHOTOSHOP TITLE -->
+<section class="slide">
+  <div class="stage" style="align-items:center;text-align:center;">
+    <div class="eyebrow" style="justify-content:center;"><span class="line"></span>SECTION 01<span class="line"></span></div>
+    <h1>Exploring<br>Photoshop</h1>
+    <p class="lead" style="max-width:520px;margin:0 auto;">A guided tour of the CS6 workspace — every zone, every bar, and how they all work together before you touch a single tool.</p>
+    <div class="stat-row" style="justify-content:center;">
+      <div class="stat"><b>5</b><span>Interface zones</span></div>
+      <div class="stat"><b>1</b><span>Options Bar</span></div>
+      <div class="stat"><b>∞</b><span>Layouts you can customize</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 2 : INTERFACE ANATOMY (interactive) -->
+<section class="slide">
+  <div class="stage">
+    <div class="eyebrow"><span class="line"></span>THE WORKSPACE</div>
+    <h2>One interface, five zones</h2>
+    <div class="mock" id="anatomyMock">
+      <div class="mock-menu zone" data-zone="menu">File · Edit · Image · Layer · Select · Filter · View · Window</div>
+      <div class="mock-optbar zone" data-zone="optbar">Brush: <b>Size</b> 40px &nbsp;·&nbsp; <b>Hardness</b> 75% &nbsp;·&nbsp; <b>Opacity</b> 100% &nbsp;·&nbsp; <b>Flow</b> 80%</div>
+      <div class="mock-tools zone" data-zone="tools">
+        <div class="ti"></div><div class="ti"></div><div class="ti"></div><div class="ti"></div>
+      </div>
+      <div class="mock-canvas zone" data-zone="canvas">
+        <div style="width:52%;height:60%;border-radius:8px;background:linear-gradient(135deg,var(--blue),var(--amber));opacity:.8;"></div>
+      </div>
+      <div class="mock-panels zone" data-zone="panels">
+        <div class="pl"></div><div class="pl"></div><div class="pl"></div><div class="pl"></div>
+      </div>
+    </div>
+    <div class="zone-info" id="zoneInfo">
+      <div class="zi-label">HOVER A ZONE →</div>
+      <p>Point at any part of the mock workspace above to see what it does.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 3 : OPTIONS BAR (interactive) -->
+<section class="slide">
+  <div class="stage">
+    <div class="eyebrow"><span class="line"></span>KEY BEHAVIOR</div>
+    <h2>The Options Bar reads your mind — well, your tool</h2>
+    <p class="lead" style="max-width:640px;">It sits right below the Menu Bar and rewrites itself for whichever tool is active. Beginners lose real time by not checking it. Try switching tools below.</p>
+    <div class="tabs" id="optTabs">
+      <button class="tab-btn active" data-tool="brush">Brush</button>
+      <button class="tab-btn" data-tool="move">Move</button>
+      <button class="tab-btn" data-tool="crop">Crop</button>
+    </div>
+    <div class="opt-bar" id="optBar"></div>
+  </div>
+</section>
+
+<!-- 3.5 : ESSENTIAL TOOLS TITLE -->
+<section class="slide">
+  <div class="stage" style="align-items:center;text-align:center;">
+    <div class="eyebrow" style="justify-content:center;"><span class="line"></span>PHOTOSHOP ESSENTIALS<span class="line"></span></div>
+    <h1>Essential Tools</h1>
+    <p class="lead" style="max-width:520px;margin:0 auto;">Seventeen tools every Photoshop user must know — from moving layers to masking, painting, and precision selection.</p>
+    <p class="pill">Use → or swipe to go through each tool</p>
+  </div>
+</section>
+
+<!-- 4 : MOVE TOOL -->
+<section class="slide">
+  <div class="stage">
+    <div class="eyebrow"><span class="line"></span>ESSENTIAL TOOL 01 / 17</div>
+    <div class="tool-grid">
+      <div class="tool-visual">
+        <div class="key-cap">V</div>
+        <div class="icon-stage"><div class="mv-box"></div></div>
+      </div>
+      <div class="tool-info">
+        <h2>Move Tool</h2>
+        <p class="lead">The first tool in almost every session — repositions layers, objects and selections anywhere on the canvas.</p>
+        <ul class="facts">
+          <li>Enable <b>Auto‑Select</b> to grab the layer you click on automatically</li>
+          <li>Hold <kbd>Shift</kbd> while dragging to lock to horizontal / vertical</li>
+          <li>Arrow keys nudge 1px · <kbd>Shift</kbd>+arrow nudges 10px</li>
+        </ul>
+        <div class="tip">Click the layer, then drag — that's the whole workflow.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 : MARQUEE -->
+<section class="slide">
+  <div class="stage">
+    <div class="eyebrow"><span class="line"></span>ESSENTIAL TOOL 02 / 17</div>
+    <div class="tool-grid">
+      <div class="tool-visual">
+        <div class="key-cap">M</div>
+        <div class="icon-stage"><div class="mq-rect"></div></div>
+      </div>
+      <div class="tool-info">
+        <h2>Marquee Tools</h2>
+        <p class="lead">Geometric selections — rectangle, ellipse, single row, single column. Right‑click the icon for all four.</p>
+        <ul class="facts">
+          <li>Rectangular / Elliptical for crops and clean regional edits</li>
+          <li>Single Row / Column select one exact line of pixels</li>
+        </ul>
+        <div class="tip">Hold <kbd>Shift</kbd> for a perfect square/circle · <kbd>Alt</kbd> to draw from the center.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 : LASSO -->
+<section class="slide">
+  <div class="stage">
+    <div class="eyebrow"><span class="line"></span>ESSENTIAL TOOL 03 / 17</div>
+    <div class="tool-grid">
+      <div class="tool-visual">
+        <div class="key-cap">L</div>
+        <div class="icon-stage"><div class="ls-blob"></div></div>
+      </div>
+      <div class="tool-info">
+        <h2>Lasso Tools</h2>
+        <p class="lead">Freehand and semi‑automatic selection for irregular shapes.</p>
+        <ul class="facts">
+          <li><b>Lasso</b> — quick, rough freehand selections</li>
+          <li><b>Polygonal Lasso</b> — straight‑edged anchor points, great for boxes and buildings</li>
+          <li><b>Magnetic Lasso</b> — snaps to edges by contrast automatically</li>
+        </ul>
+        <div class="tip">Use for cutouts, isolating subjects, complex color adjustments.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7 : CROP -->
+<section class="slide">
+  <div class="stage">
+    <div class="eyebrow"><span class="line"></span>ESSENTIAL TOOL 04 / 17</div>
+    <div class="tool-grid">
+      <div class="tool-visual">
+        <div class="key-cap">C</div>
+        <div class="icon-stage"><div class="crop-wrap">
+          <div class="crop-b tl"></div><div class="crop-b tr"></div>
+          <div class="crop-b bl"></div><div class="crop-b br"></div>
+        </div></div>
+      </div>
+      <div class="tool-info">
+        <h2>Crop Tool</h2>
+        <p class="lead">Trims, straightens and resizes the canvas — one of the most‑used tools in photo editing.</p>
+        <ul class="facts">
+          <li>Set an exact aspect ratio (1:1, 16:9, 4:5) right in the Options Bar</li>
+          <li><b>Non‑destructive by default</b> — cropped pixels hide, they don't vanish</li>
+          <li><b>Straighten</b> auto‑corrects a tilted horizon</li>
+        </ul>
+        <div class="tip">Press <kbd>Enter</kbd> to confirm · <kbd>Esc</kbd> to cancel.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 8 : BRUSH -->
+<section class="slide">
+  <div class="stage">
+    <div class="eyebrow"><span class="line"></span>ESSENTIAL TOOL 05 / 17</div>
+    <div class="tool-grid">
+      <div class="tool-visual">
+        <div class="key-cap">B</div>
+        <div class="icon-stage"><div class="brush-track"><div class="brush-fill"></div></div></div>
+      </div>
+      <div class="tool-info">
+        <h2>Brush Tool</h2>
+        <p class="lead">Simulates natural media — paint, ink, chalk. Painting, sketching, retouching, masking, all in one tool.</p>
+        <ul class="facts">
+          <li><b>Hardness</b> — 100% sharp edge, 0% soft/feathered</li>
+          <li><b>Opacity</b> vs <b>Flow</b> — transparency of the stroke vs. how fast paint builds up</li>
+        </ul>
+        <div class="tip"><kbd>[</kbd> / <kbd>]</kbd> resize · <kbd>Shift</kbd>+<kbd>[</kbd>/<kbd>]</kbd> adjusts hardness.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 8.1 : BRUSH TOOL — SCENARIO & OBJECTIVES -->
+<section class="slide">
+  <div class="stage">
+    <div class="eyebrow"><span class="line"></span>BRUSH TOOL · SCENARIO</div>
+    <h2>You're editing a portrait photo</h2>
+    <p class="lead" style="max-width:680px;">A client sends you a headshot. The background is plain but the subject needs touch-ups — skin, hair, and a creative overlay. Every task below requires the Brush Tool.</p>
+    <div class="check-list">
+      <div class="check-item"><div class="check-box"></div><p><b>Objective 1 — Soften skin</b> — Paint on a new layer with a <b>soft, low-opacity white brush</b> over harsh skin tones to smooth them out.</p></div>
+      <div class="check-item"><div class="check-box"></div><p><b>Objective 2 — Mask the background</b> — Add a Layer Mask, then paint <b>black</b> to hide and <b>white</b> to reveal edges around the hair.</p></div>
+      <div class="check-item"><div class="check-box"></div><p><b>Objective 3 — Add a light effect</b> — Create a new layer set to <b>Screen</b> blend mode, pick a bright color and paint a soft glow over the subject.</p></div>
+      <div class="check-item"><div class="check-box"></div><p><b>Objective 4 — Paint a vignette</b> — New layer set to <b>Multiply</b>, paint the edges with a large soft black brush to darken the corners.</p></div>
+      <div class="check-item"><div class="check-box"></div><p><b>Objective 5 — Sign the artwork</b> — On a new layer, use a small hard brush to hand-write your name or add a decorative stroke.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 9 : CLONE STAMP -->
+<section class="slide">
+  <div class="stage">
+    <div class="eyebrow"><span class="line"></span>ESSENTIAL TOOL 06 / 17</div>
+    <div class="tool-grid">
+      <div class="tool-visual">
+        <div class="key-cap">S</div>
+        <div class="icon-stage"><div class="cl-wrap">
+          <div class="cl-dot cl-src"></div><div class="cl-arrow">→</div><div class="cl-dot cl-tgt"></div>
+        </div></div>
+      </div>
+      <div class="tool-info">
+        <h2>Clone Stamp Tool</h2>
+        <p class="lead">Copies pixels from one area and paints them onto another — essential for restoration and retouching.</p>
+        <ul class="facts">
+          <li>Hold <kbd>Alt</kbd> and click to set the <b>source point</b></li>
+          <li>Release, then paint over the area you want covered</li>
+        </ul>
+        <div class="tip">Use a soft, low‑opacity brush and re‑sample often to avoid repeating patterns.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 : ERASER -->
+<section class="slide">
+  <div class="stage">
+    <div class="eyebrow"><span class="line"></span>ESSENTIAL TOOL 07 / 17</div>
+    <div class="tool-grid">
+      <div class="tool-visual">
+        <div class="key-cap">E</div>
+        <div class="icon-stage"><div class="er-wrap"><div class="er-cover"></div></div></div>
+      </div>
+      <div class="tool-info">
+        <h2>Eraser Tool</h2>
+        <p class="lead">Removes pixels from a layer — to transparency, or to the background color.</p>
+        <ul class="facts">
+          <li><b>Background Eraser</b> — samples under the cursor, erases matching color</li>
+          <li><b>Magic Eraser</b> — one click erases all similarly‑colored pixels</li>
+        </ul>
+        <div class="tip">Better habit: use a <b>Layer Mask</b> instead — fully reversible.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 11 : GRADIENT -->
+<section class="slide">
+  <div class="stage">
+    <div class="eyebrow"><span class="line"></span>ESSENTIAL TOOL 08 / 17</div>
+    <div class="tool-grid">
+      <div class="tool-visual">
+        <div class="key-cap">G</div>
+        <div class="icon-stage"><div class="gr-bar"></div></div>
+      </div>
+      <div class="tool-info">
+        <h2>Gradient Tool</h2>
+        <p class="lead">Fills a selection with a smooth transition between two or more colors.</p>
+        <ul class="facts">
+          <li>Linear · Radial · Angle · Reflected · Diamond</li>
+          <li>Great for backgrounds, sky replacement, vignettes, overlays</li>
+        </ul>
+        <div class="tip">The <b>Paint Bucket</b> shares this shortcut — right‑click to find it.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 12 : PEN -->
+<section class="slide">
+  <div class="stage">
+    <div class="eyebrow"><span class="line"></span>ESSENTIAL TOOL 09 / 17</div>
+    <div class="tool-grid">
+      <div class="tool-visual">
+        <div class="key-cap">P</div>
+        <div class="icon-stage">
+          <div class="pen-wrap" id="penWrap"></div>
+        </div>
+      </div>
+      <div class="tool-info">
+        <h2>Pen Tool</h2>
+        <p class="lead">The most precise selection and drawing tool — builds vector paths from anchor points.</p>
+        <ul class="facts">
+          <li>Click for corner (straight) anchors · click‑drag for smooth curves</li>
+          <li>Right‑click a finished path → <b>Make Selection</b></li>
+        </ul>
+        <div class="tip">Steep learning curve, cleanest cutouts — the industry standard.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 13 : HEALING BRUSH -->
+<section class="slide">
+  <div class="stage">
+    <div class="eyebrow"><span class="line"></span>ESSENTIAL TOOL 10 / 17</div>
+    <div class="tool-grid">
+      <div class="tool-visual">
+        <div class="key-cap">J</div>
+        <div class="icon-stage"><div class="cl-wrap">
+          <div class="cl-dot cl-src"></div><div class="cl-arrow pulse">✦</div><div class="cl-dot cl-tgt"></div>
+        </div></div>
+      </div>
+      <div class="tool-info">
+        <h2>Healing Brush Tool</h2>
+        <p class="lead">Blends sampled pixels with the surrounding texture, light and shading — repairs vanish invisibly.</p>
+        <ul class="facts">
+          <li><b>Spot Healing Brush</b> — auto‑samples, no source point needed</li>
+          <li><b>Healing Brush</b> — manual source point, more control</li>
+          <li>Also under <kbd>J</kbd>: Patch Tool · Red Eye Tool</li>
+        </ul>
+        <div class="tip">Skin retouching, scratches, distracting elements — gone cleanly.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 14 : TEXT -->
+<section class="slide">
+  <div class="stage">
+    <div class="eyebrow"><span class="line"></span>ESSENTIAL TOOL 11 / 17</div>
+    <div class="tool-grid">
+      <div class="tool-visual">
+        <div class="key-cap">T</div>
+        <div class="icon-stage"><div class="tx-wrap"><span class="tx-aa">Aa</span><span class="tx-cursor"></span></div></div>
+      </div>
+      <div class="tool-info">
+        <h2>Text (Type) Tool</h2>
+        <p class="lead">Adds text as a <b>vector layer</b> — it stays sharp at any size until rasterized.</p>
+        <ul class="facts">
+          <li>Horizontal / Vertical Type · Horizontal / Vertical Type Mask</li>
+          <li>Controls: font, size, color, alignment, tracking, leading, kerning</li>
+        </ul>
+        <div class="tip">Double‑click a text layer thumbnail to jump back into edit mode.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 15 : MAGIC WAND -->
+<section class="slide">
+  <div class="stage">
+    <div class="eyebrow"><span class="line"></span>ESSENTIAL TOOL 12 / 17</div>
+    <div class="tool-grid">
+      <div class="tool-visual">
+        <div class="key-cap">W</div>
+        <div class="icon-stage"><div class="mw-wrap"><div class="mw-ring"></div><span class="mw-star">✦</span></div></div>
+      </div>
+      <div class="tool-info">
+        <h2>Magic Wand Tool</h2>
+        <p class="lead">Selects areas of similar color and tone with a single click.</p>
+        <ul class="facts">
+          <li>Low <b>Tolerance</b> (≈10) — precise, narrow selection</li>
+          <li>High <b>Tolerance</b> (≈50–100) — broad, forgiving selection</li>
+        </ul>
+        <div class="tip">Best for solid‑color backgrounds, flat‑color shapes, sky regions.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 16 : EYEDROPPER (with correction) -->
+<section class="slide">
+  <div class="stage">
+    <div class="eyebrow"><span class="line"></span>ESSENTIAL TOOL 13 / 17</div>
+    <div class="tool-grid">
+      <div class="tool-visual">
+        <div class="key-cap">I</div>
+        <div class="icon-stage"><div class="ey-wrap">
+          <div class="ey-drop"></div>
+          <div class="ey-row" id="eyeRow">
+            <div class="ey-sw" style="background:#3ec6ff"></div>
+            <div class="ey-sw" style="background:#ffb020"></div>
+            <div class="ey-sw" style="background:#5fd39a"></div>
+          </div>
+        </div></div>
+      </div>
+      <div class="tool-info">
+        <h2>Eyedropper Tool</h2>
+        <p class="lead">Samples a color from anywhere on the canvas and sets it as the foreground color.</p>
+        <ul class="facts">
+          <li>Also under <kbd>I</kbd>: Color Sampler · Ruler · Note Tool · Count Tool</li>
+          <li>Used to match brand colors and keep color consistent across layers</li>
+        </ul>
+        <div class="tip" style="border-color:var(--amber);color:var(--amber);">⚠ Common mix‑up: <kbd>I</kbd> is the Eyedropper — <b>not</b> the Magic Wand (that's <kbd>W</kbd>).</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 17 : DODGE & BURN -->
+<section class="slide">
+  <div class="stage">
+    <div class="eyebrow"><span class="line"></span>ESSENTIAL TOOL 14 / 17</div>
+    <div class="tool-grid">
+      <div class="tool-visual">
+        <div class="key-cap">O</div>
+        <div class="icon-stage"><div class="db-wrap"><div class="db-sweep"></div></div></div>
+      </div>
+      <div class="tool-info">
+        <h2>Dodge &amp; Burn Tools</h2>
+        <p class="lead">Non‑destructive tonal adjustment directly on the image.</p>
+        <ul class="facts">
+          <li><b>Dodge</b> lightens · <b>Burn</b> darkens · <b>Sponge</b> shifts saturation</li>
+          <li>Range: Shadows / Midtones / Highlights, set in the Options Bar</li>
+        </ul>
+        <div class="tip">Work on a duplicate layer, or dodge/burn on a grey overlay layer.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 18 : PATCH -->
+<section class="slide">
+  <div class="stage">
+    <div class="eyebrow"><span class="line"></span>ESSENTIAL TOOL 15 / 17</div>
+    <div class="tool-grid">
+      <div class="tool-visual">
+        <div class="key-cap">J</div>
+        <div class="icon-stage"><div class="cl-wrap">
+          <div class="cl-dot" style="border:2px dashed var(--ants);"></div>
+          <div class="cl-arrow">⇄</div>
+          <div class="cl-dot" style="background:var(--panel2);border:2px solid var(--line);"></div>
+        </div></div>
+      </div>
+      <div class="tool-info">
+        <h2>Patch Tool</h2>
+        <p class="lead">Lasso‑style selection + Healing Brush blending: drag a problem area onto a clean source.</p>
+        <ul class="facts">
+          <li><b>Normal</b> — standard patch replacement</li>
+          <li><b>Content‑Aware</b> — synthesizes surrounding content for a natural result</li>
+        </ul>
+        <div class="tip">Shares shortcut <kbd>J</kbd> — right‑click the Healing Brush icon to reach it.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 19 : HISTORY BRUSH -->
+<section class="slide">
+  <div class="stage">
+    <div class="eyebrow"><span class="line"></span>ESSENTIAL TOOL 16 / 17</div>
+    <div class="tool-grid">
+      <div class="tool-visual">
+        <div class="key-cap">Y</div>
+        <div class="icon-stage"><span class="hy-arrow">↺</span></div>
+      </div>
+      <div class="tool-info">
+        <h2>History Brush Tool</h2>
+        <p class="lead">Paints back a previous state from the History Panel — a targeted, selective undo.</p>
+        <ul class="facts">
+          <li>Check a state in <b>Window → History</b>, then paint over the area to revert</li>
+          <li><b>Art History Brush</b> (also <kbd>Y</kbd>) applies states with painterly, stylized strokes</li>
+        </ul>
+        <div class="tip">Great for restoring over‑edited areas without reverting the whole document.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 20 : PAINT BUCKET -->
+<section class="slide">
+  <div class="stage">
+    <div class="eyebrow"><span class="line"></span>ESSENTIAL TOOL 17 / 17</div>
+    <div class="tool-grid">
+      <div class="tool-visual">
+        <div class="key-cap">G</div>
+        <div class="icon-stage"><div class="pb-wrap"><div class="pb-fill"></div></div></div>
+      </div>
+      <div class="tool-info">
+        <h2>Paint Bucket Tool</h2>
+        <p class="lead">Fills a selection, or a region of similar‑colored pixels, with a solid color or pattern.</p>
+        <ul class="facts">
+          <li><b>Contiguous</b> checked — fills only connected pixels; unchecked — fills all matches on the canvas</li>
+          <li><b>Fill with Pattern</b> swaps solid color for a repeating pattern</li>
+        </ul>
+        <div class="tip">Hidden under the Gradient Tool — right‑click to access it.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 21 : OTHER NOTABLE TOOLS -->
+<section class="slide">
+  <div class="stage">
+    <div class="eyebrow"><span class="line"></span>BEYOND THE ESSENTIALS</div>
+    <h2>Nine more tools worth knowing</h2>
+    <div class="notable-grid">
+      <div class="notable-card"><span class="nk">W</span><span class="nn">Quick Selection</span><span class="nd">Paint to select by edges &amp; color</span></div>
+      <div class="notable-card"><span class="nk">R</span><span class="nn">Blur / Sharpen / Smudge</span><span class="nd">Soften, sharpen or smear pixels</span></div>
+      <div class="notable-card"><span class="nk">Z</span><span class="nn">Zoom Tool</span><span class="nd">Zoom in and out of the canvas</span></div>
+      <div class="notable-card"><span class="nk">H</span><span class="nn">Hand Tool</span><span class="nd">Pan around when zoomed in; hold Space to temp-switch</span></div>
+      <div class="notable-card"><span class="nk">C</span><span class="nn">Slice Tool</span><span class="nd">Divide the canvas for web export</span></div>
+      <div class="notable-card"><span class="nk">A</span><span class="nn">Path Selection / Direct Selection</span><span class="nd">Select and move entire paths or individual anchor points</span></div>
+      <div class="notable-card"><span class="nk">U</span><span class="nn">Shape Tools</span><span class="nd">Rectangle, Ellipse, Polygon, Line, Custom Shape</span></div>
+      <div class="notable-card"><span class="nk">N</span><span class="nn">Notes Tool</span><span class="nd">Attach text annotations to the document</span></div>
+      <div class="notable-card"><span class="nk">K</span><span class="nn">3D Tools (CS6 Extended)</span><span class="nd">Rotate, roll, pan and slide 3D objects</span></div>
+    </div>
+    <p class="pill" style="align-self:flex-start;">Press <kbd>Tab</kbd> to hide all panels for a distraction‑free canvas.</p>
+  </div>
+</section>
+
+<!-- 22 : COMMON MIX-UPS (flip cards) -->
+<section class="slide">
+  <div class="stage">
+    <div class="eyebrow"><span class="line"></span>QUICK CHECK</div>
+    <h2>Three mix‑ups everyone makes once</h2>
+    <p class="lead">Tap a card to reveal the correction.</p>
+    <div class="flip-row" id="flipRow">
+      <div class="flip-card">
+        <div class="flip-inner">
+          <div class="flip-face flip-front"><span class="fk">Shortcut I</span><span class="ft">"That's the Magic Wand Tool... right?"</span><span class="flip-hint">Tap to check →</span></div>
+          <div class="flip-face flip-back"><span class="fk">Correction</span><span class="ft">No — <kbd>I</kbd> is the <b>Eyedropper</b>. Magic Wand is <kbd>W</kbd>.</span></div>
+        </div>
+      </div>
+      <div class="flip-card">
+        <div class="flip-inner">
+          <div class="flip-face flip-front"><span class="fk">Patch Tool</span><span class="ft">"It must have its own shortcut key."</span><span class="flip-hint">Tap to check →</span></div>
+          <div class="flip-face flip-back"><span class="fk">Correction</span><span class="ft">It shares <kbd>J</kbd> with the Healing Brush group — right‑click to find it.</span></div>
+        </div>
+      </div>
+      <div class="flip-card">
+        <div class="flip-inner">
+          <div class="flip-face flip-front"><span class="fk">Removing a background</span><span class="ft">"Just erase it, that's simplest."</span><span class="flip-hint">Tap to check →</span></div>
+          <div class="flip-face flip-back"><span class="fk">Correction</span><span class="ft">Professionals use a <b>Layer Mask</b> — non‑destructive and fully reversible.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 23 : RASTER (interactive zoom) -->
+<section class="slide">
+  <div class="stage">
+    <div class="eyebrow"><span class="line"></span>CRITICAL CONCEPT · PART 1</div>
+    <h2>Photoshop is raster‑based — pixels, fixed at creation</h2>
+    <p class="lead" style="max-width:640px;">Drag the slider to enlarge a raster image past its resolution. Photoshop has to invent pixels to fill the gaps — that's pixelation, and it can't be undone.</p>
+    <div class="rv-box" style="max-width:360px;">
+      <div class="rv-frame"><canvas id="rasterCanvas" width="150" height="150"></canvas></div>
+      <input type="range" id="rasterZoom" class="rv-slider" min="1" max="6" step="0.1" value="1">
+      <span class="rv-label" id="rasterZoomLabel">ZOOM 100% · SHARP</span>
+    </div>
+  </div>
+</section>
+
+<!-- 24 : VECTOR (comparison) -->
+<section class="slide">
+  <div class="stage">
+    <div class="eyebrow"><span class="line"></span>CRITICAL CONCEPT · PART 2</div>
+    <h2>Vector scales forever — it's just math</h2>
+    <p class="lead" style="max-width:640px;">Same slider, a vector shape this time. No pixels to invent — the software just recalculates the equation, at any size.</p>
+    <div class="rv-grid">
+      <div class="rv-box">
+        <div class="rv-label">RASTER (.JPG / .PNG / .PSD)</div>
+        <div class="rv-frame"><canvas id="rasterCanvas2" width="150" height="150"></canvas></div>
+        <div class="rv-label" id="raster2Label">degrades past 100%</div>
+      </div>
+      <div class="rv-box">
+        <div class="rv-label">VECTOR (.AI / .SVG / .EPS)</div>
+        <div class="rv-frame"><svg id="vectorSvg" width="150" height="150" viewBox="0 0 100 100"><polygon points="50,8 90,90 10,90" fill="none" stroke="#3ec6ff" stroke-width="4"/><circle cx="50" cy="60" r="14" fill="#ffb020"/></svg></div>
+        <div class="rv-label">always sharp</div>
+      </div>
+    </div>
+    <input type="range" id="vecZoom" class="rv-slider" min="1" max="6" step="0.1" value="1" style="max-width:600px;">
+  </div>
+</section>
+
+<!-- 25 : WHEN TO USE WHICH -->
+<section class="slide">
+  <div class="stage">
+    <div class="eyebrow"><span class="line"></span>CRITICAL CONCEPT · PART 3</div>
+    <h2>Photoshop or Illustrator?</h2>
+    <div class="notable-grid" style="grid-template-columns:repeat(2,1fr);">
+      <div class="notable-card"><span class="nk">✔ PHOTOSHOP</span><span class="nn">Photo retouching</span><span class="nd">Pixel‑level, tonal, blending work</span></div>
+      <div class="notable-card"><span class="nk">✔ ILLUSTRATOR</span><span class="nn">Logos &amp; icon sets</span><span class="nd">Must scale from a favicon to a billboard</span></div>
+      <div class="notable-card"><span class="nk">✔ PHOTOSHOP</span><span class="nn">Digital painting &amp; compositing</span><span class="nd">Combining and blending multiple photos</span></div>
+      <div class="notable-card"><span class="nk">✔ ILLUSTRATOR</span><span class="nn">Scalable infographics</span><span class="nd">Type‑and‑shape heavy, resolution‑independent</span></div>
+    </div>
+    <div class="tip" style="border-color:var(--amber);color:var(--amber);">⚠ The costly mistake: designing a logo in Photoshop at 500×500px, then it's needed on a 3‑meter banner. It has to be rebuilt from scratch as a vector.</div>
+  </div>
+</section>
+
+<!-- 26 : KEY TAKEAWAYS -->
+<section class="slide">
+  <div class="stage">
+    <div class="eyebrow"><span class="line"></span>SUMMARY</div>
+    <h2>Seven things to remember</h2>
+    <div class="take-grid">
+      <div class="take-item"><span class="tn">01</span><p>Photoshop is raster‑based — it works in pixels, not vectors. 300 PPI for print, 72 PPI for screen.</p></div>
+      <div class="take-item"><span class="tn">02</span><p>Five interface zones: Menu Bar, Options Bar, Toolbar, Canvas, Right Side Panels.</p></div>
+      <div class="take-item"><span class="tn">03</span><p>The Options Bar is context‑sensitive — always check it after switching tools.</p></div>
+      <div class="take-item"><span class="tn">04</span><p>Memorize: <kbd>V</kbd> <kbd>B</kbd> <kbd>C</kbd> <kbd>T</kbd> <kbd>P</kbd> <kbd>L</kbd> <kbd>M</kbd> — the core shortcuts.</p></div>
+      <div class="take-item"><span class="tn">05</span><p><kbd>I</kbd> is the Eyedropper, not the Magic Wand — the most common mix‑up.</p></div>
+      <div class="take-item"><span class="tn">06</span><p>Healing Brush (<kbd>J</kbd>) and Gradient (<kbd>G</kbd>) groups both hide extra tools in a right‑click flyout.</p></div>
+    </div>
+    <div class="take-item" style="max-width:640px;"><span class="tn">07</span><p>Non‑destructive editing — Layer Masks, Adjustment Layers, Smart Objects — is the professional standard.</p></div>
+  </div>
+</section>
+
+<!-- 27 : CLOSING / ASSIGNMENT -->
+<section class="slide">
+  <div class="stage">
+    <div class="eyebrow"><span class="line"></span>YOUR TURN</div>
+    <h2>Build a Photoshop Tool Showcase</h2>
+    <p class="lead" style="max-width:640px;">One document, five tasks — save as a layered <b>.PSD</b> and a flattened <b>.JPG</b> export.</p>
+    <div class="check-list">
+      <div class="check-item"><div class="check-box"></div><p><b>Selection</b> — cut out a subject with Lasso or Pen, place it on a new background</p></div>
+      <div class="check-item"><div class="check-box"></div><p><b>Retouching</b> — remove a blemish with Healing Brush or Patch</p></div>
+      <div class="check-item"><div class="check-box"></div><p><b>Painting</b> — add a creative element with the Brush Tool on its own layer</p></div>
+      <div class="check-item"><div class="check-box"></div><p><b>Text</b> — a headline with two distinct typographic levels</p></div>
+      <div class="check-item"><div class="check-box"></div><p><b>Color</b> — sample a color with the Eyedropper as a design accent</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- BONUS TITLE : CS6 → LATEST -->
+<section class="slide">
+  <div class="stage" style="align-items:center;text-align:center;">
+    <div class="eyebrow" style="justify-content:center;"><span class="line"></span>BONUS<span class="line"></span></div>
+    <h1>CS6 → Photoshop 2025</h1>
+    <p class="lead" style="max-width:560px;margin:0 auto;">Over a decade of Creative Cloud updates added AI-powered tools, smarter selections, and non-destructive workflows that CS6 never had. Here's what changed.</p>
+    <div class="stat-row" style="justify-content:center;">
+      <div class="stat"><b>2012</b><span>CS6 released</span></div>
+      <div class="stat"><b>2013</b><span>CC era begins</span></div>
+      <div class="stat"><b>2025</b><span>Latest version</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- BONUS 1 : NEW SELECTION TOOLS -->
+<section class="slide">
+  <div class="stage">
+    <div class="eyebrow"><span class="line"></span>BONUS · WHAT'S NEW 01</div>
+    <h2>Smarter Selections</h2>
+    <p class="lead" style="max-width:680px;">CS6 required manual lasso or pen work for complex cutouts. Modern Photoshop does it in one click.</p>
+    <div class="notable-grid" style="grid-template-columns:repeat(2,1fr);">
+      <div class="notable-card">
+        <span class="nk">NEW · W</span>
+        <span class="nn">Object Selection Tool</span>
+        <span class="nd">Draw a rough box — AI detects and snaps to the object inside it. Added CC 2020.</span>
+      </div>
+      <div class="notable-card">
+        <span class="nk">NEW · SELECT MENU</span>
+        <span class="nn">Select Subject</span>
+        <span class="nd">One click — AI isolates the main subject from the entire image automatically.</span>
+      </div>
+      <div class="notable-card">
+        <span class="nk">IMPROVED · SELECT MENU</span>
+        <span class="nn">Select &amp; Mask Workspace</span>
+        <span class="nd">Replaced Refine Edge (CS6). Dedicated workspace for hair, fur and complex edges.</span>
+      </div>
+      <div class="notable-card">
+        <span class="nk">NEW · SELECT MENU</span>
+        <span class="nn">Select Sky</span>
+        <span class="nd">Instantly selects the sky region in any photo. Added CC 2021.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BONUS 2 : AI / GENERATIVE -->
+<section class="slide">
+  <div class="stage">
+    <div class="eyebrow"><span class="line"></span>BONUS · WHAT'S NEW 02</div>
+    <h2>Generative AI (Firefly)</h2>
+    <p class="lead" style="max-width:680px;">Photoshop 2024–2025 integrates Adobe Firefly directly into the canvas — generate, extend and remove content with text prompts.</p>
+    <div class="notable-grid" style="grid-template-columns:repeat(2,1fr);">
+      <div class="notable-card">
+        <span class="nk">NEW · 2024</span>
+        <span class="nn">Generative Fill</span>
+        <span class="nd">Make a selection, type a prompt — Firefly fills it with AI-generated content on a non-destructive layer.</span>
+      </div>
+      <div class="notable-card">
+        <span class="nk">NEW · 2024</span>
+        <span class="nn">Generative Expand</span>
+        <span class="nd">Extend the canvas in any direction and AI fills the new space to match the existing image.</span>
+      </div>
+      <div class="notable-card">
+        <span class="nk">NEW · 2024</span>
+        <span class="nn">Remove Tool</span>
+        <span class="nd">Paint over any object — AI removes it and reconstructs the background. No source point needed.</span>
+      </div>
+      <div class="notable-card">
+        <span class="nk">IMPROVED · 2023</span>
+        <span class="nn">Content-Aware Fill Workspace</span>
+        <span class="nd">Dedicated workspace with sampling controls, far more powerful than CS6's basic Content-Aware Fill.</span>
+      </div>
+    </div>
+    <div class="tip">Generative layers are fully non-destructive — the original pixels are never touched.</div>
+  </div>
+</section>
+
+<!-- BONUS 3 : NEW TOOLS & PANELS -->
+<section class="slide">
+  <div class="stage">
+    <div class="eyebrow"><span class="line"></span>BONUS · WHAT'S NEW 03</div>
+    <h2>New Tools &amp; Panels Since CS6</h2>
+    <div class="notable-grid">
+      <div class="notable-card">
+        <span class="nk">NEW · K — CC 2019</span>
+        <span class="nn">Frame Tool</span>
+        <span class="nd">Placeholder frames for images in layouts — drag an image in to fill it.</span>
+      </div>
+      <div class="notable-card">
+        <span class="nk">NEW · CC 2021</span>
+        <span class="nn">Sky Replacement</span>
+        <span class="nd">Edit → Sky Replacement swaps the sky automatically with masking and lighting match.</span>
+      </div>
+      <div class="notable-card">
+        <span class="nk">NEW · CC 2018</span>
+        <span class="nn">Curvature Pen Tool</span>
+        <span class="nd">Draws smooth curves without dragging handles — easier than the classic Pen Tool.</span>
+      </div>
+      <div class="notable-card">
+        <span class="nk">IMPROVED · CC 2015+</span>
+        <span class="nn">Artboards</span>
+        <span class="nd">Multiple canvas areas in one document — essential for UI and multi-screen design.</span>
+      </div>
+      <div class="notable-card">
+        <span class="nk">NEW · CC 2021</span>
+        <span class="nn">Neural Filters</span>
+        <span class="nd">AI-powered filters: Skin Smoothing, Smart Portrait, Colorize, Style Transfer and more.</span>
+      </div>
+      <div class="notable-card">
+        <span class="nk">IMPROVED · CC 2022</span>
+        <span class="nn">Object-Aware Healing</span>
+        <span class="nd">Spot Healing and Clone Stamp now detect object boundaries for cleaner results.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BONUS 4 : CS6 vs LATEST COMPARISON -->
+<section class="slide">
+  <div class="stage">
+    <div class="eyebrow"><span class="line"></span>BONUS · WHAT'S NEW 04</div>
+    <h2>CS6 vs. Photoshop 2025 — Side by Side</h2>
+    <div class="notable-grid" style="grid-template-columns:1fr 1fr;">
+      <div class="notable-card" style="border-color:var(--blue-dim);">
+        <span class="nk" style="color:var(--muted);">PHOTOSHOP CS6 (2012)</span>
+        <span class="nd" style="line-height:1.8;">✔ Refine Edge for selections<br>✔ Content-Aware Fill (basic)<br>✔ Crop non-destructive (new in CS6)<br>✔ Blur Gallery (Field, Iris, Tilt-Shift)<br>✔ Adaptive Wide Angle filter<br>✘ No AI selection tools<br>✘ No Generative Fill<br>✘ No Artboards<br>✘ No Neural Filters<br>✘ No Sky Replacement</span>
+      </div>
+      <div class="notable-card" style="border-color:var(--blue);">
+        <span class="nk">PHOTOSHOP 2025 (LATEST)</span>
+        <span class="nd" style="line-height:1.8;">✔ Everything in CS6, plus:<br>✔ Select Subject / Object Selection<br>✔ Select &amp; Mask (replaces Refine Edge)<br>✔ Generative Fill &amp; Expand (Firefly)<br>✔ Remove Tool (AI)<br>✔ Neural Filters panel<br>✔ Sky Replacement<br>✔ Artboards &amp; Frame Tool<br>✔ Curvature Pen Tool<br>✔ Cloud sync &amp; Libraries</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div><!-- /deck -->
+
+<div class="dots" id="dots"></div>
+
+<script>
+(function(){
+  const deck = document.getElementById('deck');
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const total = slides.length;
+  const dotsWrap = document.getElementById('dots');
+  const counter = document.getElementById('counter');
+  const progressFill = document.getElementById('progressFill');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  let idx = 0;
+
+  slides.forEach((s,i)=>{
+    const d=document.createElement('div');
+    d.className='dot'+(i===0?' active':'');
+    d.addEventListener('click',()=>goTo(i));
+    dotsWrap.appendChild(d);
+  });
+  const dotEls = Array.from(dotsWrap.children);
+
+  function pad(n){return String(n).padStart(2,'0');}
+
+  function goTo(i){
+    idx = Math.max(0, Math.min(total-1, i));
+    deck.style.transform = 'translateX(-'+(idx*100)+'vw)';
+    dotEls.forEach((d,j)=>d.classList.toggle('active', j===idx));
+    counter.textContent = pad(idx+1)+' / '+pad(total);
+    progressFill.style.width = ((idx+1)/total*100)+'%';
+    prevBtn.disabled = idx===0;
+    nextBtn.disabled = idx===total-1;
+    history.replaceState(null,'','#slide-'+idx);
+  }
+  prevBtn.addEventListener('click',()=>goTo(idx-1));
+  nextBtn.addEventListener('click',()=>goTo(idx+1));
+
+  window.addEventListener('keydown',(e)=>{
+    if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();goTo(idx+1);}
+    else if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();goTo(idx-1);}
+    else if(e.key==='Home'){goTo(0);}
+    else if(e.key==='End'){goTo(total-1);}
+  });
+
+  let touchX=null;
+  window.addEventListener('touchstart',(e)=>{touchX=e.touches[0].clientX;},{passive:true});
+  window.addEventListener('touchend',(e)=>{
+    if(touchX===null)return;
+    const dx = e.changedTouches[0].clientX - touchX;
+    if(Math.abs(dx)>50){ dx<0 ? goTo(idx+1) : goTo(idx-1); }
+    touchX=null;
+  },{passive:true});
+
+  const startIdx = parseInt((location.hash||'').replace('#slide-',''))||0;
+  goTo(startIdx);
+
+  /* ---------- interface anatomy zone info ---------- */
+  const zoneData = {
+    menu:{label:'MENU BAR', text:'Top of the window — every command lives in a dropdown here, from File and Edit to Filter and Window.'},
+    optbar:{label:'OPTIONS BAR', text:'Just below the Menu Bar — rewrites itself for whichever tool is active. Always check it after switching tools; beginners lose real time by ignoring it.'},
+    tools:{label:'TOOLBAR', text:'Left side — icons for every tool, grouped by purpose. A small triangle means more tools hide in a flyout.'},
+    canvas:{label:'CANVAS', text:'The document itself. Surrounding grey space is the pasteboard — it never appears in your export.'},
+    panels:{label:'RIGHT PANELS', text:'Layers, Properties, Adjustments, History and more — dockable, draggable, and grouped to fit your workflow.'}
+  };
+  const zoneInfo = document.getElementById('zoneInfo');
+  document.querySelectorAll('#anatomyMock .zone').forEach(z=>{
+    z.addEventListener('mouseenter',()=>{
+      document.querySelectorAll('#anatomyMock .zone').forEach(o=>o.classList.remove('active'));
+      z.classList.add('active');
+      const d = zoneData[z.dataset.zone];
+      zoneInfo.querySelector('.zi-label').textContent = d.label;
+      zoneInfo.querySelector('p').textContent = d.text;
+    });
+    z.addEventListener('click',()=>z.dispatchEvent(new Event('mouseenter')));
+  });
+
+  /* ---------- options bar demo ---------- */
+  const optData = {
+    brush:[['SIZE','40 px'],['HARDNESS','75%'],['OPACITY','100%'],['FLOW','80%'],['MODE','Normal']],
+    move:[['AUTO-SELECT','Layer'],['SHOW TRANSFORM','On'],['ALIGN','—']],
+    crop:[['RATIO','16 : 9'],['RESOLUTION','300 ppi'],['STRAIGHTEN','Off'],['DELETE CROPPED','Off']]
+  };
+  const optBar = document.getElementById('optBar');
+  function renderOpt(tool){
+    optBar.innerHTML='';
+    optData[tool].forEach(([label,val])=>{
+      const item=document.createElement('div');
+      item.className='opt-item';
+      item.innerHTML='<span class="ol">'+label+'</span><span class="ov">'+val+'</span>';
+      optBar.appendChild(item);
+    });
+    if(tool==='brush'){
+      const sw=document.createElement('div');
+      sw.className='opt-item';
+      sw.innerHTML='<span class="ol">COLOR</span><div class="swatch-mini" style="background:#3ec6ff"></div>';
+      optBar.appendChild(sw);
+    }
+  }
+  document.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      renderOpt(btn.dataset.tool);
+    });
+  });
+  renderOpt('brush');
+
+  /* ---------- pen path dots ---------- */
+  const penWrap = document.getElementById('penWrap');
+  if(penWrap){
+    const pts=[[8,60],[45,15],[85,45],[60,85]];
+    pts.forEach((p,i)=>{
+      const dot=document.createElement('div');
+      dot.className='pen-dot';
+      dot.style.left=p[0]+'%'; dot.style.top=p[1]+'%';
+      dot.style.animationDelay=(i*0.2)+'s';
+      penWrap.appendChild(dot);
+      if(i<pts.length-1){
+        const a=pts[i], b=pts[i+1];
+        const dx=(b[0]-a[0]), dy=(b[1]-a[1]);
+        const len=Math.sqrt(dx*dx+dy*dy);
+        const ang=Math.atan2(dy,dx)*180/Math.PI;
+        const line=document.createElement('div');
+        line.className='pen-line';
+        line.style.left=a[0]+'%'; line.style.top=a[1]+'%';
+        line.style.width=len+'%';
+        line.style.transform='rotate('+ang+'deg)';
+        penWrap.appendChild(line);
+      }
+    });
+  }
+
+  /* ---------- flip cards ---------- */
+  document.querySelectorAll('.flip-card').forEach(c=>{
+    c.addEventListener('click',()=>c.classList.toggle('flipped'));
+  });
+
+  /* ---------- raster pixel canvas generation ---------- */
+  function drawPixelArt(canvas){
+    const ctx = canvas.getContext('2d');
+    const grid = 10;
+    const cell = canvas.width/grid;
+    const colors = ['#001E36','#0a2a42','#31A8FF','#1a6aaa','#ffb020','#5fd39a'];
+    // simple deterministic "face" pattern
+    const pattern = [
+      0,0,0,1,1,1,1,0,0,0,
+      0,0,1,1,2,2,1,1,0,0,
+      0,1,1,2,2,2,2,1,1,0,
+      1,1,2,3,2,2,3,2,1,1,
+      1,2,2,2,4,4,2,2,2,1,
+      1,2,2,2,2,2,2,2,2,1,
+      0,1,2,5,2,2,5,2,1,0,
+      0,1,1,2,5,5,2,1,1,0,
+      0,0,1,1,2,2,1,1,0,0,
+      0,0,0,1,1,1,1,0,0,0
+    ];
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    for(let y=0;y<grid;y++){
+      for(let x=0;x<grid;x++){
+        ctx.fillStyle = colors[pattern[y*grid+x]];
+        ctx.fillRect(x*cell,y*cell,cell,cell);
+      }
+    }
+  }
+  const rc1 = document.getElementById('rasterCanvas');
+  const rc2 = document.getElementById('rasterCanvas2');
+  [rc1,rc2].forEach(c=>{ if(c) drawPixelArt(c); });
+
+  function applyZoom(canvas, zoom, labelEl, prefix){
+    if(!canvas) return;
+    canvas.style.transform = 'scale('+zoom+')';
+    canvas.style.imageRendering = 'pixelated';
+    if(labelEl){
+      const pct = Math.round(zoom*100);
+      const state = zoom>1.6 ? 'PIXELATED' : (zoom>1.1 ? 'SOFTENING' : 'SHARP');
+      labelEl.textContent = (prefix||'ZOOM')+' '+pct+'% · '+state;
+    }
+  }
+  const rasterZoom = document.getElementById('rasterZoom');
+  const rasterZoomLabel = document.getElementById('rasterZoomLabel');
+  if(rasterZoom){
+    rasterZoom.addEventListener('input',()=>applyZoom(rc1, parseFloat(rasterZoom.value), rasterZoomLabel));
+  }
+  const vecZoom = document.getElementById('vecZoom');
+  const vectorSvg = document.getElementById('vectorSvg');
+  const raster2Label = document.getElementById('raster2Label');
+  if(vecZoom){
+    vecZoom.addEventListener('input',()=>{
+      const z = parseFloat(vecZoom.value);
+      applyZoom(rc2, z, raster2Label, '');
+      if(vectorSvg) vectorSvg.style.transform='scale('+z+')';
+    });
+  }
+
+  /* ---------- eyedropper swatch pick ---------- */
+  const eyeRow = document.getElementById('eyeRow');
+  if(eyeRow){
+    eyeRow.querySelectorAll('.ey-sw').forEach(sw=>{
+      sw.style.cursor='pointer';
+      sw.addEventListener('click',()=>{
+        eyeRow.querySelectorAll('.ey-sw').forEach(s=>s.style.outline='none');
+        sw.style.outline='2px solid #fff';
+      });
+    });
+  }
+})();
+</script>
+</body>
+</html>
