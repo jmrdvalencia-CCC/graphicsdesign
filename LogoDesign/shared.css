@@ -1,0 +1,526 @@
+/* ============================================================
+   LOGO DESIGN MODULE — SHARED STYLES
+   Palette:
+     --ink      #0E0E10  primary dark bg
+     --paper    #F7F5F0  warm off-white bg
+     --orange   #FF5A1F  signal orange — hero accent
+     --teal     #1B4B4A  deep teal — secondary accent
+     --gray     #8C8578  warm gray — muted text / borders
+     --charcoal #2B2A28  body text on light bg
+   ============================================================ */
+
+:root {
+  --ink:        #0E0E10;
+  --paper:      #F7F5F0;
+  --orange:     #FF5A1F;
+  --teal:       #1B4B4A;
+  --gray:       #8C8578;
+  --charcoal:   #2B2A28;
+  --orange-soft: rgba(255,90,31,0.12);
+  --teal-soft:   rgba(27,75,74,0.12);
+  --line-dark:   rgba(247,245,240,0.10);
+  --line-light:  rgba(43,42,40,0.12);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0; padding: 0;
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  background: var(--paper);
+  color: var(--charcoal);
+}
+
+/* ── DESKTOP: locked viewport, slide-deck ── */
+@media (min-width: 701px) {
+  html, body { height: 100%; overflow: hidden; }
+}
+
+/* ── MOBILE: normal scrolling document ── */
+@media (max-width: 700px) {
+  html, body { height: auto; overflow: auto; }
+}
+
+::selection { background: var(--orange); color: #fff; }
+
+h1, h2, h3, h4 {
+  font-family: 'Fraunces', serif;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+.mono { font-family: 'JetBrains Mono', monospace; }
+button { font-family: inherit; cursor: pointer; }
+a { color: inherit; text-decoration: none; }
+
+/* =====================================================
+   APP SHELL — full width, footer nav
+   ===================================================== */
+.app {
+  display: grid;
+  grid-template-columns: 1fr;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+}
+.app.scrollable { height: auto; min-height: 100vh; overflow: visible; }
+
+/* =====================================================
+   SLIDE DECK AREA
+   ===================================================== */
+.deck {
+  position: relative;
+  background: var(--paper);
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── DESKTOP: fixed-height deck, slides are absolutely positioned ── */
+@media (min-width: 701px) {
+  .deck {
+    height: 100vh;
+    overflow: hidden;
+  }
+}
+
+/* ── individual slide ── */
+.slide {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* DESKTOP: absolute positioning + transitions */
+@media (min-width: 701px) {
+  .slide {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    bottom: 90px;
+    padding: 36px 52px 16px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(40px);
+    transition: opacity .35s ease, transform .35s ease;
+  }
+  .slide.active {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(0);
+  }
+  .slide.exit-left {
+    opacity: 0;
+    transform: translateX(-40px);
+    transition: opacity .25s ease, transform .25s ease;
+  }
+}
+
+/* MOBILE: all slides visible, stacked, natural height */
+@media (max-width: 700px) {
+  .slide {
+    position: relative;
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+    padding: 24px 18px 32px;
+    gap: 14px;
+    /* divider between slides */
+    border-bottom: 2px solid var(--line-light);
+  }
+  .slide:last-of-type { border-bottom: none; }
+  /* hide the slide-deck nav on mobile — replaced by sticky bottom bar */
+  .slide-nav { display: none !important; }
+}
+
+/* dark-bg slide variant */
+.slide.dark { background: var(--ink); }
+.slide.dark .kicker { color: var(--orange); }
+.slide.dark h2 { color: var(--paper); }
+.slide.dark .sub { color: var(--gray); }
+.slide.dark .h-bar { background: var(--orange); }
+
+/* ── slide header ── */
+.kicker {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--orange);
+  flex-shrink: 0;
+}
+.kicker .sw { width: 7px; height: 7px; border-radius: 2px; background: var(--orange); flex-shrink: 0; }
+
+.slide h2 {
+  font-size: clamp(22px, 3.2vw, 36px);
+  line-height: 1.05; color: var(--charcoal);
+  flex-shrink: 0;
+}
+.slide h2 .accent { color: var(--orange); }
+
+.h-bar { width: 40px; height: 3px; background: var(--orange); border-radius: 2px; flex-shrink: 0; }
+
+.sub {
+  font-size: clamp(13px, 1.4vw, 15px);
+  color: var(--gray); max-width: 62ch; line-height: 1.55;
+  flex-shrink: 0;
+}
+
+/* slide body — natural height, scrolls with the slide */
+.slide-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* two-column body layout */
+.slide-body.cols2 {
+  flex-direction: row;
+  gap: 16px;
+}
+.slide-body.cols2 > * { flex: 1; min-width: 0; }
+
+@media (max-width: 700px) {
+  .slide-body.cols2 { flex-direction: column; }
+}
+
+/* =====================================================
+   FOOTER NAV — desktop slide controls
+   Total height = 40px (parts row) + 50px (controls row) = 90px
+   Hidden on mobile (replaced by .mobile-nav)
+   ===================================================== */
+.slide-nav {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--paper);
+  border-top: 1px solid var(--line-light);
+  z-index: 200;
+  max-height: 90px;
+}
+
+/* top row: part links */
+.snav-parts {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 0 16px;
+  height: 40px;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--line-light);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.snav-parts::-webkit-scrollbar { display: none; }
+
+.snav-part {
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 10px; border-radius: 100px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; font-weight: 500;
+  letter-spacing: 0.06em; white-space: nowrap;
+  color: var(--gray); text-decoration: none;
+  transition: color .15s, background .15s;
+}
+.snav-part:hover { color: var(--charcoal); }
+.snav-part.active { background: rgba(255,90,31,0.15); color: var(--orange); }
+.snav-part .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+
+/* bottom row: prev / slide dots / next */
+.snav-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  height: 50px;
+  flex-shrink: 0;
+}
+
+/* =====================================================
+   MOBILE NAV BAR — sticky bottom, prev/next part only
+   Shown only on mobile (≤ 700px)
+   ===================================================== */
+.mobile-nav {
+  display: none;
+}
+@media (max-width: 700px) {
+  .mobile-nav {
+    display: flex;
+    position: sticky;
+    bottom: 0;
+    left: 0; right: 0;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--paper);
+    border-top: 1px solid var(--line-light);
+    padding: 0 16px;
+    height: 56px;
+    z-index: 200;
+    gap: 8px;
+  }
+  .mobile-nav .mnav-btn {
+    display: flex; align-items: center; gap: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--charcoal);
+    padding: 8px 14px; border-radius: 8px;
+    border: 1.5px solid var(--line-light);
+    background: none;
+    transition: border-color .15s, color .15s;
+    cursor: pointer;
+  }
+  .mobile-nav .mnav-btn:hover { border-color: var(--orange); color: var(--orange); }
+  .mobile-nav .mnav-btn:disabled { opacity: 0.25; pointer-events: none; }
+  .mobile-nav .mnav-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--gray);
+    text-align: center; flex: 1;
+  }
+}
+
+/* nav buttons */
+.snav-btn {
+  display: flex; align-items: center; gap: 7px;
+  background: none; border: none; padding: 6px 0;
+  color: var(--charcoal); font-size: 13px; font-weight: 500;
+  transition: color .15s; cursor: pointer;
+}
+.snav-btn:hover { color: var(--orange); }
+.snav-btn:disabled { opacity: 0.25; pointer-events: none; }
+.snav-btn svg { flex-shrink: 0; }
+
+/* dot indicators */
+.slide-dots { display: flex; align-items: center; gap: 7px; }
+.sdot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--gray); opacity: 0.35;
+  transition: background .2s, opacity .2s, width .2s;
+  cursor: pointer; border: none; padding: 0;
+}
+.sdot.active { background: var(--orange); opacity: 1; width: 20px; border-radius: 4px; }
+
+/* section label */
+.snav-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--gray); opacity: 0.6;
+}
+
+/* =====================================================
+   CONTENT COMPONENTS (cards, tables, etc.)
+   ===================================================== */
+
+/* card */
+.card {
+  background: #fff;
+  border: 1px solid var(--line-light);
+  border-radius: 10px;
+  padding: 16px 18px;
+  overflow: hidden;
+}
+.card h3 { font-size: clamp(13px, 1.3vw, 15px); color: var(--charcoal); margin-bottom: 8px; }
+.card p { color: var(--gray); line-height: 1.55; font-size: clamp(12px, 1.1vw, 13.5px); margin: 0 0 6px; }
+.card p:last-child { margin-bottom: 0; }
+
+/* teal block */
+.teal-block {
+  background: var(--teal); border-radius: 10px;
+  padding: 16px 18px; color: var(--paper); overflow: hidden;
+}
+.teal-block h3 { color: var(--paper); margin-bottom: 8px; font-size: clamp(13px, 1.3vw, 15px); }
+.teal-block p { color: rgba(247,245,240,0.78); font-size: clamp(12px, 1.1vw, 13.5px); line-height: 1.55; margin: 0; }
+
+/* orange strip */
+.orange-strip {
+  background: var(--orange); border-radius: 10px;
+  padding: 14px 18px; color: #fff; overflow: hidden;
+}
+.orange-strip h3 { color: #fff; font-size: clamp(13px, 1.3vw, 15px); margin-bottom: 5px; }
+.orange-strip p { color: rgba(255,255,255,0.88); font-size: clamp(12px, 1.1vw, 13px); line-height: 1.5; margin: 0; }
+
+/* callout */
+.callout {
+  border-left: 3px solid var(--orange);
+  background: var(--orange-soft);
+  border-radius: 0 8px 8px 0;
+  padding: 11px 14px;
+  font-size: clamp(12px, 1.1vw, 13.5px);
+  color: var(--orange); line-height: 1.55;
+  flex-shrink: 0;
+}
+.callout b {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px; text-transform: uppercase;
+  letter-spacing: 0.08em; display: block;
+  margin-bottom: 4px; color: var(--orange);
+}
+.callout-teal { border-left-color: var(--teal); background: var(--teal-soft); }
+.callout-teal b { color: var(--teal); }
+
+/* callout inside dark slide */
+.slide.dark .callout {
+  background: rgba(255,90,31,0.18);
+  color: #fff;
+}
+.slide.dark .callout b { color: var(--orange); }
+
+/* table */
+table.data {
+  width: 100%; border-collapse: collapse;
+  font-size: clamp(11px, 1vw, 12.5px);
+}
+table.data th, table.data td {
+  text-align: left; padding: 6px 9px;
+  border-bottom: 1px solid var(--line-light);
+  vertical-align: top; color: var(--charcoal);
+}
+table.data th {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; text-transform: uppercase;
+  letter-spacing: 0.08em; color: var(--gray); font-weight: 600;
+}
+table.data tr:last-child td { border-bottom: none; }
+table.data b { color: var(--charcoal); }
+
+/* table wrapper */
+.table-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid var(--line-light); background: #fff; }
+.table-wrap table.data { margin: 0; }
+.table-wrap table.data th, .table-wrap table.data td { padding: 7px 10px; }
+
+/* step list */
+.step-list {
+  list-style: none; margin: 0; padding: 0;
+  counter-reset: step;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.step-list li {
+  counter-increment: step;
+  display: flex; gap: 11px; align-items: flex-start;
+  font-size: clamp(11.5px, 1.05vw, 13px);
+  color: var(--gray); line-height: 1.5; flex-shrink: 0;
+}
+.step-list li::before {
+  content: counter(step);
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700; font-size: 10px;
+  color: var(--paper); background: var(--orange);
+  border-radius: 50%; width: 22px; height: 22px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px;
+}
+
+/* checklist */
+.checklist {
+  list-style: none; margin: 0; padding: 0;
+  display: flex; flex-direction: column; gap: 7px;
+}
+.checklist li {
+  display: flex; gap: 9px; align-items: flex-start;
+  font-size: clamp(11.5px, 1.05vw, 13px);
+  color: var(--gray); line-height: 1.45; flex-shrink: 0;
+}
+.checklist li::before { content: "✓"; color: var(--orange); font-weight: 700; flex-shrink: 0; }
+
+/* grid helpers */
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+@media (max-width: 700px) { .g2, .g3 { grid-template-columns: 1fr; } }
+
+/* flip cards */
+.flip-outer { perspective: 1200px; }
+.flip-inner {
+  position: relative; width: 100%; height: 100%;
+  transition: transform .5s cubic-bezier(.4,.2,.2,1);
+  transform-style: preserve-3d;
+}
+.flip-outer.flipped .flip-inner { transform: rotateY(180deg); }
+.flip-front, .flip-back {
+  position: absolute; inset: 0;
+  backface-visibility: hidden; border-radius: 10px;
+}
+.flip-back { transform: rotateY(180deg); }
+
+.activity-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+@media (max-width: 700px) { .activity-grid { grid-template-columns: 1fr; } }
+
+.activity-card { cursor: pointer; }
+.activity-card .flip-front {
+  background: #fff; border: 1px solid var(--line-light);
+  padding: 16px; display: flex; flex-direction: column;
+}
+.activity-card .flip-back {
+  background: var(--teal); padding: 16px;
+  display: flex; flex-direction: column;
+}
+.activity-card .tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--orange);
+}
+.activity-card h4 { font-family: 'Fraunces', serif; font-size: clamp(13px,1.3vw,15px); margin: 6px 0 8px; color: var(--charcoal); }
+.activity-card .flip-back h4 { color: var(--paper); }
+.activity-card ul { padding-left: 14px; margin: 0; color: var(--gray); font-size: clamp(11px,1vw,12.5px); line-height: 1.5; overflow-y: auto; flex: 1; }
+.activity-card .flip-back ul { color: rgba(247,245,240,0.82); list-style: none; padding-left: 0; display: flex; flex-direction: column; gap: 5px; }
+.activity-card .flip-back ul li::before { content: "— "; color: var(--orange); }
+.flip-hint { margin-top: auto; font-family: 'JetBrains Mono', monospace; font-size: 9px; text-transform: uppercase; letter-spacing: .08em; color: var(--gray); padding-top: 6px; }
+
+/* assess */
+.assess { counter-reset: q; display: flex; flex-direction: column; gap: 0; }
+.assess .q {
+  counter-increment: q; padding: 10px 0;
+  border-top: 1px solid var(--line-light);
+  display: flex; gap: 12px; flex-shrink: 0;
+}
+.assess .q:first-child { border-top: none; }
+.assess .q::before {
+  content: counter(q); font-family: 'JetBrains Mono', monospace;
+  font-weight: 700; color: var(--orange); flex-shrink: 0; font-size: 12px;
+}
+.assess .q p { margin: 0; font-size: clamp(11.5px,1.05vw,13px); line-height: 1.5; color: var(--charcoal); }
+
+/* section label inside card */
+.sec-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--orange);
+  margin-bottom: 6px; display: block;
+}
+.sec-label.teal { color: var(--teal); }
+
+/* =====================================================
+   BACKGROUND ANIMATION CANVAS
+   ===================================================== */
+#bgCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 100;
+  opacity: 0.35;
+  transition: opacity .4s;
+}
+.deck:has(.slide.dark.active) #bgCanvas { opacity: 0.20; }
+
+/* =====================================================
+   ENTRANCE ANIMATIONS
+   ===================================================== */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; } to { opacity: 1; }
+}
+.slide.active .anim { animation: fadeUp .4s ease both; }
+.slide.active .anim.d1 { animation-delay: .05s; }
+.slide.active .anim.d2 { animation-delay: .12s; }
+.slide.active .anim.d3 { animation-delay: .20s; }
+.slide.active .anim.d4 { animation-delay: .28s; }
+.slide.active .anim.d5 { animation-delay: .36s; }

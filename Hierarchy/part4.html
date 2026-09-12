@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Part 4 – Summary &amp; Assessment</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body { font-family: 'Inter', sans-serif; background: #07070f; color: #fff; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+
+  /* HEADER */
+  header {
+    background: rgba(255,255,255,0.02);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    padding: 0 36px;
+    height: 54px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .hd-left { display: flex; align-items: center; gap: 12px; }
+  .part-badge {
+    background: #7c3aed; font-size: 0.62rem; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    padding: 4px 14px; border-radius: 20px;
+  }
+  .hd-title { font-size: 0.85rem; font-weight: 600; color: #6b7280; }
+  .hd-right { font-size: 0.72rem; color: #374151; }
+
+  /* SLIDES CONTAINER */
+  .slides { flex: 1; overflow: hidden; position: relative; }
+
+  .slide {
+    display: none;
+    position: absolute; inset: 0;
+    padding: 40px 60px;
+    flex-direction: column;
+    overflow-y: auto;
+    animation: fadeIn 0.35s ease;
+  }
+  .slide.active { display: flex; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* SLIDE LABELS */
+  .slide-tag {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 3px;
+    text-transform: uppercase; color: #7c3aed; margin-bottom: 6px;
+  }
+  h2 { font-size: 2.1rem; font-weight: 900; line-height: 1.1; margin-bottom: 6px; }
+  .lead { font-size: 0.95rem; color: #6b7280; margin-bottom: 22px; }
+
+  /* BOXES */
+  .note-box {
+    background: rgba(167,139,250,0.07); border-left: 4px solid #a78bfa;
+    border-radius: 0 10px 10px 0; padding: 16px 22px;
+    font-size: 0.92rem; color: #d1d5db; line-height: 1.75; margin-bottom: 16px;
+  }
+  .note-box strong { color: #a78bfa; }
+  .discuss-box {
+    background: rgba(124,58,237,0.07); border-left: 4px solid #7c3aed;
+    border-radius: 0 10px 10px 0; padding: 16px 22px;
+    font-size: 0.92rem; color: #d1d5db; line-height: 1.75; margin-bottom: 16px;
+  }
+  .discuss-box strong { color: #a78bfa; }
+  .warn-box {
+    background: rgba(251,191,36,0.07); border-left: 4px solid #fbbf24;
+    border-radius: 0 10px 10px 0; padding: 16px 22px;
+    font-size: 0.92rem; color: #d1d5db; line-height: 1.75; margin-bottom: 16px;
+  }
+  .warn-box strong { color: #fbbf24; }
+
+  .two-col { display: flex; gap: 36px; align-items: flex-start; flex: 1; min-height: 0; }
+  .col { flex: 1; min-width: 0; }
+  .col-label { font-size: 0.7rem; color: #4b5563; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 14px; }
+
+  ul.points { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+  ul.points li {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 0.9rem; color: #d1d5db; line-height: 1.65;
+  }
+  ul.points li::before { content: '→'; color: #7c3aed; flex-shrink: 0; }
+
+  /* Tool recap grid */
+  .why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 18px; }
+  .why-card {
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px; padding: 16px 14px;
+    transition: border-color 0.25s, background 0.25s, transform 0.2s;
+  }
+  .why-card:hover { background: rgba(124,58,237,0.08); border-color: rgba(124,58,237,0.3); transform: translateY(-2px); }
+  .why-tag { font-size: 0.62rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #7c3aed; margin-bottom: 6px; }
+  .why-title { font-size: 0.9rem; font-weight: 800; color: #fff; margin-bottom: 4px; }
+  .why-desc { font-size: 0.75rem; color: #6b7280; line-height: 1.5; }
+
+  /* Task list (numbered, static) */
+  .task-list { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+  .task-item {
+    display: flex; align-items: flex-start; gap: 14px;
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 12px; padding: 13px 16px;
+    font-size: 0.9rem; color: #d1d5db; line-height: 1.6;
+  }
+  .task-num {
+    background: #7c3aed; color: #fff; font-weight: 800; font-size: 0.76rem;
+    min-width: 24px; height: 24px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;
+  }
+
+  /* Timer (single phase) */
+  .timer-panel {
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 16px; padding: 22px 26px; margin-bottom: 4px;
+  }
+  .timer-top { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 14px; }
+  .timer-phase { font-size: 0.72rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #a78bfa; }
+  .timer-clock { font-size: 2.4rem; font-weight: 900; font-variant-numeric: tabular-nums; }
+  .timer-bar {
+    height: 14px; border-radius: 8px; background: rgba(255,255,255,0.06);
+    overflow: hidden; margin-bottom: 18px; position: relative;
+  }
+  .timer-fill { position: absolute; top: 0; left: 0; height: 100%; width: 0%; background: #7c3aed; transition: width 0.3s linear; }
+  .timer-controls { display: flex; gap: 10px; }
+  .timer-btn {
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.09);
+    color: #9ca3af; padding: 9px 20px; border-radius: 10px; font-family: inherit;
+    font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
+  }
+  .timer-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+  .timer-btn.primary { background: #7c3aed; border-color: #7c3aed; color: #fff; }
+  .timer-btn.primary:hover { background: #6d28d9; }
+
+  /* Comparison table */
+  .table-wrap { overflow-x: auto; margin-bottom: 16px; border: 1px solid rgba(255,255,255,0.07); border-radius: 14px; }
+  .hierarchy-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  .hierarchy-table th, .hierarchy-table td { padding: 12px 16px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.06); }
+  .hierarchy-table thead th { background: rgba(124,58,237,0.14); color: #c4b5fd; font-size: 0.68rem; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; }
+  .hierarchy-table tbody tr:last-child td { border-bottom: none; }
+  .hierarchy-table tbody tr:hover td { background: rgba(255,255,255,0.02); }
+  .hierarchy-table td:first-child { color: #fff; font-weight: 700; white-space: nowrap; }
+  .hierarchy-table td.strong-cell { color: #c4b5fd; }
+  .hierarchy-table td.weak-cell { color: #fbbf24; }
+
+  /* Version A/B cards */
+  .version-card { border-radius: 14px; padding: 18px 20px; margin-bottom: 16px; }
+  .version-card.weak { background: rgba(251,191,36,0.06); border: 1px solid rgba(251,191,36,0.3); }
+  .version-card.strong { background: rgba(124,58,237,0.08); border: 1px solid rgba(124,58,237,0.35); }
+  .version-tag { font-size: 0.62rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+  .version-card.weak .version-tag { color: #fbbf24; }
+  .version-card.strong .version-tag { color: #a78bfa; }
+  .version-title { font-size: 1rem; font-weight: 800; color: #fff; margin-bottom: 6px; }
+  .version-desc { font-size: 0.86rem; color: #d1d5db; line-height: 1.65; }
+
+  /* Evaluation criteria */
+  .format-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 18px; }
+  .format-card {
+    display: flex; align-items: flex-start; gap: 12px;
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px; padding: 14px 16px;
+  }
+  .format-check {
+    background: #7c3aed; color: #fff; font-weight: 800; font-size: 0.8rem;
+    min-width: 26px; height: 26px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .format-desc { font-size: 0.84rem; color: #d1d5db; line-height: 1.55; }
+
+  /* References / closing */
+  .unit-links { display: flex; gap: 10px; margin-top: 8px; flex-wrap: wrap; }
+  .end-badge {
+    display: inline-block; background: rgba(124,58,237,0.14); border: 1px solid rgba(124,58,237,0.4);
+    color: #c4b5fd; font-size: 0.68rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    padding: 6px 16px; border-radius: 20px; margin-bottom: 16px; align-self: flex-start;
+  }
+
+  /* FOOTER */
+  footer {
+    background: rgba(255,255,255,0.02);
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding: 0 36px; height: 58px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .nav-btn {
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.09);
+    color: #9ca3af; padding: 7px 20px; border-radius: 8px;
+    cursor: pointer; font-size: 0.78rem; font-family: inherit;
+    transition: all 0.2s; text-decoration: none; display: inline-block;
+  }
+  .nav-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+  .nav-btn.primary { background: #7c3aed; border-color: #7c3aed; color: #fff; }
+  .nav-btn.primary:hover { background: #6d28d9; }
+  .dots { display: flex; gap: 6px; align-items: center; }
+  .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: rgba(255,255,255,0.15); cursor: pointer; transition: all 0.25s;
+  }
+  .dot.active { background: #7c3aed; width: 22px; border-radius: 4px; }
+  .slide-counter { font-size: 0.72rem; color: #374151; margin-top: 5px; text-align: center; }
+
+  @media (max-width: 900px) {
+    .slide { padding: 28px 24px; }
+    .two-col { flex-direction: column; }
+    .why-grid { grid-template-columns: 1fr; }
+    .format-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hd-left">
+    <span class="part-badge">Part 4</span>
+    <span class="hd-title">Summary &amp; Assessment · 15 min</span>
+  </div>
+  <span class="hd-right">Mrantinkovic et al. (2020)</span>
+</header>
+
+<div class="slides">
+
+  <!-- ══ SLIDE 1: KEY TAKEAWAYS ══ -->
+  <div class="slide active" id="slide-1">
+    <div class="slide-tag">4.1 — Key Takeaways</div>
+    <h2>What Hierarchy Actually Does</h2>
+    <p class="lead">A quick recap before the assessment. If any of this feels shaky, this is the moment to ask.</p>
+    <div class="note-box"><strong>Definition:</strong> Visual hierarchy is the deliberate arrangement of elements to signal their relative importance and guide the viewer's eye in a specific sequence.</div>
+    <ul class="points">
+      <li>Hierarchy answers: <strong style="color:#fff;">What do I see first?</strong></li>
+      <li>Then: <strong style="color:#fff;">What do I see next?</strong></li>
+      <li>Then: <strong style="color:#fff;">What do I read last?</strong></li>
+    </ul>
+    <div class="col-label">The Six Tools — Quick Recap</div>
+    <div class="why-grid">
+      <div class="why-card"><div class="why-tag">Tool 1</div><div class="why-title">Size</div><div class="why-desc">Larger = more important.</div></div>
+      <div class="why-card"><div class="why-tag">Tool 2</div><div class="why-title">Color</div><div class="why-desc">High saturation and contrast = more dominant.</div></div>
+      <div class="why-card"><div class="why-tag">Tool 3</div><div class="why-title">Contrast</div><div class="why-desc">The highest-contrast element is seen first.</div></div>
+      <div class="why-card"><div class="why-tag">Tool 4</div><div class="why-title">Spacing</div><div class="why-desc">More white space = more important.</div></div>
+      <div class="why-card"><div class="why-tag">Tool 5</div><div class="why-title">Typography</div><div class="why-desc">Size, weight, style, and color create text levels.</div></div>
+      <div class="why-card"><div class="why-tag">Tool 6</div><div class="why-title">Placement</div><div class="why-desc">Higher, centered, and left-placed elements are seen first.</div></div>
+    </div>
+    <div class="discuss-box"><strong>Remember:</strong> Hierarchy and balance work together — a design can be balanced and have a clear hierarchy.</div>
+    <div class="warn-box"><strong>Watch for:</strong> Weak hierarchy — where everything looks equally important — is the most common beginner design mistake.</div>
+    <div class="note-box" style="margin-bottom:0;"><strong>Payoff:</strong> Strong hierarchy makes designs faster to read, easier to understand, and more professional.</div>
+  </div>
+
+  <!-- ══ SLIDE 2: ASSESSMENT QUESTIONS ══ -->
+  <div class="slide" id="slide-2">
+    <div class="slide-tag">4.2 — Assessment Questions</div>
+    <h2>Short Answer — Individual Work</h2>
+    <p class="lead">10 minutes, working alone. Answer each question in your own words.</p>
+    <ol class="task-list">
+      <li class="task-item"><span class="task-num">1</span><span>Define visual hierarchy in your own words. Why is it considered a fundamental principle of graphic design?</span></li>
+      <li class="task-item"><span class="task-num">2</span><span>A designer creates a poster where the headline, subheading, and body text are all the same size and color. What hierarchy problem does this create? Name two tools they could use to fix it.</span></li>
+      <li class="task-item"><span class="task-num">3</span><span>Explain how spacing (white space) creates hierarchy. Give one real-world example.</span></li>
+      <li class="task-item"><span class="task-num">4</span><span>What is the difference between the F-pattern and the Z-pattern reading models? When would you use each?</span></li>
+      <li class="task-item"><span class="task-num">5</span><span>A design looks great in full color but loses all hierarchy when viewed in greyscale. What does this tell you about the design's hierarchy? How would you fix it?</span></li>
+    </ol>
+    <div class="col-label">Individual Work Timer</div>
+    <div class="timer-panel">
+      <div class="timer-top">
+        <span class="timer-phase">Individual Short Answer</span>
+        <span class="timer-clock" id="qClock">10:00</span>
+      </div>
+      <div class="timer-bar"><div class="timer-fill" id="qFill"></div></div>
+      <div class="timer-controls">
+        <button class="timer-btn primary" id="qStartBtn" onclick="qTimerStart()">Start</button>
+        <button class="timer-btn" onclick="qTimerPause()">Pause</button>
+        <button class="timer-btn" onclick="qTimerReset()">Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 3: COMPARISON TABLE ══ -->
+  <div class="slide" id="slide-3">
+    <div class="slide-tag">4.3 — Comparison Table</div>
+    <h2>Strong vs. Weak Hierarchy</h2>
+    <p class="lead">Use this as a checklist when critiquing your own work.</p>
+    <div class="table-wrap">
+      <table class="hierarchy-table">
+        <thead>
+          <tr><th>Feature</th><th>Strong Hierarchy</th><th>Weak Hierarchy</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Size</td><td class="strong-cell">Clear size differences between levels</td><td class="weak-cell">All elements are similar in size</td></tr>
+          <tr><td>Color</td><td class="strong-cell">Accent color used for the most important element</td><td class="weak-cell">Multiple vivid colors compete for attention</td></tr>
+          <tr><td>Contrast</td><td class="strong-cell">High contrast for primary elements</td><td class="weak-cell">Low or equal contrast throughout</td></tr>
+          <tr><td>Spacing</td><td class="strong-cell">Generous space around key elements</td><td class="weak-cell">Crowded, no breathing room</td></tr>
+          <tr><td>Typography</td><td class="strong-cell">3–4 distinct typographic levels</td><td class="weak-cell">All text looks the same</td></tr>
+          <tr><td>Placement</td><td class="strong-cell">Most important content is top/center</td><td class="weak-cell">Important content is buried or off-center</td></tr>
+          <tr><td>Viewer Experience</td><td class="strong-cell">Eye moves naturally through the design</td><td class="weak-cell">Viewer is confused about where to start</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 4: ASSIGNMENT ══ -->
+  <div class="slide" id="slide-4">
+    <div class="slide-tag">4.4 — Assignment</div>
+    <h2>Create a Hierarchy Comparison</h2>
+    <p class="lead">Using any design tool (Canva, Adobe Express, Figma, MS Word, or hand-drawn):</p>
+    <div class="two-col">
+      <div class="col">
+        <div class="version-card weak">
+          <div class="version-tag">Version A — Weak Hierarchy</div>
+          <div class="version-title">Everything Equal</div>
+          <div class="version-desc">Create a simple event poster or product flyer where all elements have the same size, color, and weight. Everything looks equally important.</div>
+        </div>
+        <div class="version-card strong">
+          <div class="version-tag">Version B — Strong Hierarchy</div>
+          <div class="version-title">Three Clear Levels</div>
+          <div class="version-desc">Redesign the same poster applying at least four of the six tools to create a clear 3-level hierarchy (headline → subheading → body/details).</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="note-box"><strong>Written Reflection (5–7 sentences):</strong> Describe which tools you used in Version B and explain how each one contributes to the hierarchy.</div>
+        <div class="discuss-box"><strong>Submission:</strong> Next class meeting.</div>
+        <div class="col-label">Evaluation Criteria</div>
+        <div class="format-grid">
+          <div class="format-card"><span class="format-check">✓</span><span class="format-desc">Version A clearly demonstrates the absence of hierarchy</span></div>
+          <div class="format-card"><span class="format-check">✓</span><span class="format-desc">Version B has at least 3 visually distinct levels</span></div>
+          <div class="format-card"><span class="format-check">✓</span><span class="format-desc">At least 4 of the 6 tools are applied and identifiable</span></div>
+          <div class="format-card"><span class="format-check">✓</span><span class="format-desc">Written reflection accurately describes the tools used</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 5: REFERENCES ══ -->
+  <div class="slide" id="slide-5">
+    <div class="end-badge">End of Unit</div>
+    <div class="slide-tag">References</div>
+    <h2>Sources</h2>
+    <div class="note-box"><strong>Reference:</strong> Mrantinkovic, Piestun, Fouda, Killings, Hajj, Parveen, Krunic, Pehcevski, Nur, Stephen &amp; Michelle. (2020). <em>3G Handy Guide: Graphic Designing</em>. 3G E-Learning LLC.</div>
+    <div class="col-label">Full Unit</div>
+    <div class="unit-links">
+      <a class="nav-btn" href="part1.html">Part 1 — Foundations</a>
+      <a class="nav-btn" href="part2.html">Part 2 — Six Tools</a>
+      <a class="nav-btn" href="part3.html">Part 3 — Group Activity</a>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <a class="nav-btn" href="part3.html">← Part 3</a>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:5px;">
+    <div class="dots" id="dots">
+      <div class="dot active" onclick="goTo(1)"></div>
+      <div class="dot" onclick="goTo(2)"></div>
+      <div class="dot" onclick="goTo(3)"></div>
+      <div class="dot" onclick="goTo(4)"></div>
+      <div class="dot" onclick="goTo(5)"></div>
+    </div>
+    <span class="slide-counter" id="counter">Slide 1 of 5</span>
+  </div>
+  <div style="display:flex;gap:10px;">
+    <button class="nav-btn" onclick="prev()">← Prev</button>
+    <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+  </div>
+</footer>
+
+<script>
+  let current = 1;
+  const total = 5;
+
+  function saveProgress(n) {
+    localStorage.setItem('h_p4', Math.max(parseInt(localStorage.getItem('h_p4') || 0), n));
+  }
+
+  function goTo(n) {
+    document.getElementById('slide-' + current).classList.remove('active');
+    document.querySelectorAll('.dot')[current - 1].classList.remove('active');
+    current = n;
+    document.getElementById('slide-' + current).classList.add('active');
+    document.querySelectorAll('.dot')[current - 1].classList.add('active');
+    document.getElementById('counter').textContent = 'Slide ' + current + ' of ' + total;
+    const btn = document.getElementById('nextBtn');
+    if (current === total) {
+      btn.textContent = 'Restart ↺';
+      btn.onclick = () => goTo(1);
+    } else {
+      btn.textContent = 'Next →';
+      btn.onclick = next;
+    }
+    saveProgress(current);
+  }
+
+  function next() { if (current < total) goTo(current + 1); else goTo(1); }
+  function prev() { if (current > 1) goTo(current - 1); }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') next();
+    if (e.key === 'ArrowLeft') prev();
+  });
+
+  /* ---- ASSESSMENT TIMER (10 min single phase) ---- */
+  const Q_TOTAL = 600;
+  let qRemaining = Q_TOTAL;
+  let qInterval = null;
+
+  function qFormat(s) {
+    const m = Math.floor(s / 60);
+    const sec = s % 60;
+    return m + ':' + (sec < 10 ? '0' : '') + sec;
+  }
+
+  function qRender() {
+    document.getElementById('qClock').textContent = qFormat(qRemaining);
+    const pct = Math.min(100, ((Q_TOTAL - qRemaining) / Q_TOTAL) * 100);
+    document.getElementById('qFill').style.width = pct + '%';
+  }
+
+  function qTimerStart() {
+    if (qInterval) return;
+    document.getElementById('qStartBtn').textContent = 'Running…';
+    qInterval = setInterval(() => {
+      qRemaining--;
+      if (qRemaining <= 0) {
+        qRemaining = 0;
+        clearInterval(qInterval);
+        qInterval = null;
+        document.getElementById('qStartBtn').textContent = 'Start';
+      }
+      qRender();
+    }, 1000);
+  }
+
+  function qTimerPause() {
+    clearInterval(qInterval);
+    qInterval = null;
+    document.getElementById('qStartBtn').textContent = 'Start';
+  }
+
+  function qTimerReset() {
+    clearInterval(qInterval);
+    qInterval = null;
+    qRemaining = Q_TOTAL;
+    document.getElementById('qStartBtn').textContent = 'Start';
+    qRender();
+  }
+
+  qRender();
+</script>
+</body>
+</html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Part 4 — Scalability &amp; File Formats · Logo Design Techniques</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>input[type=range]{accent-color:var(--orange);width:100%;}</style>
+</head>
+<body data-prev="part3-digitizing.html" data-next="part5-summary.html">
+<div class="app">
+
+  <div class="deck">
+
+    <!-- ══ SLIDE HEADER — Part 4 ══ -->
+    <section class="slide dark" data-section="Part 4 — Overview">
+      <div style="flex:1; display:flex; flex-direction:column; justify-content:center; gap:20px; max-width:680px;">
+        <span class="kicker anim d1"><span class="sw"></span>Logo Design Techniques · Module 04</span>
+        <h2 class="anim d2" style="font-size:clamp(32px,5vw,52px); line-height:1.0;">Part 4 <span class="accent">Scalability &amp; File Formats</span></h2>
+        <div class="h-bar anim d2"></div>
+        <p class="sub anim d3" style="max-width:52ch; font-size:clamp(13px,1.5vw,16px);">Why logos must scale, the two-part scalability test, logo variations to deliver, and the correct file format for every use case.</p>
+        <div class="anim d4" style="display:flex; flex-wrap:wrap; gap:8px;">
+          <span style="font-family:'JetBrains Mono',monospace; font-size:10px; padding:5px 12px; border-radius:100px; border:1px solid rgba(247,245,240,0.15); color:rgba(247,245,240,0.6);">4.1 — Why Scalability Matters</span>
+          <span style="font-family:'JetBrains Mono',monospace; font-size:10px; padding:5px 12px; border-radius:100px; border:1px solid rgba(247,245,240,0.15); color:rgba(247,245,240,0.6);">4.2 — The Scalability Test</span>
+          <span style="font-family:'JetBrains Mono',monospace; font-size:10px; padding:5px 12px; border-radius:100px; border:1px solid rgba(247,245,240,0.15); color:rgba(247,245,240,0.6);">4.3 — Logo Variations</span>
+          <span style="font-family:'JetBrains Mono',monospace; font-size:10px; padding:5px 12px; border-radius:100px; border:1px solid rgba(247,245,240,0.15); color:rgba(247,245,240,0.6);">4.4 — File Format Guide</span>
+          <span style="font-family:'JetBrains Mono',monospace; font-size:10px; padding:5px 12px; border-radius:100px; border:1px solid rgba(247,245,240,0.15); color:rgba(247,245,240,0.6);">4.5 — Quick Reference</span>
+        </div>
+        <div class="anim d5" style="display:flex; align-items:center; gap:10px; margin-top:8px;">
+          <span style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--orange); letter-spacing:.1em; text-transform:uppercase;">Press Next to begin</span>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="#FF5A1F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ SLIDE 4.1 — Why Scalability Matters ══ -->
+    <section class="slide" data-section="4.1 — Why Scalability Matters">
+      <span class="kicker anim d1"><span class="sw"></span>Part 4 · Section 4.1</span>
+      <h2 class="anim d2">Why Scalability is <span class="accent">Non-Negotiable</span></h2>
+      <div class="h-bar anim d2"></div>
+      <p class="sub anim d3">A logo appears in an enormous range of sizes throughout its life. A raster logo at 500×500 px is unusable at billboard scale. A vector logo reproduces perfectly at all sizes.</p>
+
+      <div class="slide-body cols2">
+        <div class="table-wrap anim d3">
+          <table class="data">
+            <tr><th>Application</th><th>Approximate Size</th></tr>
+            <tr><td>Favicon (browser tab)</td><td>16 × 16 px to 32 × 32 px</td></tr>
+            <tr><td>Social media profile picture</td><td>400 × 400 px</td></tr>
+            <tr><td>Website header</td><td>120–300 px wide</td></tr>
+            <tr><td>Business card</td><td>15–25 mm wide</td></tr>
+            <tr><td>Letterhead</td><td>30–50 mm wide</td></tr>
+            <tr><td>Signage / storefront</td><td>300–1,000 mm wide</td></tr>
+            <tr><td>Vehicle wrap</td><td>500–2,000 mm wide</td></tr>
+            <tr><td>Billboard</td><td>3,000–14,000 mm wide</td></tr>
+          </table>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:12px; overflow:hidden;">
+          <div class="teal-block anim d3">
+            <h3>The Core Principle</h3>
+            <p>Scalability is a core requirement of professional graphic design output. A design that cannot be reproduced consistently across media has failed a fundamental professional standard.</p>
+          </div>
+          <div class="callout anim d4">
+            <b>Key Concept</b>
+            Color is an enhancement, not a crutch. The strongest logos — Nike, Apple, McDonald's arches — are instantly recognizable as pure black silhouettes. Build the form first; add color second.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ SLIDE 4.2 — The Scalability Test + Interactive Demo ══ -->
+    <section class="slide" data-section="4.2 — The Scalability Test">
+      <span class="kicker anim d1"><span class="sw"></span>Part 4 · Section 4.2</span>
+      <h2 class="anim d2">The <span class="accent">Scalability Test</span></h2>
+      <div class="h-bar anim d2"></div>
+      <p class="sub anim d3">Before finalizing any logo, apply this two-part test.</p>
+
+      <div class="slide-body cols2">
+        <!-- Two tests -->
+        <div style="display:flex; flex-direction:column; gap:10px; overflow:hidden;">
+          <div class="teal-block anim d3" style="flex:1;">
+            <h3>Test 1 — Minimum Size</h3>
+            <p>Display the logo at 15 mm / 57 px wide. Ask:</p>
+            <ul style="padding-left:14px; color:rgba(247,245,240,0.8); font-size:clamp(11px,1vw,12.5px); line-height:1.55; margin-top:8px;">
+              <li>Is the brand name still readable?</li>
+              <li>Are all symbol details still visible?</li>
+              <li>Does the overall shape still read clearly?</li>
+            </ul>
+            <p style="color:rgba(247,245,240,0.55); font-size:11.5px; margin-top:8px;">If any answer is <em>no</em> — simplify until it passes.</p>
+          </div>
+          <div class="teal-block anim d4" style="flex:1;">
+            <h3>Test 2 — One-Color Silhouette</h3>
+            <p>Fill the entire logo with solid black. Remove all gradients and color. Ask:</p>
+            <ul style="padding-left:14px; color:rgba(247,245,240,0.8); font-size:clamp(11px,1vw,12.5px); line-height:1.55; margin-top:8px;">
+              <li>Is the logo still recognizable?</li>
+              <li>Does the shape communicate the brand without color?</li>
+              <li>Would it work embroidered or engraved?</li>
+            </ul>
+            <p style="color:rgba(247,245,240,0.55); font-size:11.5px; margin-top:8px;">If any answer is <em>no</em> — the form is too dependent on color.</p>
+          </div>
+        </div>
+
+        <!-- Interactive scale demo -->
+        <div class="card anim d3" style="display:flex; flex-direction:column; overflow:hidden;">
+          <h3>Interactive: Scale Preview</h3>
+          <p style="font-size:11.5px; color:var(--gray); margin-bottom:10px;">Drag to see vector vs. raster quality at different sizes.</p>
+          <input type="range" id="scaleSlider" min="16" max="200" value="60">
+          <p style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--gray); margin:6px 0 12px;" id="scaleLabel">Size: 60px</p>
+          <div style="display:flex; align-items:flex-end; gap:24px; flex-wrap:wrap; padding:14px; background:var(--paper); border:1px solid var(--line-light); border-radius:8px; flex:1; align-content:center;">
+            <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+              <svg id="vectorLogo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="display:block; transition:width .1s,height .1s;">
+                <rect width="100" height="100" rx="18" fill="#1B4B4A"/>
+                <text x="50" y="62" text-anchor="middle" font-family="Fraunces,serif" font-weight="900" font-size="52" fill="#FF5A1F">L</text>
+              </svg>
+              <span style="font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--gray); text-transform:uppercase; letter-spacing:.06em;">Vector (SVG)</span>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+              <canvas id="rasterLogo" style="display:block; image-rendering:pixelated; border-radius:3px;"></canvas>
+              <span style="font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--gray); text-transform:uppercase; letter-spacing:.06em;">Raster (PNG @32px)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ SLIDE 4.3 — Logo Variations to Deliver ══ -->
+    <section class="slide dark" data-section="4.3 — Logo Variations to Deliver">
+      <span class="kicker anim d1"><span class="sw"></span>Part 4 · Section 4.3</span>
+      <h2 class="anim d2">Logo Variations <span class="accent">to Deliver</span></h2>
+      <div class="h-bar anim d2"></div>
+      <p class="sub anim d3">A complete professional logo package includes multiple variations to cover every use case.</p>
+
+      <div class="slide-body" style="overflow:hidden;">
+        <div class="table-wrap anim d3" style="background:#1a1a1c; border-color:var(--line-dark);">
+          <table class="data" style="background:transparent;">
+            <tr><th style="color:var(--gray);">Variation</th><th style="color:var(--gray);">Description</th><th style="color:var(--gray);">Use Case</th></tr>
+            <tr><td style="color:rgb(255, 90, 31); font-weight:700;">Full color (primary)</td><td style="color:rgba(247,245,240,0.75);">The logo in its official brand colors</td><td style="color:rgba(247,245,240,0.55);">Standard use across all media</td></tr>
+            <tr><td style="color:#FF5A1F; font-weight:700;">Reversed (white)</td><td style="color:rgba(247,245,240,0.75);">White version for dark backgrounds</td><td style="color:rgba(247,245,240,0.55);">Dark website headers, dark packaging, apparel</td></tr>
+            <tr><td style="color:#FF5A1F; font-weight:700;">One-color black</td><td style="color:rgba(247,245,240,0.75);">Solid black version</td><td style="color:rgba(247,245,240,0.55);">Fax, photocopying, black-and-white print</td></tr>
+            <tr><td style="color:#FF5A1F; font-weight:700;">One-color white</td><td style="color:rgba(247,245,240,0.75);">Solid white version</td><td style="color:rgba(247,245,240,0.55);">Embossing, engraving, white-on-dark print</td></tr>
+            <tr><td style="color:#FF5A1F; font-weight:700;">Horizontal layout</td><td style="color:rgba(247,245,240,0.75);">Logo elements arranged side by side</td><td style="color:rgba(247,245,240,0.55);">Website headers, email signatures, banners</td></tr>
+            <tr><td style="color:#FF5A1F; font-weight:700;">Stacked layout</td><td style="color:rgba(247,245,240,0.75);">Logo elements arranged vertically</td><td style="color:rgba(247,245,240,0.55);">Square formats, profile pictures, stamps</td></tr>
+            <tr><td style="color:#FF5A1F; font-weight:700;">Icon / symbol only</td><td style="color:rgba(247,245,240,0.75);">The symbol without the wordmark</td><td style="color:rgba(247,245,240,0.55);">Favicon, app icon, social media avatar</td></tr>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ SLIDE 4.4+4.5 — File Formats ══ -->
+    <section class="slide" data-section="4.4 — File Formats & Quick Reference">
+      <span class="kicker anim d1"><span class="sw"></span>Part 4 · Sections 4.4 &amp; 4.5</span>
+      <h2 class="anim d2">File Formats &amp; <span class="accent">Quick Reference</span></h2>
+      <div class="h-bar anim d2"></div>
+
+      <div class="slide-body cols2">
+        <div style="display:flex; flex-direction:column; gap:8px; overflow:hidden;">
+          <span class="sec-label anim d3">§ 4.4 — File Format Guide</span>
+          <div class="table-wrap anim d3" style="flex:1;">
+            <table class="data">
+              <tr><th>Format</th><th>Type</th><th>Use Case</th></tr>
+              <tr><td><b>.AI</b></td><td>Vector</td><td>Master source file — fully editable</td></tr>
+              <tr><td><b>.EPS</b></td><td>Vector</td><td>Print vendors, sign makers, embroidery</td></tr>
+              <tr><td><b>.SVG</b></td><td>Vector</td><td>Websites, apps, responsive UI</td></tr>
+              <tr><td><b>.PDF</b></td><td>Vector</td><td>Print-ready delivery; client presentations</td></tr>
+              <tr><td><b>.PNG</b></td><td>Raster</td><td>Web, presentations (transparent bg)</td></tr>
+              <tr><td><b>.JPG</b></td><td>Raster</td><td>Photography, email (no transparency)</td></tr>
+            </table>
+          </div>
+          <div class="callout anim d4" style="flex-shrink:0;">
+            <b>Critical Rule</b>
+            The <strong>.AI file is the master</strong>. All other formats are exports. If the AI file is lost, the logo must be rebuilt from scratch.
+          </div>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:8px; overflow:hidden;">
+          <span class="sec-label anim d3">§ 4.5 — Quick Reference</span>
+          <div class="table-wrap anim d3" style="flex:1;">
+            <table class="data">
+              <tr><th>Situation</th><th>Format</th></tr>
+              <tr><td>Sending to a print shop</td><td><b>EPS or PDF</b></td></tr>
+              <tr><td>Placing on a website</td><td><b>SVG or PNG</b></td></tr>
+              <tr><td>Embroidery machine</td><td><b>EPS or AI</b></td></tr>
+              <tr><td>Creating a favicon</td><td><b>PNG 32×32 or ICO</b></td></tr>
+              <tr><td>Sending to client (general)</td><td><b>PNG + PDF</b></td></tr>
+              <tr><td>Storing the master file</td><td><b>AI</b></td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── FOOTER NAV ── -->
+    <nav class="slide-nav" aria-label="Navigation">
+      <div class="snav-parts" id="snavParts"></div>
+      <div class="snav-controls">
+        <button class="snav-btn" id="snavPrev" aria-label="Previous"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Prev</button>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:5px;"><div class="slide-dots" id="snavDots"></div><span class="snav-label" id="snavLabel"></span></div>
+        <button class="snav-btn" id="snavNext" aria-label="Next">Next<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </div>
+    </nav>
+
+  </div><!-- /deck -->
+</div><!-- /app -->
+
+<script src="shared.js"></script>
+<script>
+  buildRail('scalability');
+  buildSlides();
+  buildMobileNav();
+  buildBgAnimation();
+
+  /* scale demo */
+  (function () {
+    const slider = document.getElementById('scaleSlider');
+    const label  = document.getElementById('scaleLabel');
+    const svg    = document.getElementById('vectorLogo');
+    const canvas = document.getElementById('rasterLogo');
+    const ctx    = canvas.getContext('2d');
+    const SRC = 32;
+    canvas.width = SRC; canvas.height = SRC;
+    ctx.fillStyle = '#1B4B4A';
+    ctx.beginPath(); ctx.roundRect(0, 0, SRC, SRC, 6); ctx.fill();
+    ctx.fillStyle = '#FF5A1F'; ctx.font = 'bold 22px serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('L', 16, 17);
+    function update() {
+      const v = parseInt(slider.value);
+      label.textContent = 'Size: ' + v + 'px';
+      svg.style.width = v + 'px'; svg.style.height = v + 'px';
+      canvas.style.width = v + 'px'; canvas.style.height = v + 'px';
+    }
+    slider.addEventListener('input', update); update();
+  })();
+</script>
+</body>
+</html>

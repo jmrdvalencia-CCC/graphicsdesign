@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎨 The Color Journey — Kokology Quiz</title>
+    <style>
+        :root {
+            --checker-light: #f0f0f0;
+            --checker-dark: #d0d0d0;
+            --text-dark: #2d2d2d;
+            --bg-soft: #fafafa;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+        }
+        body {
+            background: var(--bg-soft);
+            color: var(--text-dark);
+            line-height: 1.7;
+            padding: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            padding: 30px 20px;
+            border-bottom: 2px solid #e0e0e0;
+            margin-bottom: 40px;
+        }
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #e63946, #ff9f1c, #2a9d8f, #4361ee, #7209b7);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .scene {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        }
+        .scene h2 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #444;
+            border-left: 4px solid #4361ee;
+            padding-left: 12px;
+        }
+        .story-text {
+            font-size: 1.05rem;
+            margin-bottom: 25px;
+            line-height: 1.8;
+        }
+        .img-placeholder {
+            width: 100%;
+            height: 220px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #555;
+            font-style: italic;
+            margin-bottom: 25px;
+            border: 2px dashed #bbb;
+            background: linear-gradient(135deg, var(--checker-dark) 25%, transparent 25%),
+                        linear-gradient(225deg, var(--checker-dark) 25%, transparent 25%),
+                        linear-gradient(45deg, var(--checker-dark) 25%, transparent 25%),
+                        linear-gradient(315deg, var(--checker-dark) 25%, transparent 25%);
+            background-size: 24px 24px;
+            background-position: 0 0, 12px 0, 12px -12px, 0px 12px;
+            background-color: var(--checker-light);
+        }
+        .choices {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+        }
+        .choice-card {
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+            cursor: default;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 2px solid rgba(0,0,0,0.08);
+        }
+        .choice-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+        }
+        .color-swatch {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 12px;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            position: relative;
+            background: linear-gradient(135deg, var(--checker-dark) 25%, transparent 25%),
+                        linear-gradient(225deg, var(--checker-dark) 25%, transparent 25%),
+                        linear-gradient(45deg, var(--checker-dark) 25%, transparent 25%),
+                        linear-gradient(315deg, var(--checker-dark) 25%, transparent 25%);
+            background-size: 16px 16px;
+            background-position: 0 0, 8px 0, 8px -8px, 0px 8px;
+            background-color: var(--checker-light);
+            overflow: hidden;
+        }
+        .color-swatch > span {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+        }
+        .choice-title {
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        .choice-desc {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            line-height: 1.4;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 0.95rem;
+            color: #777;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>🎨 The Color Journey</h1>
+    <p>A Kokology Story Quiz — discover your true self through color</p>
+</header>
+
+<!-- SCENE 1: The Path -->
+<section class="scene">
+    <h2>🚶 Scene 1: The Path of Colors</h2>
+    <img src="cocology-image/Road-journey.png" alt="Misty valley with four glowing colorful paths winding toward the horizon" style="width:100%; height:220px; object-fit:cover; border-radius:12px; margin-bottom:25px; display:block;">
+    <p class="story-text">
+        You wake up in a quiet, misty valley. Ahead, a long, winding road leads toward a glowing horizon. 
+        The sky is soft and warm. At your feet, <strong>four different paths stretch forward</strong>, 
+        each shining with a different color. Which one do you walk on?
+    </p>
+    <div class="choices">
+        <div class="choice-card">
+            <div class="color-swatch"><span style="background-color: rgba(220, 38, 38, 0.85);"></span></div>
+            <div class="choice-title">🔴 Red Path</div>
+            <div class="choice-desc">Bold, passionate, full of fire — you live in the moment and follow your heart.</div>
+        </div>
+        <div class="choice-card">
+            <div class="color-swatch"><span style="background-color: rgba(249, 115, 22, 0.85);"></span></div>
+            <div class="choice-title">🟠 Orange Path</div>
+            <div class="choice-desc">Warm, joyful, creative — you bring sunshine wherever you go.</div>
+        </div>
+        <div class="choice-card">
+            <div class="color-swatch"><span style="background-color: rgba(234, 179, 8, 0.85);"></span></div>
+            <div class="choice-title">🟡 Yellow Path</div>
+            <div class="choice-desc">Bright, hopeful, wise — you see the best in everything.</div>
+        </div>
+        <div class="choice-card">
+            <div class="color-swatch"><span style="background-color: rgba(22, 163, 74, 0.85);"></span></div>
+            <div class="choice-title">🟢 Green Path</div>
+            <div class="choice-desc">Calm, steady, kind — you walk with peace and grow at your own pace.</div>
+        </div>
+    </div>
+</section>
+
+<!-- SCENE 2: The Sunset -->
+<section class="scene">
+    <h2>🌅 Scene 2: The Sunset Sky</h2>
+    <img src="cocology-image/sunset.png" alt="Beautiful sunset clearing with horizon glowing in rich gradient colors" style="width:100%; height:220px; object-fit:cover; border-radius:12px; margin-bottom:25px; display:block;">
+    <p class="story-text">
+        After walking for a while, you come to a clearing. Above you, <strong>a beautiful sunset paints the sky</strong>. 
+        Which color fills the horizon?
+    </p>
+    <div class="choices">
+        <div class="choice-card">
+            <div class="color-swatch"><span style="background-color: rgba(30, 64, 175, 0.85);"></span></div>
+            <div class="choice-title">🔵 Deep Blue</div>
+            <div class="choice-desc">Thoughtful, sincere, calm — you value trust and honesty above all.</div>
+        </div>
+        <div class="choice-card">
+            <div class="color-swatch"><span style="background-color: rgba(109, 40, 217, 0.85);"></span></div>
+            <div class="choice-title">🟣 Royal Purple</div>
+            <div class="choice-desc">Magical, unique, dreamy — you see beauty where others don't.</div>
+        </div>
+        <div class="choice-card">
+            <div class="color-swatch"><span style="background-color: rgba(244, 114, 182, 0.85);"></span></div>
+            <div class="choice-title">🩷 Soft Pink</div>
+            <div class="choice-desc">Gentle, loving, tender — you believe in kindness and forgiveness.</div>
+        </div>
+        <div class="choice-card">
+            <div class="color-swatch"><span style="background-color: rgba(20, 20, 30, 0.85);"></span></div>
+            <div class="choice-title">⚫ Twilight Black</div>
+            <div class="choice-desc">Strong, mysterious, self-controlled — you protect your heart carefully.</div>
+        </div>
+    </div>
+</section>
+
+<!-- SCENE 3: The Lake -->
+<section class="scene">
+    <h2>🌊 Scene 3: The Crystal Lake</h2>
+    <img src="cocology-image/lake.png" alt="Still crystal-clear lake with water shimmering with deep hidden color" style="width:100%; height:220px; object-fit:cover; border-radius:12px; margin-bottom:25px; display:block;">
+    <p class="story-text">
+        The sunset fades, and you stand beside <strong>a perfectly still lake</strong>. The water is clear — 
+        but deep down, you sense it holds a special color. What color do you see in the deepest part?
+    </p>
+    <div class="choices">
+        <div class="choice-card">
+            <div class="color-swatch"><span style="background-color: rgba(20, 184, 166, 0.85);"></span></div>
+            <div class="choice-title">💎 Turquoise</div>
+            <div class="choice-desc">Free-spirited, youthful, wise — you bring healing and clarity.</div>
+        </div>
+        <div class="choice-card">
+            <div class="color-swatch"><span style="background-color: rgba(56, 189, 248, 0.85);"></span></div>
+            <div class="choice-title">🩵 Sky Blue</div>
+            <div class="choice-desc">Pure, open, peaceful — you carry light even on dark days.</div>
+        </div>
+        <div class="choice-card">
+            <div class="color-swatch"><span style="background-color: rgba(136, 76, 45, 0.85);"></span></div>
+            <div class="choice-title">🟤 Earth Brown</div>
+            <div class="choice-desc">Warm, steady, loyal — your strength is quiet and deeply real.</div>
+        </div>
+        <div class="choice-card">
+            <div class="color-swatch"><span style="background-color: rgba(180, 180, 210, 0.85);"></span></div>
+            <div class="choice-title">⚪ Shimmering Silver</div>
+            <div class="choice-desc">Graceful, reflective, bright — you shine with timeless elegance.</div>
+        </div>
+    </div>
+</section>
+
+<!-- SCENE 4: The House -->
+<section class="scene">
+    <h2>🏠 Scene 4: The House by the Shore</h2>
+    <img src="cocology-image/house.png" alt="Cozy house standing by lakeshore with warm light glowing from windows" style="width:100%; height:220px; object-fit:cover; border-radius:12px; margin-bottom:25px; display:block;">
+    <p class="story-text">
+        Night falls gently. Ahead, <strong>a cozy house stands waiting for you</strong>. Light glows from the windows. 
+        The door is open. What color is the house?
+    </p>
+    <div class="choices">
+        <div class="choice-card">
+            <div class="color-swatch"><span style="background-color: rgba(255, 255, 255, 0.92); border:1px solid #ddd;"></span></div>
+            <div class="choice-title">⚪ White House</div>
+            <div class="choice-desc">You crave peace, clarity, and a fresh start — a place to simply be yourself.</div>
+        </div>
+        <div class="choice-card">
+            <div class="color-swatch"><span style="background-color: rgba(254, 240, 138, 0.9);"></span></div>
+            <div class="choice-title">🟡 Cream Yellow</div>
+            <div class="choice-desc">You want warmth, laughter, and love — a home filled with happy memories.</div>
+        </div>
+        <div class="choice-card">
+            <div class="color-swatch"><span style="background-color: rgba(161, 98, 53, 0.85);"></span></div>
+            <div class="choice-title">🟤 Warm Brown</div>
+            <div class="choice-desc">You want stability and belonging — a life that truly feels like home.</div>
+        </div>
+        <div class="choice-card">
+            <div class="color-swatch"><span style="background-color: rgba(37, 99, 235, 0.85);"></span></div>
+            <div class="choice-title">🔵 Blue House</div>
+            <div class="choice-desc">You want calm, trust, and quiet happiness — something real and true.</div>
+        </div>
+    </div>
+</section>
+
+<!-- SCENE 5: The Gift -->
+<section class="scene">
+    <h2>🎁 Scene 5: The Waiting Gift</h2>
+    <img src="cocology-image/gift.png" alt="A glowing gift box sitting on a table" style="width:100%; height:220px; object-fit:cover; border-radius:12px; margin-bottom:25px; display:block;">
+    <p class="story-text">
+        You step inside. On the table, <strong>a glowing gift box sits waiting</strong> — meant just for you. 
+        What color is the ribbon tied around it?
+    </p>
+    <div class="choices">
+        <div class="choice-card">
+            <div class="color-swatch"><span style="background-color: rgba(245, 158, 11, 0.9);"></span></div>
+            <div class="choice-title">🧡 Gold Ribbon</div>
+            <div class="choice-desc">Your destiny: to shine, inspire, and share your gifts with the world.</div>
+        </div>
+        <div class="choice-card">
+            <div class="color-swatch"><span style="background-color: rgba(124, 58, 237, 0.85);"></span></div>
+            <div class="choice-title">💜 Violet Ribbon</div>
+            <div class="choice-desc">Your destiny: to create, heal, and bring magic wherever you go.</div>
+        </div>
+        <div class="choice-card">
+            <div class="color-swatch"><span style="background-color: rgba(5, 150, 105, 0.85);"></span></div>
+            <div class="choice-title">💚 Emerald Ribbon</div>
+            <div class="choice-desc">Your destiny: to love deeply, grow, and build a life of peace.</div>
+        </div>
+        <div class="choice-card">
+            <div class="color-swatch"><span style="background-color: rgba(185, 28, 28, 0.85);"></span></div>
+            <div class="choice-title">❤️ Crimson Ribbon</div>
+            <div class="choice-desc">Your destiny: to love bravely and live life fully — follow your heart.</div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    ✨ Open the gift inside… Your true color shines bright. You are perfect exactly as you are. ✨
+</footer>
+
+</body>
+</html>

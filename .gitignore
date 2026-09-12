@@ -1,0 +1,21 @@
+# Windows system files
+*/desktop.ini
+desktop.ini
+Thumbs.db
+ehthumbs.db
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Student submission folders (large files, not for repo)
+Photoshop Tool Showcase (File responses)/
+Photoshop Tool Showcase - 3IT3 (File responses)/
+
+# Temp/lock files
+~$*
+*.tmp

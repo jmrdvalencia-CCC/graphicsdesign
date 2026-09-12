@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Part 1b — History · Color Theory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+<div class="app">
+  <nav class="rail" aria-label="Module sections">
+    <div class="brand">
+      <span class="eyebrow">Graphic Design · Module 03</span>
+      <h1>Color&nbsp;Theory</h1>
+    </div>
+    <div class="wheel-wrap" aria-hidden="true">
+      <div class="wheel-disc"></div>
+      <div class="wheel-center-label" id="wheelCenterLabel"></div>
+    </div>
+    <div class="tabstrip" id="tabstrip"></div>
+    <ul class="navlist" id="navlist"></ul>
+    <div class="rail-foot">Ref. Mrantinkovic et al. (2020)<br>3G Handy Guide: Graphic Designing</div>
+  </nav>
+
+  <main>
+    <span class="kicker"><span class="sw"></span>Part 1 · Section 1.2</span>
+    <h2>A brief history</h2>
+    <p class="sub">Understanding where color theory comes from helps explain why it works. Tap any row to expand the detail.</p>
+
+    <div class="timeline" id="timeline"></div>
+
+    <div class="callout" style="margin-top:28px;"><b>Key insight</b>Color theory is not a set of rigid rules — it is a set of principles based on how human vision actually works. Understanding the principles is what lets designers break them intentionally.</div>
+
+    <div class="pager">
+      <a class="pagebtn prev" href="part1e-systems-pillar.html"><span class="lbl">Back</span><span class="name">← Color Systems</span></a>
+      <a class="pagebtn next" href="part1a2-pillars.html"><span class="lbl">Next</span><span class="name">Three Pillars →</span></a>
+    </div>
+  </main>
+</div>
+
+<script src="shared.js"></script>
+<script>
+buildRail('foundations-history');
+
+const TIMELINE = [
+  { y:'1666',  n:'Isaac Newton',               d:'Split white light into a spectrum through a prism and drew the first circular color diagram.',    x:'He named seven hues by analogy to the seven notes of a musical scale.' },
+  { y:'1810',  n:'Johann Wolfgang von Goethe', d:'Published Theory of Colors, the first systematic study of color\u2019s psychological effects.',   x:'He argued perception was physiological as much as physical, clashing publicly with Newton.' },
+  { y:'1840',  n:'Michel Eug\u00e8ne Chevreul',d:'Identified simultaneous contrast \u2014 colors look different depending on what surrounds them.', x:'He was a chemist studying dyes at the Gobelins tapestry works when he noticed the effect.' },
+  { y:'1920s', n:'Bauhaus School',             d:'Itten and Albers built the color exercises that still anchor design education today.',             x:'Itten had students mix a personal, gut palette before ever touching theory.' },
+  { y:'1963',  n:'Josef Albers',               d:'Published Interaction of Color, showing that color perception is relative, not absolute.',         x:'He proved the same grey looks warm on blue and cool on orange, using paper squares alone.' },
+];
+const timelineEl = document.getElementById('timeline');
+TIMELINE.forEach(t => {
+  const item = document.createElement('div');
+  item.className = 'tl-item';
+  item.innerHTML = `
+    <button class="tl-head">
+      <span class="tl-year">${t.y}</span>
+      <span><h4>${t.n}</h4><p>${t.d}</p></span>
+      <span class="tl-chev">&#9662;</span>
+    </button>
+    <div class="tl-extra"><p>${t.x}</p></div>`;
+  item.querySelector('.tl-head').addEventListener('click', () => item.classList.toggle('open'));
+  timelineEl.appendChild(item);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Part 1 — Foundations · Color Theory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+<div class="app">
+  <nav class="rail" aria-label="Module sections">
+    <div class="brand">
+      <span class="eyebrow">Graphic Design · Module 03</span>
+      <h1>Color&nbsp;Theory</h1>
+    </div>
+    <div class="wheel-wrap" aria-hidden="true">
+      <div class="wheel-disc"></div>
+      <div class="wheel-center-label" id="wheelCenterLabel"></div>
+    </div>
+    <div class="tabstrip" id="tabstrip"></div>
+    <ul class="navlist" id="navlist"></ul>
+    <div class="rail-foot">Ref. Mrantinkovic et al. (2020)<br>3G Handy Guide: Graphic Designing</div>
+  </nav>
+
+  <main>
+    <span class="kicker"><span class="sw"></span>Part 1 · 25 min</span>
+    <h2>What is color theory?</h2>
+    <p class="sub">The practical guidance for mixing colors and predicting how combinations behave — the framework that explains why a palette works before a single word is read.</p>
+
+    <div class="card" style="margin-bottom:4px;">
+      <h3 style="font-size:16px; margin-bottom:12px;">Learning Objectives</h3>
+      <ol style="margin:0; padding-left:18px; color:var(--ink-soft); font-size:14px; line-height:1.7;">
+        <li>Define color theory and explain its foundational role in graphic design decision-making.</li>
+        <li>Identify and describe the properties of color: hue, value, saturation, and temperature.</li>
+        <li>Apply the color wheel to construct harmonious color schemes using complementary, analogous, triadic, split-complementary, and monochromatic relationships.</li>
+        <li>Explain the psychological and cultural effects of color and apply them to design intent.</li>
+        <li>Critique real-world designs for effective or ineffective use of color and propose improvements through group activity.</li>
+      </ol>
+    </div>
+
+    <div class="callout"><b>Key concept</b>Color is never neutral. Every choice communicates mood, priority, brand identity, and cultural meaning. A designer who understands color theory makes intentional choices — one who does not makes accidental ones.</div>
+
+    <div class="grid2">
+      <div class="card"><h3>🎨 The color wheel</h3><p>How colors relate to each other and how to build harmonious combinations from those relationships.</p></div>
+      <div class="card"><h3>🧠 Color psychology</h3><p>The emotional and behavioral responses that specific colors trigger in a viewer.</p></div>
+      <div class="card"><h3>🖨️ Color systems</h3><p>How color is produced and reproduced across media — screen versus print.</p></div>
+    </div>
+
+    <h3 style="margin-top:36px; font-size:20px;">A brief history <span class="mono" style="font-size:11px; color:var(--ink-soft); font-weight:400;">— tap a row</span></h3>
+    <div class="timeline" id="timeline"></div>
+
+    <div class="callout" style="margin-top:28px;"><b>Key insight</b>Color theory is not a set of rigid rules — it is a set of principles based on how human vision actually works. Understanding the principles is what lets designers break them intentionally.</div>
+
+    <div class="pager">
+      <span class="pagebtn hidden"></span>
+      <a class="pagebtn next" href="part2-properties.html"><span class="lbl">Next</span><span class="name">The Color Wheel &amp; Properties →</span></a>
+    </div>
+  </main>
+</div>
+
+<script src="shared.js"></script>
+<script>
+buildRail('foundations');
+
+const TIMELINE = [
+  { y:'1666',  n:'Isaac Newton',              d:'Split white light into a spectrum through a prism and drew the first circular color diagram.',          x:'He named seven hues by analogy to the seven notes of a musical scale.' },
+  { y:'1810',  n:'Johann Wolfgang von Goethe',d:'Published Theory of Colors, the first systematic study of color\u2019s psychological effects.',         x:'He argued perception was physiological as much as physical, clashing publicly with Newton.' },
+  { y:'1840',  n:'Michel Eugène Chevreul',    d:'Identified simultaneous contrast \u2014 colors look different depending on what surrounds them.',       x:'He was a chemist studying dyes at the Gobelins tapestry works when he noticed the effect.' },
+  { y:'1920s', n:'Bauhaus School',            d:'Itten and Albers built the color exercises that still anchor design education today.',                   x:'Itten had students mix a personal, gut palette before ever touching theory.' },
+  { y:'1963',  n:'Josef Albers',              d:'Published Interaction of Color, showing that color perception is relative, not absolute.',               x:'He proved the same grey looks warm on blue and cool on orange, using paper squares alone.' },
+];
+const timelineEl = document.getElementById('timeline');
+TIMELINE.forEach(t => {
+  const item = document.createElement('div');
+  item.className = 'tl-item';
+  item.innerHTML = `
+    <button class="tl-head">
+      <span class="tl-year">${t.y}</span>
+      <span><h4>${t.n}</h4><p>${t.d}</p></span>
+      <span class="tl-chev">&#9662;</span>
+    </button>
+    <div class="tl-extra"><p>${t.x}</p></div>`;
+  item.querySelector('.tl-head').addEventListener('click', () => item.classList.toggle('open'));
+  timelineEl.appendChild(item);
+});
+</script>
+</body>
+</html>

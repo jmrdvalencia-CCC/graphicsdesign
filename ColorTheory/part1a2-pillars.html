@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Part 1 — Three Foundational Pillars · Color Theory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+<div class="app">
+  <nav class="rail" aria-label="Module sections">
+    <div class="brand">
+      <span class="eyebrow">Graphic Design · Module 03</span>
+      <h1>Color&nbsp;Theory</h1>
+    </div>
+    <div class="wheel-wrap" aria-hidden="true">
+      <div class="wheel-disc"></div>
+      <div class="wheel-center-label" id="wheelCenterLabel"></div>
+    </div>
+    <div class="tabstrip" id="tabstrip"></div>
+    <ul class="navlist" id="navlist"></ul>
+    <div class="rail-foot">Ref. Mrantinkovic et al. (2020)<br>3G Handy Guide: Graphic Designing</div>
+  </nav>
+
+  <main>
+    <span class="kicker"><span class="sw"></span>Part 1 · Section 1.2</span>
+    <h2>Three foundational pillars</h2>
+    <p class="sub">Color theory in graphic design rests on three pillars. Each one is a full topic on its own — select a card to explore it.</p>
+
+    <div class="grid2">
+      <div class="card" style="cursor:pointer;" onclick="location.href='part1c-wheel-pillar.html'">
+        <h3>🎨 The color wheel</h3>
+        <p>How colors relate to each other and how to build harmonious combinations from those relationships.</p>
+        <p style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--accent); margin-top:8px;">Explore →</p>
+      </div>
+      <div class="card" style="cursor:pointer;" onclick="location.href='part1d-psychology-pillar.html'">
+        <h3>🧠 Color psychology</h3>
+        <p>The emotional and behavioral responses that specific colors trigger in a viewer.</p>
+        <p style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--accent); margin-top:8px;">Explore →</p>
+      </div>
+      <div class="card" style="cursor:pointer;" onclick="location.href='part1e-systems-pillar.html'">
+        <h3>🖨️ Color systems</h3>
+        <p>How color is produced and reproduced across media — screen versus print.</p>
+        <p style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--accent); margin-top:8px;">Explore →</p>
+      </div>
+    </div>
+
+    <div class="pager">
+      <a class="pagebtn prev" href="part1b-history.html"><span class="lbl">Back</span><span class="name">← History</span></a>
+      <a class="pagebtn next" href="part2-properties.html"><span class="lbl">Next</span><span class="name">Wheel &amp; Properties →</span></a>
+    </div>
+  </main>
+</div>
+
+<script src="shared.js"></script>
+<script>buildRail('foundations-definition');</script>
+</body>
+</html>

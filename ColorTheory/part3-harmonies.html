@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Part 3 — Harmonies · Color Theory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+<div class="app">
+  <nav class="rail" aria-label="Module sections">
+    <div class="brand">
+      <span class="eyebrow">Graphic Design · Module 03</span>
+      <h1>Color&nbsp;Theory</h1>
+    </div>
+    <div class="wheel-wrap" aria-hidden="true">
+      <div class="wheel-disc"></div>
+      <div class="wheel-center-label" id="wheelCenterLabel"></div>
+    </div>
+    <div class="tabstrip" id="tabstrip"></div>
+    <ul class="navlist" id="navlist"></ul>
+    <div class="rail-foot">Ref. Mrantinkovic et al. (2020)<br>3G Handy Guide: Graphic Designing</div>
+  </nav>
+
+  <main>
+    <span class="kicker"><span class="sw"></span>Part 2 · 35 min</span>
+    <h2>Harmonies &amp; schemes</h2>
+    <p class="sub">A structured relationship between colors on the wheel that reads as visually intentional rather than accidental.</p>
+
+    <div class="harmony-demo">
+      <div class="harmony-btns" id="harmonyBtns"></div>
+      <div class="hue-slider-row">Base hue <input type="range" id="baseHueSlider" min="0" max="360" value="250"> <span id="baseHueVal">250°</span></div>
+      <div class="harmony-body">
+        <div class="mini-wheel" id="miniWheel"><div class="hue-ring" style="cursor:default;"></div></div>
+        <div class="harmony-info" id="harmonyInfo"></div>
+      </div>
+    </div>
+
+    <div class="grid2" style="margin-top:28px;">
+      <div class="card"><h3>Monochromatic</h3><p>One hue, varied in value. Cohesive and elegant, but can feel flat. Chanel leans on black-and-white monochrome for timelessness.</p><p style="font-size:13px; color:var(--ink-soft);"><b>Best for:</b> Minimalist designs, luxury branding.</p></div>
+      <div class="card"><h3>Analogous</h3><p>3–5 neighboring hues. Found constantly in nature — a sunset's yellow, orange, and red-orange is a textbook analogous palette.</p><p style="font-size:13px; color:var(--ink-soft);"><b>Best for:</b> Nature themes, mood-driven illustrations.</p></div>
+      <div class="card"><h3>Complementary</h3><p>Two opposite hues at maximum contrast. The Lakers' purple and gold is a classic pair — one color should dominate at 60–70%.</p><p style="font-size:13px; color:var(--ink-soft);"><b>Best for:</b> CTAs, sports branding, promotional materials.</p></div>
+      <div class="card"><h3>Split-complementary</h3><p>A base color plus the two neighbors of its complement. High contrast, less harsh — a gentler entry point for beginners.</p><p style="font-size:13px; color:var(--ink-soft);"><b>Best for:</b> Designs needing energy with more sophistication.</p></div>
+      <div class="card"><h3>Triadic</h3><p>Three hues 120° apart. Vibrant and playful — Google's logo and most kids' brands live here.</p><p style="font-size:13px; color:var(--ink-soft);"><b>Best for:</b> Children's media, entertainment, infographics.</p></div>
+      <div class="card"><h3>Tetradic</h3><p>Two complementary pairs forming a rectangle. The richest, hardest-to-balance scheme — needs one dominant color.</p><p style="font-size:13px; color:var(--ink-soft);"><b>Best for:</b> Complex editorial layouts, multi-category branding.</p></div>
+    </div>
+
+    <div class="pager">
+      <a class="pagebtn prev" href="part2-properties.html"><span class="lbl">Back</span><span class="name">← Wheel &amp; Properties</span></a>
+      <a class="pagebtn next" href="part4-ratio.html"><span class="lbl">Next</span><span class="name">The 60-30-10 Rule →</span></a>
+    </div>
+  </main>
+</div>
+
+<script src="shared.js"></script>
+<script>
+buildRail('harmonies');
+
+const HARMONIES = {
+  monochromatic: { label:'Monochromatic',      offsets:[0],           desc:'A single hue carried through tints, tones, and shades. Cohesive and elegant \u2014 but watch for flatness.' },
+  analogous:     { label:'Analogous',           offsets:[-30,0,30],    desc:'Neighboring hues on the wheel. Naturally harmonious, low contrast \u2014 great for mood and atmosphere.' },
+  complementary: { label:'Complementary',       offsets:[0,180],       desc:'Two opposite hues, maximum contrast. Let one dominate at 60\u201370% or it will visually vibrate.' },
+  split:         { label:'Split-complementary', offsets:[0,150,210],   desc:'A base hue plus both neighbors of its complement. High contrast, gentler than straight complementary.' },
+  triadic:       { label:'Triadic',             offsets:[0,120,240],   desc:'Three hues 120\u00b0 apart. Vibrant and playful \u2014 common in kids and entertainment branding.' },
+  tetradic:      { label:'Tetradic',            offsets:[0,90,180,270],desc:'Two complementary pairs. The richest and hardest to balance \u2014 needs one clear dominant color.' },
+};
+
+const harmonyBtnsEl  = document.getElementById('harmonyBtns');
+const miniWheel      = document.getElementById('miniWheel');
+const harmonyInfo    = document.getElementById('harmonyInfo');
+const baseHueSlider  = document.getElementById('baseHueSlider');
+const baseHueVal     = document.getElementById('baseHueVal');
+let baseHue = 250;
+let activeHarmony = 'complementary';
+
+Object.entries(HARMONIES).forEach(([key,h]) => {
+  const b = document.createElement('button');
+  b.className = 'hbtn'; b.textContent = h.label; b.dataset.key = key;
+  b.addEventListener('click', () => { activeHarmony = key; renderHarmony(); });
+  harmonyBtnsEl.appendChild(b);
+});
+baseHueSlider.addEventListener('input', () => { baseHue = +baseHueSlider.value; baseHueVal.textContent = baseHue+'°'; renderHarmony(); });
+
+function hueColor(h){ return `hsl(${((h%360)+360)%360}, 78%, 55%)`; }
+function renderHarmony(){
+  document.querySelectorAll('.hbtn').forEach(b => b.classList.toggle('active', b.dataset.key === activeHarmony));
+  document.querySelectorAll('.mini-marker').forEach(m => m.remove());
+  const h = HARMONIES[activeHarmony];
+  const swatches = [];
+  h.offsets.forEach(off => {
+    const hue = baseHue + off;
+    const rad = (hue-90) * Math.PI/180;
+    const cx = 95 + 68*Math.cos(rad), cy = 95 + 68*Math.sin(rad);
+    const m = document.createElement('div');
+    m.className = 'mini-marker';
+    m.style.left = cx+'px'; m.style.top = cy+'px';
+    m.style.background = hueColor(hue);
+    miniWheel.appendChild(m);
+    swatches.push(hueColor(hue));
+  });
+  harmonyInfo.innerHTML = `<h4>${h.label}</h4><p>${h.desc}</p><div class="swatch-row">${swatches.map(c=>`<div class="chip" style="background:${c}"></div>`).join('')}</div>`;
+}
+renderHarmony();
+</script>
+</body>
+</html>

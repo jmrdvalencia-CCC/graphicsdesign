@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Part 6b — How RGB &amp; CMYK Work · Color Theory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+<div class="app">
+  <nav class="rail" aria-label="Module sections">
+    <div class="brand">
+      <span class="eyebrow">Graphic Design · Module 03</span>
+      <h1>Color&nbsp;Theory</h1>
+    </div>
+    <div class="wheel-wrap" aria-hidden="true">
+      <div class="wheel-disc"></div>
+      <div class="wheel-center-label" id="wheelCenterLabel"></div>
+    </div>
+    <div class="tabstrip" id="tabstrip"></div>
+    <ul class="navlist" id="navlist"></ul>
+    <div class="rail-foot">Ref. Mrantinkovic et al. (2020)<br>3G Handy Guide: Graphic Designing</div>
+  </nav>
+
+  <main>
+    <span class="kicker"><span class="sw"></span>Part 6 · Color Systems</span>
+    <h2>How RGB and CMYK work</h2>
+    <p class="sub">Two completely different physical processes — one builds color with light, the other removes it with ink.</p>
+
+    <div class="grid2">
+      <div class="card">
+        <h3 style="color:#3a6fc9;">🖥️ RGB — Additive Process</h3>
+        <p><b>What it is:</b> A color system for computer screens, phones, and TVs.</p>
+        <p><b>Base state:</b> Black — the screen is off and no light shows.</p>
+        <p><b>How it works:</b> It adds red, green, and blue light together.</p>
+        <p><b>Result:</b> Adding all three full lights together makes white.</p>
+      </div>
+      <div class="card">
+        <h3 style="color:#c94a3a;">🖨️ CMYK — Subtractive Process</h3>
+        <p><b>What it is:</b> A color system for printed paper and magazines.</p>
+        <p><b>Base state:</b> White paper, which reflects all light back to your eyes.</p>
+        <p><b>How it works:</b> It uses cyan, magenta, yellow, and black ink.</p>
+        <p><b>Result:</b> Adding inks subtracts colors from the reflected light.</p>
+      </div>
+    </div>
+
+    <h3 style="margin-top:36px; font-size:20px;">How the subtractive method happens</h3>
+    <p class="sub" style="margin-top:4px; font-size:15px;">Step by step — what physically occurs when ink sits on paper.</p>
+
+    <ol class="checklist" style="list-style:none; counter-reset:steps;">
+      <li style="counter-increment:steps;"><b>White light hits the paper</b> — White light from the sun or a lamp shines down on printed paper.</li>
+      <li style="counter-increment:steps;"><b>Inks act as filters</b> — Tiny ink dots sit on the paper and act as color filters.</li>
+      <li style="counter-increment:steps;"><b>Cyan absorbs red</b> — Cyan ink blocks and takes in red light, letting blue and green light bounce back.</li>
+      <li style="counter-increment:steps;"><b>Magenta absorbs green</b> — Magenta ink blocks and takes in green light, letting blue and red light bounce back.</li>
+      <li style="counter-increment:steps;"><b>Yellow absorbs blue</b> — Yellow ink blocks and takes in blue light, letting red and green light bounce back.</li>
+      <li style="counter-increment:steps;"><b>Color is subtracted</b> — Mixing these inks blocks more light types, leaving fewer colors to bounce back to your eyes.</li>
+      <li style="counter-increment:steps;"><b>Darkness appears</b> — Mixing cyan, magenta, and yellow absorbs almost all light, making a dark brown or muddy color.</li>
+      <li style="counter-increment:steps;"><b>Black ink helps</b> — Printers add black ink to make true dark shades and save colored ink.</li>
+    </ol>
+
+    <div class="callout" style="margin-top:24px;"><b>Why K and not B?</b> In CMYK, black is called <b>K</b> (Key) to avoid confusion with Blue in RGB. The "key" plate in traditional printing carried the sharpest detail — usually printed in black.</div>
+
+    <div class="pager">
+      <a class="pagebtn prev" href="part6-systems.html"><span class="lbl">Back</span><span class="name">← Systems &amp; Process</span></a>
+      <a class="pagebtn next" href="part7-activity.html"><span class="lbl">Next</span><span class="name">Activity &amp; Assessment →</span></a>
+    </div>
+  </main>
+</div>
+
+<script src="shared.js"></script>
+<script>buildRail('systems');</script>
+</body>
+</html>

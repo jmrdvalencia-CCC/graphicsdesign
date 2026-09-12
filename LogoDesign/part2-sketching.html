@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Part 2 — Sketching Techniques · Logo Design Techniques</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+</head>
+<body data-prev="part1-intro.html" data-next="part3-digitizing.html">
+<div class="app">
+
+  <div class="deck">
+
+    <!-- ══ SLIDE HEADER — Part 2 ══ -->
+    <section class="slide dark" data-section="Part 2 — Overview">
+      <div style="flex:1; display:flex; flex-direction:column; justify-content:center; gap:20px; max-width:680px;">
+        <span class="kicker anim d1"><span class="sw"></span>Logo Design Techniques · Module 04</span>
+        <h2 class="anim d2" style="font-size:clamp(32px,5vw,52px); line-height:1.0;">Part 2 <span class="accent">Sketching Techniques</span></h2>
+        <div class="h-bar anim d2"></div>
+        <p class="sub anim d3" style="max-width:52ch; font-size:clamp(13px,1.5vw,16px);">Why paper beats software for ideation, the 5-step thumbnail process, tools, design elements of line and shape, and the do’s and don’ts of sketching.</p>
+        <div class="anim d4" style="display:flex; flex-wrap:wrap; gap:8px;">
+          <span style="font-family:'JetBrains Mono',monospace; font-size:10px; padding:5px 12px; border-radius:100px; border:1px solid rgba(247,245,240,0.15); color:rgba(247,245,240,0.6);">2.1 — Why Sketch First</span>
+          <span style="font-family:'JetBrains Mono',monospace; font-size:10px; padding:5px 12px; border-radius:100px; border:1px solid rgba(247,245,240,0.15); color:rgba(247,245,240,0.6);">2.2 — Thumbnail Process</span>
+          <span style="font-family:'JetBrains Mono',monospace; font-size:10px; padding:5px 12px; border-radius:100px; border:1px solid rgba(247,245,240,0.15); color:rgba(247,245,240,0.6);">2.3 — Tools</span>
+          <span style="font-family:'JetBrains Mono',monospace; font-size:10px; padding:5px 12px; border-radius:100px; border:1px solid rgba(247,245,240,0.15); color:rgba(247,245,240,0.6);">2.4 — Line &amp; Shape</span>
+          <span style="font-family:'JetBrains Mono',monospace; font-size:10px; padding:5px 12px; border-radius:100px; border:1px solid rgba(247,245,240,0.15); color:rgba(247,245,240,0.6);">2.5 — Do’s &amp; Don’ts</span>
+        </div>
+        <div class="anim d5" style="display:flex; align-items:center; gap:10px; margin-top:8px;">
+          <span style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--orange); letter-spacing:.1em; text-transform:uppercase;">Press Next to begin</span>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="#FF5A1F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ SLIDE 2.1 — Why Sketch First ══ -->
+    <section class="slide" data-section="2.1 — Why Sketch First">
+      <span class="kicker anim d1"><span class="sw"></span>Part 2 · Section 2.1</span>
+      <h2 class="anim d2">Why Sketch <span class="accent">Before Software?</span></h2>
+      <div class="h-bar anim d2"></div>
+      <p class="sub anim d3">Paper is the fastest prototyping tool a designer has. Sketching forces thinking in concepts, not clicks.</p>
+
+      <div class="slide-body cols2">
+        <div style="display:flex; flex-direction:column; gap:12px; overflow:hidden;">
+          <div class="callout anim d3">
+            <b>The Core Reason</b>
+            Sketching allows 20 ideas in the time it takes to build one on screen. Bad ideas are cheaper to discard on paper. It removes the temptation to polish too early — which locks designers into weak concepts.
+          </div>
+          <div class="callout callout-teal anim d4">
+            <b>Key Concept</b>
+            The goal of sketching is not to produce a finished drawing. It is to externalize as many ideas as possible as quickly as possible, so the best concept can be identified before any time is invested in execution.
+          </div>
+        </div>
+        <div class="card anim d3" style="display:flex; flex-direction:column; overflow:hidden;">
+          <h3>Sketching achieves:</h3>
+          <ul class="checklist">
+            <li>Forces thinking in <strong>concepts</strong>, not software features</li>
+            <li>Allows 20 ideas in the time it takes to build one on screen</li>
+            <li>Makes it cheap and fast to discard bad ideas</li>
+            <li>Produces a <strong>record of the design process</strong> — essential for client presentations</li>
+            <li>Removes the temptation to polish too early</li>
+            <li>Prevents locking into weak concepts before exploring alternatives</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ SLIDE 2.2 — Thumbnail Sketching Process ══ -->
+    <section class="slide dark" data-section="2.2 — Thumbnail Sketching Process">
+      <span class="kicker anim d1"><span class="sw"></span>Part 2 · Section 2.2</span>
+      <h2 class="anim d2">The Thumbnail <span class="accent">Sketching Process</span></h2>
+      <div class="h-bar anim d2"></div>
+      <p class="sub anim d3">A structured 5-step process — the professional standard for logo ideation.</p>
+
+      <div class="slide-body" style="overflow:hidden;">
+        <ol class="step-list anim d3">
+          <li><b>Brief Analysis</b> — Read the design brief carefully. Highlight: industry and business type, target audience (age, gender, lifestyle, values), brand personality, competitors' logos, and any mandatory elements.</li>
+          <li><b>Word Association</b> — Write 20–30 words related to the brand: what it <em>does</em>, what it <em>feels like</em>, what it <em>values</em>. Circle the 5–8 most visually suggestive words — words that immediately suggest a shape, symbol, or letterform.</li>
+          <li><b>Thumbnail Grid</b> — Draw a grid of 20 small boxes (4 columns × 5 rows, ≈ 3 cm each). Fill every box — one idea per box. No erasing. No color. No judgment — quantity is the goal. Vary approaches: symbol, letterform, abstract shape, combination.</li>
+          <li><b>Select &amp; Refine</b> — Review all 20 thumbnails. Circle the 3–5 strongest concepts. Redraw each at a larger size (≈ 8–10 cm) with more detail and precision.</li>
+          <li><b>Concept Presentation</b> — Present 2–3 refined sketches to the client or peer group <em>before</em> digitizing. This prevents wasted digitizing time on a concept the client will reject.</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ══ SLIDE 2.3 — Tools for Sketching ══ -->
+    <section class="slide" data-section="2.3 — Tools for Sketching">
+      <span class="kicker anim d1"><span class="sw"></span>Part 2 · Section 2.3</span>
+      <h2 class="anim d2">Tools for <span class="accent">Sketching</span></h2>
+      <div class="h-bar anim d2"></div>
+      <p class="sub anim d3">The right tool for each stage of the sketching process — from loose ideation to refined line-art ready for scanning.</p>
+
+      <div class="slide-body" style="overflow:hidden;">
+        <div class="table-wrap anim d3">
+          <table class="data">
+            <tr><th>Tool</th><th>Best For</th></tr>
+            <tr><td>HB or 2B pencil</td><td>Loose thumbnails, quick ideation, easy to see light marks</td></tr>
+            <tr><td>Fine-liner pen (0.3–0.5 mm)</td><td>Refined line-art before scanning; clean, consistent line weight</td></tr>
+            <tr><td>Marker or brush pen</td><td>Bold, gestural letterforms; testing thick/thin stroke contrast</td></tr>
+            <tr><td>Grid or dot paper</td><td>Geometric and symmetrical logos; maintaining proportions</td></tr>
+            <tr><td>Tracing paper</td><td>Iterating on top of a base sketch without redrawing from scratch</td></tr>
+          </table>
+        </div>
+        <div class="callout anim d4">
+          <b>Pro Tip</b>
+          Start every session with a pencil — never a pen. Pencil marks are fast, light, and commitment-free. Switch to a fine-liner only when refining the 3–5 strongest thumbnails.
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ SLIDE 2.4a — Line as a Design Element ══ -->
+    <section class="slide" data-section="2.4 — Line as a Design Element">
+      <span class="kicker anim d1"><span class="sw"></span>Part 2 · Section 2.4</span>
+      <h2 class="anim d2">Line as a <span class="accent">Design Element</span></h2>
+      <div class="h-bar anim d2"></div>
+      <p class="sub anim d3">Every logo begins as a line. The character of the line communicates personality before any color or typography is applied.</p>
+
+      <div class="slide-body cols2">
+        <div class="table-wrap anim d3">
+          <table class="data">
+            <tr><th>Line Type</th><th>Communicates</th></tr>
+            <tr><td><b>Straight horizontal</b></td><td>Stability, calm, groundedness</td></tr>
+            <tr><td><b>Straight vertical</b></td><td>Strength, authority, formality</td></tr>
+            <tr><td><b>Diagonal</b></td><td>Energy, movement, dynamism</td></tr>
+            <tr><td><b>Curved</b></td><td>Friendliness, flow, approachability</td></tr>
+            <tr><td><b>Jagged / angular</b></td><td>Tension, aggression, excitement</td></tr>
+          </table>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:12px; overflow:hidden;">
+          <div class="card anim d3">
+            <h3>Why Line Matters First</h3>
+            <p>Line is the most fundamental element of a sketch. Before a shape is closed, before color is chosen, the line already communicates. A logo built on horizontal lines feels stable and calm. The same mark redrawn with diagonals feels urgent and dynamic.</p>
+            <p>This is why the brief must inform the line choice — not personal preference or current trends.</p>
+          </div>
+          <div class="callout anim d4">
+            <b>Sketching Application</b>
+            In your thumbnail grid, consciously vary the dominant line direction across different boxes. Try the same concept with horizontal lines, then diagonal, then curved — and observe how the personality shifts.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ SLIDE 2.4b — Shape as a Design Element ══ -->
+    <section class="slide" data-section="2.4 — Shape as a Design Element">
+      <span class="kicker anim d1"><span class="sw"></span>Part 2 · Section 2.4</span>
+      <h2 class="anim d2">Shape as a <span class="accent">Design Element</span></h2>
+      <div class="h-bar anim d2"></div>
+      <p class="sub anim d3">Enclosed lines form shapes. Shape is the primary carrier of meaning in a logo symbol — it communicates before the viewer reads a single word.</p>
+
+      <div class="slide-body cols2">
+        <div class="table-wrap anim d3">
+          <table class="data">
+            <tr><th>Shape</th><th>Communicates</th></tr>
+            <tr><td><b>Circle / oval</b></td><td>Unity, wholeness, community, protection, infinity</td></tr>
+            <tr><td><b>Square / rectangle</b></td><td>Stability, reliability, professionalism, structure</td></tr>
+            <tr><td><b>Triangle</b></td><td>Direction, power, ambition, tension — point up = strength; point down = instability</td></tr>
+            <tr><td><b>Organic / irregular</b></td><td>Nature, creativity, handmade quality, uniqueness</td></tr>
+          </table>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:12px; overflow:hidden;">
+          <div class="teal-block anim d3">
+            <h3>Design Application</h3>
+            <p>Before sketching, decide what the logo's primary shape language should be — from the brief, not from personal preference.</p>
+            <p style="margin-top:8px;">Financial institution → squares and rectangles (stability, reliability). Children's brand → circles and organic shapes (friendliness, warmth). Sports brand → triangles and diagonals (energy, direction).</p>
+          </div>
+          <div class="callout anim d4">
+            <b>Key Principle</b>
+            The strongest logos are recognizable as pure black silhouettes. If the shape does not communicate the brand without color, the form is not strong enough. Build shape first — add color second.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ SLIDE 2.5 — Do's & Don'ts ══ -->
+    <section class="slide" data-section="2.5 — Do's &amp; Don'ts">
+      <span class="kicker anim d1"><span class="sw"></span>Part 2 · Section 2.5</span>
+      <h2 class="anim d2">Do's &amp; <span class="accent">Don'ts</span></h2>
+      <div class="h-bar anim d2"></div>
+      <p class="sub anim d3">Common mistakes that stall the sketching process — and the habits that keep it moving.</p>
+
+      <div class="slide-body cols2">
+        <div class="card anim d3" style="display:flex; flex-direction:column; overflow:hidden;">
+          <p style="font-family:'JetBrains Mono',monospace; font-size:9.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--orange); margin:0 0 8px;">✓ Do</p>
+          <ul class="checklist">
+            <li>Sketch fast — quantity over quality in the thumbnail phase</li>
+            <li>Vary approaches: geometric, organic, typographic, abstract</li>
+            <li>Think in silhouette — check if the shape reads as a solid black form</li>
+            <li>Date and number every page of your sketchbook</li>
+            <li>Keep all sketches — rejected ideas sometimes become useful later</li>
+          </ul>
+        </div>
+        <div class="card anim d4" style="display:flex; flex-direction:column; overflow:hidden;">
+          <p style="font-family:'JetBrains Mono',monospace; font-size:9.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--teal); margin:0 0 8px;">✗ Don't</p>
+          <ul style="padding-left:14px; color:var(--gray); font-size:clamp(11px,1vw,12.5px); line-height:1.5; margin:0; overflow-y:auto; flex:1;">
+            <li>Don't erase — cross out and move on; erasing wastes time</li>
+            <li>Don't add color at the thumbnail stage — color distracts from form</li>
+            <li>Don't open design software until you have a chosen, refined concept</li>
+            <li>Don't show the client only one concept — always present at least two or three</li>
+            <li>Don't skip the brief analysis — designing without understanding the audience produces generic work</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ SLIDE 2.4c — Interactive Ideation Grid ══ -->
+    <section class="slide" data-section="2.4 — Thumbnail Ideation Grid">
+      <span class="kicker anim d1"><span class="sw"></span>Part 2 · Section 2.4</span>
+      <h2 class="anim d2">Thumbnail <span class="accent">Ideation Grid</span></h2>
+      <div class="h-bar anim d2"></div>
+      <p class="sub anim d3">Click any box to open a drawing canvas. Sketch or type your idea, then save it as the thumbnail.</p>
+
+      <div style="flex:1; display:flex; flex-direction:column; gap:14px;">
+
+        <!-- 20-box grid -->
+        <div class="card anim d3" style="padding:14px;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; flex-shrink:0;">
+            <h3 style="margin:0;">Ideation Grid</h3>
+            <span id="gridCount" style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--gray);">0 / 20 filled</span>
+          </div>
+          <div id="thumbGrid" style="display:grid; grid-template-columns:repeat(5,1fr); gap:6px; max-width:480px;"></div>
+        </div>
+
+        <!-- sidebar — now below the grid -->
+        <div style="display:flex; flex-direction:row; gap:12px; flex-shrink:0; flex-wrap:wrap;">
+          <div class="card anim d3" style="flex:1; min-width:200px;">
+            <h3>Grid Rules</h3>
+            <ul class="checklist">
+              <li>Click a box to open the drawing canvas</li>
+              <li>Draw with the pen or type a label, then hit <b>Post</b></li>
+              <li>Click a saved thumbnail to re-open and edit</li>
+              <li>Vary: symbol, letterform, abstract, combination</li>
+              <li>After 20, star the 3–5 strongest to refine</li>
+            </ul>
+          </div>
+          <div class="callout anim d4" style="flex:1; min-width:200px;">
+            <b style="display:flex;align-items:center;justify-content:space-between;">Why 20? <button id="why20Btn" style="background:none;border:1.5px solid #FF5A1F;color:#FF5A1F;border-radius:50%;width:18px;height:18px;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;font-family:'JetBrains Mono',monospace;flex-shrink:0;">?</button></b>
+            The first 5–7 ideas are obvious. Ideas 16–20 are often the most original — the obvious options are already exhausted.
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ══ WHY 20 MODAL ══ -->
+    <div id="why20Modal" style="display:none;position:fixed;inset:0;background:rgba(14,14,16,0.72);z-index:600;align-items:center;justify-content:center;">
+      <div style="background:#fff;border-radius:16px;padding:28px 28px 24px;width:min(560px,92vw);max-height:82vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,0.28);display:flex;flex-direction:column;gap:16px;">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
+          <div>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:9.5px;text-transform:uppercase;letter-spacing:.12em;color:#FF5A1F;display:block;margin-bottom:6px;">Design Thinking</span>
+            <h3 style="font-family:'Fraunces',serif;font-size:20px;font-weight:900;color:#2B2A28;margin:0;letter-spacing:-0.02em;">The Rule of 20</h3>
+          </div>
+          <button id="why20Close" style="background:none;border:1.5px solid #e0ddd8;border-radius:8px;width:32px;height:32px;font-size:16px;cursor:pointer;color:#8C8578;flex-shrink:0;display:flex;align-items:center;justify-content:center;">×</button>
+        </div>
+        <p style="font-size:13px;color:#8C8578;line-height:1.65;margin:0;">A foundational technique in creative problem-solving and brainstorming, popularised by design thinking and ideation frameworks. Here is why forcing yourself to reach 20 ideas works:</p>
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <!-- Zone 1 -->
+          <div style="border-left:3px solid #FF5A1F;padding:10px 14px;background:rgba(255,90,31,0.06);border-radius:0 8px 8px 0;">
+            <p style="font-family:'JetBrains Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:#FF5A1F;margin:0 0 6px;">Step 1 — Ideas 1–5 · The Habitual Zone</p>
+            <p style="font-size:12.5px;color:#2B2A28;line-height:1.6;margin:0;">Your brain is an energy-saving organ. When faced with a prompt, it immediately retrieves existing mental models, clichés, and things you have seen recently. These are predictable, low-friction answers that almost anyone in your field would come up with.</p>
+          </div>
+          <!-- Zone 2 -->
+          <div style="border-left:3px solid #FF5A1F;padding:10px 14px;background:rgba(255,90,31,0.06);border-radius:0 8px 8px 0;">
+            <p style="font-family:'JetBrains Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:#FF5A1F;margin:0 0 6px;">Step 2 — Ideas 6–12 · The Adaptation Zone</p>
+            <p style="font-size:12.5px;color:#2B2A28;line-height:1.6;margin:0;">Variations and tweaks on the first few ideas. You are taking the obvious concepts and reframing, combining, or stretching them. Still derivative, but getting warmer.</p>
+          </div>
+          <!-- Zone 3 -->
+          <div style="border-left:3px solid #1B4B4A;padding:10px 14px;background:rgba(27,75,74,0.07);border-radius:0 8px 8px 0;">
+            <p style="font-family:'JetBrains Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:#1B4B4A;margin:0 0 6px;">Step 3 — Ideas 13–15 · The Wall</p>
+            <p style="font-size:12.5px;color:#2B2A28;line-height:1.6;margin:0;">Around ideas 13–15 you hit a mental wall. You run out of immediate memories to modify and feel genuinely stuck. To move past this threshold, your brain has to stop searching memory and start forcing unexpected connections between disparate concepts.</p>
+          </div>
+          <!-- Zone 4 -->
+          <div style="border-left:3px solid #1B4B4A;padding:10px 14px;background:rgba(27,75,74,0.07);border-radius:0 8px 8px 0;">
+            <p style="font-family:'JetBrains Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:#1B4B4A;margin:0 0 6px;">Step 4 — Ideas 16–20 · The Lateral Thinking Zone</p>
+            <p style="font-size:12.5px;color:#2B2A28;line-height:1.6;margin:0;">Once the safe, conventional options are off the table, the risk of proposing something “weird” drops to zero. You are forced to break rules, reverse premises, or look at extreme edge cases. The pressure to be “correct” gives way to novelty — and the rare gem hidden in this final batch is almost always more valuable than the safe choices in the first five.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ DRAW POPUP ══ -->
+    <div id="drawOverlay" style="display:none; position:fixed; inset:0; background:rgba(14,14,16,0.72); z-index:500; align-items:center; justify-content:center;">
+      <div style="background:#fff; border-radius:16px; padding:20px; display:flex; flex-direction:column; gap:12px; width:min(480px,92vw); box-shadow:0 24px 64px rgba(0,0,0,0.28);">
+        <!-- header -->
+        <div style="display:flex; align-items:center; justify-content:space-between;">
+          <span id="popupLabel" style="font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.12em; color:#FF5A1F;"></span>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <!-- tool toggle -->
+            <button id="toolPen" title="Pen" style="width:30px;height:30px;border-radius:8px;border:1.5px solid #FF5A1F;background:#FF5A1F;color:#fff;font-size:14px;cursor:pointer;">✏️</button>
+            <button id="toolText" title="Text" style="width:30px;height:30px;border-radius:8px;border:1.5px solid #8C8578;background:#fff;color:#2B2A28;font-size:13px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-weight:700;">T</button>
+            <button id="toolErase" title="Eraser" style="width:30px;height:30px;border-radius:8px;border:1.5px solid #8C8578;background:#fff;color:#2B2A28;font-size:14px;cursor:pointer;">⬜</button>
+            <button id="clearBtn" title="Clear" style="width:30px;height:30px;border-radius:8px;border:1.5px solid #8C8578;background:#fff;color:#2B2A28;font-size:13px;cursor:pointer;">🗑</button>
+          </div>
+        </div>
+        <!-- canvas -->
+        <canvas id="drawCanvas" width="440" height="300" style="border:1.5px solid #e0ddd8; border-radius:10px; cursor:crosshair; touch-action:none; width:100%; background:#fff;"></canvas>
+        <!-- text input (hidden unless text mode) -->
+        <div id="textRow" style="display:none; gap:8px;">
+          <input id="textInput" type="text" placeholder="Type your label…" style="flex:1; padding:8px 12px; border:1.5px solid #e0ddd8; border-radius:8px; font-family:'Inter',sans-serif; font-size:13px; outline:none;">
+          <button id="stampText" style="padding:8px 14px; background:#FF5A1F; color:#fff; border:none; border-radius:8px; font-family:'JetBrains Mono',monospace; font-size:11px; cursor:pointer;">Stamp</button>
+        </div>
+        <!-- footer -->
+        <div style="display:flex; gap:8px; justify-content:flex-end;">
+          <button id="popupCancel" style="padding:8px 18px; background:#fff; border:1.5px solid #e0ddd8; border-radius:8px; font-family:'Inter',sans-serif; font-size:13px; cursor:pointer; color:#8C8578;">Cancel</button>
+          <button id="popupSave" style="padding:8px 22px; background:#FF5A1F; color:#fff; border:none; border-radius:8px; font-family:'Inter',sans-serif; font-size:13px; font-weight:600; cursor:pointer;">Post</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── FOOTER NAV ── -->
+    <nav class="slide-nav" aria-label="Navigation">
+      <div class="snav-parts" id="snavParts"></div>
+      <div class="snav-controls">
+        <button class="snav-btn" id="snavPrev" aria-label="Previous"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Prev</button>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:5px;"><div class="slide-dots" id="snavDots"></div><span class="snav-label" id="snavLabel"></span></div>
+        <button class="snav-btn" id="snavNext" aria-label="Next">Next<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </div>
+    </nav>
+
+  </div><!-- /deck -->
+</div><!-- /app -->
+
+<script src="shared.js"></script>
+<script>
+  buildRail('sketching');
+  buildSlides();
+  buildMobileNav();
+  buildBgAnimation();
+
+  /* ── WHY 20 MODAL ── */
+  (function () {
+    const modal = document.getElementById('why20Modal');
+    document.getElementById('why20Btn').addEventListener('click', () => { modal.style.display = 'flex'; });
+    document.getElementById('why20Close').addEventListener('click', () => { modal.style.display = 'none'; });
+    modal.addEventListener('click', e => { if (e.target === modal) modal.style.display = 'none'; });
+  })();
+
+  /* ── THUMBNAIL GRID WITH DRAW POPUP ── */
+  (function () {
+    const grid    = document.getElementById('thumbGrid');
+    const count   = document.getElementById('gridCount');
+    const overlay = document.getElementById('drawOverlay');
+    const canvas  = document.getElementById('drawCanvas');
+    const ctx     = canvas.getContext('2d');
+    const label   = document.getElementById('popupLabel');
+    const textRow = document.getElementById('textRow');
+    const textInput = document.getElementById('textInput');
+
+    const btnPen   = document.getElementById('toolPen');
+    const btnText  = document.getElementById('toolText');
+    const btnErase = document.getElementById('toolErase');
+    const btnClear = document.getElementById('clearBtn');
+    const btnStamp = document.getElementById('stampText');
+    const btnSave  = document.getElementById('popupSave');
+    const btnCancel= document.getElementById('popupCancel');
+
+    let boxes = [], currentBox = null, tool = 'pen', drawing = false, filled = 0, selected = 0;
+
+    /* build 20 boxes */
+    for (let i = 0; i < 20; i++) {
+      const box = document.createElement('div');
+      box.style.cssText = 'position:relative;aspect-ratio:1/1;border:1.5px dashed #c8c4bc;border-radius:7px;cursor:pointer;overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center;transition:border-color .15s,box-shadow .15s;box-shadow:0 1px 3px rgba(43,42,40,0.06);';
+      const num = document.createElement('span');
+      num.textContent = String(i + 1).padStart(2, '0');
+      num.style.cssText = 'font-family:JetBrains Mono,monospace;font-size:9px;color:#c8c4bc;pointer-events:none;position:absolute;bottom:3px;right:5px;';
+      const img = document.createElement('img');
+      img.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:none;';
+      const star = document.createElement('span');
+      star.textContent = '★';
+      star.style.cssText = 'position:absolute;top:3px;left:5px;font-size:11px;color:#FF5A1F;display:none;pointer-events:none;line-height:1;';
+      box.appendChild(img);
+      box.appendChild(num);
+      box.appendChild(star);
+      box.addEventListener('mouseenter', () => { if (!box._filled) { box.style.borderColor = '#FF5A1F'; box.style.boxShadow = '0 0 0 2px rgba(255,90,31,0.15)'; } });
+      box.addEventListener('mouseleave', () => {
+        if (box._selected) { box.style.borderColor = '#FF5A1F'; box.style.boxShadow = '0 0 0 3px rgba(255,90,31,0.35)'; }
+        else if (box._filled) { box.style.borderColor = '#FF5A1F'; box.style.boxShadow = 'none'; }
+        else { box.style.borderColor = '#c8c4bc'; box.style.boxShadow = 'none'; }
+      });
+      box.addEventListener('click', () => {
+        if (!box._filled) { openPopup(i); return; }
+        box._selected = !box._selected;
+        selected += box._selected ? 1 : -1;
+        star.style.display = box._selected ? 'block' : 'none';
+        box.style.boxShadow = box._selected ? '0 0 0 3px rgba(255,90,31,0.35)' : 'none';
+        box.style.background = box._selected ? 'rgba(255,90,31,0.07)' : '#fff';
+        updateCount();
+      });
+      box._filled = false;
+      box._selected = false;
+      box._img = img;
+      box._num = num;
+      box._star = star;
+      boxes.push(box);
+      grid.appendChild(box);
+    }
+
+    function updateCount() {
+      count.textContent = selected > 0
+        ? `${filled} / 20 filled · ${selected} selected`
+        : `${filled} / 20 filled`;
+    }
+
+    /* ── POPUP OPEN ── */
+    function openPopup(idx) {
+      currentBox = idx;
+      label.textContent = `Box ${String(idx + 1).padStart(2, '0')} — Sketch your idea`;
+      overlay.style.display = 'flex';
+
+      /* resize canvas to actual rendered width */
+      const w = canvas.parentElement.clientWidth - 40;
+      canvas.width  = w;
+      canvas.height = Math.round(w * 0.65);
+
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      /* restore existing drawing if any */
+      if (boxes[idx]._filled) {
+        const tmp = new Image();
+        tmp.onload = () => ctx.drawImage(tmp, 0, 0, canvas.width, canvas.height);
+        tmp.src = boxes[idx]._img.src;
+      }
+
+      setTool('pen');
+      textInput.value = '';
+    }
+
+    /* ── TOOL SELECTION ── */
+    function setTool(t) {
+      tool = t;
+      [btnPen, btnText, btnErase].forEach(b => {
+        b.style.background = '#fff';
+        b.style.borderColor = '#8C8578';
+        b.style.color = '#2B2A28';
+      });
+      const active = t === 'pen' ? btnPen : t === 'text' ? btnText : btnErase;
+      active.style.background = '#FF5A1F';
+      active.style.borderColor = '#FF5A1F';
+      active.style.color = '#fff';
+      canvas.style.cursor = t === 'text' ? 'text' : 'crosshair';
+      textRow.style.display = t === 'text' ? 'flex' : 'none';
+    }
+
+    btnPen.addEventListener('click',   () => setTool('pen'));
+    btnText.addEventListener('click',  () => setTool('text'));
+    btnErase.addEventListener('click', () => setTool('erase'));
+
+    btnClear.addEventListener('click', () => {
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    });
+
+    /* ── DRAWING ── */
+    function pos(e) {
+      const r = canvas.getBoundingClientRect();
+      const src = e.touches ? e.touches[0] : e;
+      return { x: (src.clientX - r.left) * (canvas.width / r.width),
+               y: (src.clientY - r.top)  * (canvas.height / r.height) };
+    }
+
+    function startDraw(e) {
+      if (tool === 'text') return;
+      e.preventDefault();
+      drawing = true;
+      const p = pos(e);
+      ctx.beginPath();
+      ctx.moveTo(p.x, p.y);
+      if (tool === 'erase') { ctx.globalCompositeOperation = 'destination-out'; ctx.lineWidth = 18; }
+      else { ctx.globalCompositeOperation = 'source-over'; ctx.strokeStyle = '#1a1a1c'; ctx.lineWidth = 2; }
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+    }
+    function moveDraw(e) {
+      if (!drawing) return;
+      e.preventDefault();
+      const p = pos(e);
+      ctx.lineTo(p.x, p.y);
+      ctx.stroke();
+    }
+    function endDraw() { drawing = false; ctx.globalCompositeOperation = 'source-over'; }
+
+    canvas.addEventListener('mousedown',  startDraw);
+    canvas.addEventListener('mousemove',  moveDraw);
+    canvas.addEventListener('mouseup',    endDraw);
+    canvas.addEventListener('mouseleave', endDraw);
+    canvas.addEventListener('touchstart', startDraw, { passive: false });
+    canvas.addEventListener('touchmove',  moveDraw,  { passive: false });
+    canvas.addEventListener('touchend',   endDraw);
+
+    /* ── TEXT STAMP ── */
+    btnStamp.addEventListener('click', () => {
+      const txt = textInput.value.trim();
+      if (!txt) return;
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.fillStyle = '#1a1a1c';
+      ctx.font = `bold ${Math.round(canvas.height * 0.13)}px Fraunces, serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(txt, canvas.width / 2, canvas.height / 2);
+      textInput.value = '';
+    });
+
+    /* ── SAVE ── */
+    btnSave.addEventListener('click', () => {
+      const dataUrl = canvas.toDataURL('image/png');
+      const box = boxes[currentBox];
+      box._img.src = dataUrl;
+      box._img.style.display = 'block';
+      box._num.style.display = 'none';
+      if (!box._filled) { box._filled = true; filled++; }
+      box.style.borderStyle = 'solid';
+      box.style.borderColor = '#FF5A1F';
+      box.style.cursor = 'pointer';
+      box.style.opacity = '1';
+      updateCount();
+      overlay.style.display = 'none';
+    });
+
+    /* ── CANCEL ── */
+    btnCancel.addEventListener('click', () => { overlay.style.display = 'none'; });
+    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.style.display = 'none'; });
+  })();
+</script>
+</body>
+</html>

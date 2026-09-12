@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Activity 3 – Guess the Fix!</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #f0f9f4;
+    color: #1a1a2e;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  /* ── Progress bar ── */
+  #progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 5px;
+    background: linear-gradient(90deg, #2ecc71, #1a8cff);
+    transition: width .4s ease;
+    z-index: 100;
+  }
+
+  /* ── Slide wrapper ── */
+  .slide {
+    display: none;
+    width: min(860px, 95vw);
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(26,140,255,.13);
+    padding: 48px 52px;
+    animation: fadeIn .45s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .slide.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Slide accent bar ── */
+  .slide::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, #2ecc71, #1a8cff);
+    border-radius: 20px 20px 0 0;
+  }
+
+  /* ── Slide 1 – Intro ── */
+  .badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #2ecc71, #1a8cff);
+    color: #fff;
+    font-size: .78rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 18px;
+  }
+
+  .slide h1 {
+    font-size: 2.6rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #1a8cff, #2ecc71);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 10px;
+  }
+
+  .slide h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1a8cff;
+    margin-bottom: 14px;
+  }
+
+  .intro-meta {
+    display: flex;
+    gap: 18px;
+    margin: 22px 0;
+    flex-wrap: wrap;
+  }
+  .meta-chip {
+    background: #e8f8f0;
+    border: 1.5px solid #2ecc71;
+    color: #1a6640;
+    border-radius: 30px;
+    padding: 7px 18px;
+    font-size: .9rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .intro-goal {
+    background: linear-gradient(135deg, #e8f4ff, #e8fff4);
+    border-left: 4px solid #1a8cff;
+    border-radius: 10px;
+    padding: 16px 20px;
+    font-size: 1rem;
+    color: #1a3a5c;
+    margin-top: 18px;
+    line-height: 1.6;
+  }
+
+  .instruction-box {
+    margin-top: 22px;
+    background: #f0f9f4;
+    border-radius: 12px;
+    padding: 18px 22px;
+    font-size: 1.05rem;
+    color: #1a4a2e;
+    border: 1.5px dashed #2ecc71;
+    line-height: 1.7;
+  }
+
+  /* ── Problem slides ── */
+  .problem-label {
+    display: inline-block;
+    background: #1a8cff;
+    color: #fff;
+    font-size: .78rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 14px;
+  }
+
+  .question-box {
+    background: #f0f9f4;
+    border-left: 4px solid #2ecc71;
+    border-radius: 10px;
+    padding: 16px 20px;
+    font-size: 1.05rem;
+    font-style: italic;
+    color: #1a3a2e;
+    margin: 18px 0;
+    line-height: 1.6;
+  }
+
+  /* ── Visual demos ── */
+  .demo-area {
+    display: flex;
+    gap: 18px;
+    margin: 18px 0;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  /* Pixelated logo demo */
+  .pixel-demo {
+    text-align: center;
+  }
+  .pixel-demo canvas {
+    border-radius: 10px;
+    border: 2px solid #e0e0e0;
+    display: block;
+    margin: 0 auto 6px;
+  }
+  .pixel-demo span {
+    font-size: .78rem;
+    color: #888;
+    display: block;
+  }
+
+  /* Color mode demo */
+  .color-demo {
+    display: flex;
+    gap: 14px;
+    align-items: flex-end;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .poster-card {
+    border-radius: 12px;
+    padding: 22px 18px;
+    text-align: center;
+    width: 140px;
+    position: relative;
+  }
+  .poster-card .poster-label {
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .poster-card .poster-title {
+    font-size: 1rem;
+    font-weight: 800;
+    margin-bottom: 4px;
+  }
+  .poster-card .poster-sub {
+    font-size: .72rem;
+  }
+  .poster-rgb {
+    background: linear-gradient(135deg, #9b59b6, #8e44ad);
+    color: #fff;
+    box-shadow: 0 4px 18px rgba(155,89,182,.35);
+  }
+  .poster-cmyk {
+    background: #c8c0cc;
+    color: #555;
+    border: 2px dashed #aaa;
+  }
+  .arrow-icon {
+    font-size: 1.8rem;
+    color: #aaa;
+    align-self: center;
+  }
+
+  /* Contrast demo */
+  .contrast-demo {
+    display: flex;
+    gap: 18px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .contrast-card {
+    border-radius: 12px;
+    padding: 22px 24px;
+    text-align: center;
+    width: 160px;
+    border: 2px solid #e0e0e0;
+  }
+  .contrast-card .contrast-label {
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: block;
+  }
+  .contrast-card .contrast-text {
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 10px 8px;
+    border-radius: 8px;
+  }
+  .bad-contrast  { background: #fff; }
+  .bad-contrast .contrast-text  { color: #d0d0d0; background: #f8f8f8; }
+  .good-contrast { background: #fff; }
+  .good-contrast .contrast-text { color: #1a1a1a; background: #f8f8f8; }
+
+  /* ── Reveal answer ── */
+  .reveal-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #2ecc71, #1a8cff);
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    padding: 11px 28px;
+    font-size: .95rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 6px;
+    transition: transform .15s, box-shadow .15s;
+    box-shadow: 0 4px 14px rgba(26,140,255,.25);
+  }
+  .reveal-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(26,140,255,.35); }
+
+  .answer-box {
+    display: none;
+    margin-top: 18px;
+    border-radius: 14px;
+    overflow: hidden;
+    animation: fadeIn .35s ease;
+  }
+  .answer-box.show { display: block; }
+
+  .answer-row {
+    display: flex;
+    gap: 0;
+  }
+  .answer-mistake {
+    flex: 1;
+    background: #fff3f3;
+    border: 1.5px solid #ffb3b3;
+    padding: 14px 18px;
+    border-radius: 12px 0 0 12px;
+  }
+  .answer-fix {
+    flex: 1;
+    background: #f0fff6;
+    border: 1.5px solid #b3f0cc;
+    border-left: none;
+    padding: 14px 18px;
+    border-radius: 0 12px 12px 0;
+  }
+  .answer-mistake h4 { color: #c0392b; font-size: .82rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .answer-fix h4     { color: #27ae60; font-size: .82rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .answer-mistake p, .answer-fix p { font-size: .92rem; line-height: 1.55; color: #333; }
+
+  .cg-link {
+    margin-top: 12px;
+    background: linear-gradient(135deg, #e8f4ff, #e8fff4);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: .88rem;
+    color: #1a3a5c;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    line-height: 1.5;
+  }
+  .cg-link span.bulb { font-size: 1.1rem; }
+
+  /* ── Navigation ── */
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 32px;
+  }
+  .nav-btn {
+    background: #fff;
+    border: 2px solid #1a8cff;
+    color: #1a8cff;
+    border-radius: 30px;
+    padding: 9px 26px;
+    font-size: .92rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .15s, color .15s;
+  }
+  .nav-btn:hover { background: #1a8cff; color: #fff; }
+  .nav-btn:disabled { opacity: .35; cursor: default; }
+  .nav-btn.primary {
+    background: linear-gradient(135deg, #2ecc71, #1a8cff);
+    border: none;
+    color: #fff;
+  }
+  .nav-btn.primary:hover { opacity: .9; }
+
+  .slide-counter {
+    font-size: .88rem;
+    color: #888;
+    font-weight: 600;
+    min-width: 60px;
+    text-align: center;
+  }
+
+  /* ── Slide 5 – End ── */
+  .end-icon { font-size: 3.5rem; margin-bottom: 10px; }
+  .end-points {
+    list-style: none;
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .end-points li {
+    background: #f0f9f4;
+    border-left: 4px solid #2ecc71;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: .95rem;
+    color: #1a3a2e;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<!-- ══════════════ SLIDE 1 – INTRO ══════════════ -->
+<div class="slide active" id="slide-1">
+  <div class="badge">⏱ 3–4 Minutes Activity</div>
+  <h1>Guess the Fix! 🔍</h1>
+  <div class="intro-meta">
+    <div class="meta-chip">🎯 Activity 3</div>
+    <div class="meta-chip">🖼 3 Problems</div>
+    <div class="meta-chip">💡 CG-Powered Fixes</div>
+  </div>
+  <div class="intro-goal">
+    <strong>Goal:</strong> Show how <em>computer graphics knowledge</em> solves common design mistakes — instead of guessing randomly.
+  </div>
+  <div class="instruction-box">
+    👀 Look at each problem carefully.<br>
+    🗣 Shout out <strong>what went wrong</strong> and <strong>what the correct fix is</strong>.<br>
+    ✅ Then reveal the answer to check!
+  </div>
+  <div class="nav">
+    <button class="nav-btn" disabled>← Back</button>
+    <span class="slide-counter">1 / 5</span>
+    <button class="nav-btn primary" onclick="goTo(2)">Start →</button>
+  </div>
+</div>
+
+<!-- ══════════════ SLIDE 2 – PROBLEM 1 ══════════════ -->
+<div class="slide" id="slide-2">
+  <div class="problem-label">Problem 1 of 3</div>
+  <h2>🖼 The Blurry Tarpaulin Logo</h2>
+
+  <div class="demo-area">
+    <div class="pixel-demo">
+      <canvas id="blurCanvas" width="130" height="130"></canvas>
+      <span>❌ Enlarged raster logo</span>
+    </div>
+    <div class="pixel-demo">
+      <canvas id="vectorCanvas" width="130" height="130"></canvas>
+      <span>✅ Vector logo (crisp at any size)</span>
+    </div>
+  </div>
+
+  <div class="question-box">
+    "This logo looks fuzzy and jagged when we make it big. What is the mistake, and what should we use instead?"
+  </div>
+
+  <button class="reveal-btn" onclick="reveal('ans1', this)">👁 Reveal Answer</button>
+
+  <div class="answer-box" id="ans1">
+    <div class="answer-row">
+      <div class="answer-mistake">
+        <h4>❌ Mistake</h4>
+        <p>Used a <strong>raster / JPG / PNG</strong> file — made of fixed pixels that break apart when enlarged.</p>
+      </div>
+      <div class="answer-fix">
+        <h4>✅ Fix</h4>
+        <p>Use a <strong>vector / SVG / EPS</strong> file — it scales to any size without losing quality.</p>
+      </div>
+    </div>
+    <div class="cg-link">
+      <span class="bulb">💡</span>
+      <span><strong>CG Link:</strong> This comes straight from learning how computers store and render shapes — raster vs. vector graphics!</span>
+    </div>
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" onclick="goTo(1)">← Back</button>
+    <span class="slide-counter">2 / 5</span>
+    <button class="nav-btn primary" onclick="goTo(3)">Next →</button>
+  </div>
+</div>
+
+<!-- ══════════════ SLIDE 3 – PROBLEM 2 ══════════════ -->
+<div class="slide" id="slide-3">
+  <div class="problem-label">Problem 2 of 3</div>
+  <h2>🎨 The Dull Printed Poster</h2>
+
+  <div class="demo-area">
+    <div class="color-demo">
+      <div class="poster-card poster-rgb">
+        <span class="poster-label">🖥 On Screen</span>
+        <div class="poster-title">SALE!</div>
+        <div class="poster-sub">Vibrant Purple<br>RGB Mode</div>
+      </div>
+      <div class="arrow-icon">→</div>
+      <div class="poster-card poster-cmyk">
+        <span class="poster-label">🖨 Printed</span>
+        <div class="poster-title">SALE!</div>
+        <div class="poster-sub">Dull & Faded<br>CMYK Mismatch</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="question-box">
+    "It looked perfect on my laptop, but printed all dull and gray! Why did this happen?"
+  </div>
+
+  <button class="reveal-btn" onclick="reveal('ans2', this)">👁 Reveal Answer</button>
+
+  <div class="answer-box" id="ans2">
+    <div class="answer-row">
+      <div class="answer-mistake">
+        <h4>❌ Mistake</h4>
+        <p>Saved the file in <strong>RGB color mode</strong> — designed for screens that emit light, not for print.</p>
+      </div>
+      <div class="answer-fix">
+        <h4>✅ Fix</h4>
+        <p>Switch to <strong>CMYK mode</strong> before sending to the printer to get accurate printed colors.</p>
+      </div>
+    </div>
+    <div class="cg-link">
+      <span class="bulb">💡</span>
+      <span><strong>CG Link:</strong> Computer graphics explains how screens (additive RGB) and printers (subtractive CMYK) produce color differently!</span>
+    </div>
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" onclick="goTo(2)">← Back</button>
+    <span class="slide-counter">3 / 5</span>
+    <button class="nav-btn primary" onclick="goTo(4)">Next →</button>
+  </div>
+</div>
+
+<!-- ══════════════ SLIDE 4 – PROBLEM 3 ══════════════ -->
+<div class="slide" id="slide-4">
+  <div class="problem-label">Problem 3 of 3</div>
+  <h2>👁 The Invisible Warning Text</h2>
+
+  <div class="demo-area">
+    <div class="contrast-demo">
+      <div class="contrast-card bad-contrast">
+        <span class="contrast-label">❌ Bad</span>
+        <div class="contrast-text">⚠ LOW DISK SPACE</div>
+        <div style="font-size:.72rem;color:#bbb;margin-top:8px;">Light gray on white</div>
+      </div>
+      <div class="contrast-card good-contrast">
+        <span class="contrast-label">✅ Good</span>
+        <div class="contrast-text" style="color:#1a1a1a;">⚠ LOW DISK SPACE</div>
+        <div style="font-size:.72rem;color:#888;margin-top:8px;">Dark text on white</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="question-box">
+    "My classmates say they can barely read this text. What rule did I break?"
+  </div>
+
+  <button class="reveal-btn" onclick="reveal('ans3', this)">👁 Reveal Answer</button>
+
+  <div class="answer-box" id="ans3">
+    <div class="answer-row">
+      <div class="answer-mistake">
+        <h4>❌ Mistake</h4>
+        <p>Too <strong>low color contrast</strong> between text and background — light gray on white is nearly invisible.</p>
+      </div>
+      <div class="answer-fix">
+        <h4>✅ Fix</h4>
+        <p>Use a <strong>dark text color</strong> (dark gray or black) to meet accessibility contrast standards (WCAG AA).</p>
+      </div>
+    </div>
+    <div class="cg-link">
+      <span class="bulb">💡</span>
+      <span><strong>CG Link:</strong> We learn contrast ratios and visual processing in computer graphics — it's not just art, it's science!</span>
+    </div>
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn" onclick="goTo(3)">← Back</button>
+    <span class="slide-counter">4 / 5</span>
+    <button class="nav-btn primary" onclick="goTo(5)">Finish →</button>
+  </div>
+</div>
+
+<!-- ══════════════ SLIDE 5 – END ══════════════ -->
+<div class="slide" id="slide-5">
+  <div class="end-icon">🎉</div>
+  <h1>Activity Complete!</h1>
+  <p style="color:#555;margin-top:8px;font-size:1rem;">Great job! Here's what we learned from the 3 problems:</p>
+  <ul class="end-points">
+    <li>🖼 <span><strong>Raster vs. Vector</strong> — Always use SVG/EPS for logos that need to scale.</span></li>
+    <li>🎨 <span><strong>RGB vs. CMYK</strong> — Match your color mode to your output medium.</span></li>
+    <li>👁 <span><strong>Contrast Matters</strong> — Dark text on light backgrounds ensures readability.</span></li>
+  </ul>
+  <div class="intro-goal" style="margin-top:10px;">
+    💡 <strong>Computer Graphics knowledge</strong> isn't just theory — it directly prevents real design mistakes!
+  </div>
+  <div class="nav">
+    <button class="nav-btn" onclick="goTo(4)">← Back</button>
+    <span class="slide-counter">5 / 5</span>
+    <button class="nav-btn primary" onclick="goTo(1)">🔄 Restart</button>
+  </div>
+</div>
+
+<script>
+  let current = 1;
+  const total = 5;
+
+  function goTo(n) {
+    document.getElementById('slide-' + current).classList.remove('active');
+    current = n;
+    document.getElementById('slide-' + current).classList.add('active');
+    document.getElementById('progress-bar').style.width = ((current / total) * 100) + '%';
+    if (current === 2) drawCanvases();
+  }
+
+  function reveal(id, btn) {
+    document.getElementById(id).classList.add('show');
+    btn.style.display = 'none';
+  }
+
+  /* ── Canvas drawings ── */
+  function drawCanvases() {
+    drawPixelated();
+    drawVector();
+  }
+
+  function drawPixelated() {
+    const c = document.getElementById('blurCanvas');
+    const ctx = c.getContext('2d');
+    ctx.clearRect(0, 0, 130, 130);
+    // Background
+    ctx.fillStyle = '#f5f5f5';
+    ctx.fillRect(0, 0, 130, 130);
+    // Draw blocky pixelated "logo" — a star shape made of big pixels
+    const pixels = [
+      [5,2],[6,2],
+      [4,3],[5,3],[6,3],[7,3],
+      [3,4],[4,4],[5,4],[6,4],[7,4],[8,4],
+      [2,5],[3,5],[4,5],[5,5],[6,5],[7,5],[8,5],[9,5],
+      [3,6],[4,6],[5,6],[6,6],[7,6],[8,6],
+      [2,7],[3,7],[4,7],[5,7],[6,7],[7,7],[8,7],[9,7],
+      [3,8],[4,8],[5,8],[6,8],[7,8],[8,8],
+      [4,9],[5,9],[6,9],[7,9],
+      [5,10],[6,10],
+    ];
+    const colors = ['#1a8cff','#2ecc71','#9b59b6','#e74c3c','#f39c12'];
+    pixels.forEach(([px, py], i) => {
+      ctx.fillStyle = colors[i % colors.length];
+      // Make pixels big and blurry-looking
+      const size = 11;
+      ctx.fillRect(px * size + 2, py * size - 8, size + 1, size + 1);
+    });
+    // Jagged overlay lines to simulate blur artifact
+    ctx.strokeStyle = 'rgba(0,0,0,0.08)';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < 130; i += 11) {
+      ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, 130); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(130, i); ctx.stroke();
+    }
+    // Label
+    ctx.fillStyle = '#e74c3c';
+    ctx.font = 'bold 10px Segoe UI';
+    ctx.fillText('PIXELATED', 28, 122);
+  }
+
+  function drawVector() {
+    const c = document.getElementById('vectorCanvas');
+    const ctx = c.getContext('2d');
+    ctx.clearRect(0, 0, 130, 130);
+    ctx.fillStyle = '#f5f5f5';
+    ctx.fillRect(0, 0, 130, 130);
+
+    // Draw a clean crisp vector-style logo (circle + letter)
+    // Outer ring
+    ctx.beginPath();
+    ctx.arc(65, 58, 44, 0, Math.PI * 2);
+    ctx.fillStyle = 'linear-gradient';
+    const grad = ctx.createLinearGradient(21, 14, 109, 102);
+    grad.addColorStop(0, '#1a8cff');
+    grad.addColorStop(1, '#2ecc71');
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    // Inner white circle
+    ctx.beginPath();
+    ctx.arc(65, 58, 34, 0, Math.PI * 2);
+    ctx.fillStyle = '#fff';
+    ctx.fill();
+
+    // Letter G
+    ctx.fillStyle = '#1a8cff';
+    ctx.font = 'bold 36px Segoe UI';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('G', 65, 59);
+
+    // Label
+    ctx.fillStyle = '#27ae60';
+    ctx.font = 'bold 10px Segoe UI';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillText('VECTOR CRISP', 65, 122);
+  }
+
+  // Init progress bar
+  document.getElementById('progress-bar').style.width = ((1 / total) * 100) + '%';
+</script>
+</body>
+</html>

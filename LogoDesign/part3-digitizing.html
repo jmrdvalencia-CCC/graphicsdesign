@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Part 3 — Digitizing Your Sketch · Logo Design Techniques</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+</head>
+<body data-prev="part2-sketching.html" data-next="part4-scalability.html">
+<div class="app">
+
+  <div class="deck">
+
+    <!-- ══ SLIDE HEADER — Part 3 ══ -->
+    <section class="slide dark" data-section="Part 3 — Overview">
+      <div style="flex:1; display:flex; flex-direction:column; justify-content:center; gap:20px; max-width:680px;">
+        <span class="kicker anim d1"><span class="sw"></span>Logo Design Techniques · Module 04</span>
+        <h2 class="anim d2" style="font-size:clamp(32px,5vw,52px); line-height:1.0;">Part 3 <span class="accent">Digitizing Your Sketch</span></h2>
+        <div class="h-bar anim d2"></div>
+        <p class="sub anim d3" style="max-width:52ch; font-size:clamp(13px,1.5vw,16px);">From paper to vector — scanning, raster vs. vector, the scan-to-vector workflow, key Illustrator tools, and using Image Trace.</p>
+        <div class="anim d4" style="display:flex; flex-wrap:wrap; gap:8px;">
+          <span style="font-family:'JetBrains Mono',monospace; font-size:10px; padding:5px 12px; border-radius:100px; border:1px solid rgba(247,245,240,0.15); color:rgba(247,245,240,0.6);">3.1 — From Paper to Vector</span>
+          <span style="font-family:'JetBrains Mono',monospace; font-size:10px; padding:5px 12px; border-radius:100px; border:1px solid rgba(247,245,240,0.15); color:rgba(247,245,240,0.6);">3.2 — Raster vs. Vector</span>
+          <span style="font-family:'JetBrains Mono',monospace; font-size:10px; padding:5px 12px; border-radius:100px; border:1px solid rgba(247,245,240,0.15); color:rgba(247,245,240,0.6);">3.3 — Scan-to-Vector Workflow</span>
+          <span style="font-family:'JetBrains Mono',monospace; font-size:10px; padding:5px 12px; border-radius:100px; border:1px solid rgba(247,245,240,0.15); color:rgba(247,245,240,0.6);">3.4 — Key Vector Tools</span>
+          <span style="font-family:'JetBrains Mono',monospace; font-size:10px; padding:5px 12px; border-radius:100px; border:1px solid rgba(247,245,240,0.15); color:rgba(247,245,240,0.6);">3.5 — Image Trace</span>
+        </div>
+        <div class="anim d5" style="display:flex; align-items:center; gap:10px; margin-top:8px;">
+          <span style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--orange); letter-spacing:.1em; text-transform:uppercase;">Press Next to begin</span>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="#FF5A1F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ SLIDE 3.1 — From Paper to Vector ══ -->
+    <section class="slide" data-section="3.1 — From Paper to Vector">
+      <span class="kicker anim d1"><span class="sw"></span>Part 3 · Section 3.1</span>
+      <h2 class="anim d2">From Paper <span class="accent">to Vector</span></h2>
+      <div class="h-bar anim d2"></div>
+      <p class="sub anim d3">Digitizing is the process of converting a hand-drawn sketch into clean, scalable digital artwork. The goal is not to copy the sketch — it is to <em>improve</em> it.</p>
+
+      <div class="slide-body cols2">
+        <div style="display:flex; flex-direction:column; gap:12px; overflow:hidden;">
+          <div class="teal-block anim d3">
+            <h3>What Digitizing Achieves</h3>
+            <p>Refine proportions, smooth curves, correct symmetry, and produce a mark that is technically precise and production-ready. The sketch is a starting point — the vector is the destination.</p>
+          </div>
+          <div class="callout anim d4">
+            <b>Key Rule</b>
+            A logo must always be built and stored as a vector. Raster versions (PNG, JPG) are <em>exports</em> for specific uses — they are never the master file. A designer who delivers only a JPG logo has not completed the job.
+          </div>
+        </div>
+        <div class="card anim d3" style="display:flex; flex-direction:column; overflow:hidden;">
+          <h3>Workflow Overview</h3>
+          <ol class="step-list">
+            <li>Scan or photograph the sketch</li>
+            <li>Clean up in a raster application (Photoshop)</li>
+            <li>Place as a template in Illustrator</li>
+            <li>Trace with the Pen tool</li>
+            <li>Refine and simplify paths</li>
+            <li>Apply color and typography</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ SLIDE 3.2 — Raster vs Vector ══ -->
+    <section class="slide dark" data-section="3.2 — Raster vs. Vector">
+      <span class="kicker anim d1"><span class="sw"></span>Part 3 · Section 3.2</span>
+      <h2 class="anim d2">Raster vs. <span class="accent">Vector</span></h2>
+      <div class="h-bar anim d2"></div>
+      <p class="sub anim d3">Understanding this difference is the most important technical concept in logo production.</p>
+
+      <div class="slide-body" style="overflow:hidden;">
+        <div class="table-wrap anim d3" style="background:#1a1a1c; border-color:var(--line-dark); flex:1;">
+          <table class="data" style="background:transparent;">
+            <tr><th style="color:var(--orange);"></th><th style="color:var(--gray);">Raster</th><th style="color:var(--gray);">Vector</th></tr>
+            <tr><td style="color:#FF5A1F; font-weight:700;">Made of</td><td style="color:rgba(247,245,240,0.75);">A fixed grid of pixels (dots of color)</td><td style="color:rgba(247,245,240,0.75);">Mathematical paths defined by points and curves</td></tr>
+            <tr><td style="color:#FF5A1F; font-weight:700;">Scaling</td><td style="color:rgba(247,245,240,0.75);">Loses quality when enlarged — pixelated and blurry</td><td style="color:var(--orange);">Scales to any size with no quality loss</td></tr>
+            <tr><td style="color:#FF5A1F; font-weight:700;">File size</td><td style="color:rgba(247,245,240,0.75);">Larger at high resolution</td><td style="color:rgba(247,245,240,0.75);">Typically smaller; resolution-independent</td></tr>
+            <tr><td style="color:#FF5A1F; font-weight:700;">Editing</td><td style="color:rgba(247,245,240,0.75);">Destructive — quality degrades with each edit</td><td style="color:var(--orange);">Non-destructive — paths can be edited infinitely</td></tr>
+            <tr><td style="color:#FF5A1F; font-weight:700;">File formats</td><td style="color:rgba(247,245,240,0.75);">JPG, PNG, GIF, PSD, TIFF</td><td style="color:rgba(247,245,240,0.75);">SVG, AI, EPS, PDF</td></tr>
+            <tr><td style="color:#FF5A1F; font-weight:700;">Logo use</td><td style="color:rgba(247,245,240,0.55);">Web only (PNG with transparency)</td><td style="color:var(--orange);">All uses — web, print, embroidery, billboard</td></tr>
+            <tr><td style="color:#FF5A1F; font-weight:700;">Software</td><td style="color:rgba(247,245,240,0.55);">Adobe Photoshop, GIMP</td><td style="color:rgba(247,245,240,0.75);">Adobe Illustrator, Inkscape, Affinity Designer</td></tr>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ SLIDE 3.3 — Scan-to-Vector Workflow ══ -->
+    <section class="slide" data-section="3.3 — Scan-to-Vector Workflow">
+      <span class="kicker anim d1"><span class="sw"></span>Part 3 · Section 3.3</span>
+      <h2 class="anim d2">Scan-to-Vector <span class="accent">Workflow</span></h2>
+      <div class="h-bar anim d2"></div>
+
+      <div class="slide-body" style="overflow:hidden;">
+        <ol class="step-list anim d3">
+          <li><b>Scan or photograph</b> — Scan at 300–600 dpi in grayscale. Use even, diffused lighting with no shadows or perspective distortion. Clean white paper with dark, confident lines.</li>
+          <li><b>Clean up in Photoshop</b> — Use Levels (Ctrl/Cmd + L) to increase contrast: push the black point right and the white point left until lines are crisp. Remove smudges, stray marks, and paper texture. Straighten and crop.</li>
+          <li><b>Place as template in Illustrator</b> — File → Place. Lock the image on its layer. Reduce layer opacity to 40–50% — visible but not distracting.</li>
+          <li><b>Trace with the Pen tool (P)</b> — Build paths over the sketch from individual closed shapes. Use as few anchor points as possible — smooth curves need only 2 points.</li>
+          <li><b>Refine and simplify</b> — Use Direct Selection tool (A) to adjust anchor points. Check symmetry: Object → Transform → Reflect. Delete the template layer when complete.</li>
+          <li><b>Apply color and typography</b> — Apply brand colors using exact hex, RGB, or CMYK values. Outline all text: Type → Create Outlines (Shift + Ctrl/Cmd + O).</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ══ SLIDE 3.4 — Key Vector Tools ══ -->
+    <section class="slide" data-section="3.4 — Key Vector Tools">
+      <span class="kicker anim d1"><span class="sw"></span>Part 3 · Section 3.4</span>
+      <h2 class="anim d2">Key Vector <span class="accent">Tools</span></h2>
+      <div class="h-bar anim d2"></div>
+      <p class="sub anim d3">The essential Adobe Illustrator tools for digitizing a logo sketch into clean vector artwork.</p>
+
+      <div class="slide-body cols2">
+        <div class="table-wrap anim d3">
+          <table class="data">
+            <tr><th>Tool</th><th>Key</th><th>Purpose</th></tr>
+            <tr><td><b>Pen tool</b></td><td>P</td><td>Draw precise bezier paths — the primary digitizing tool</td></tr>
+            <tr><td><b>Direct Selection</b></td><td>A</td><td>Select and move individual anchor points and handles</td></tr>
+            <tr><td><b>Anchor Point</b></td><td>Shift+C</td><td>Convert corner points ↔ smooth curve points</td></tr>
+            <tr><td><b>Pathfinder</b></td><td>Win→PF</td><td>Unite, subtract, intersect, and divide overlapping shapes</td></tr>
+            <tr><td><b>Align panel</b></td><td>Win→Align</td><td>Distribute and align objects precisely on a grid</td></tr>
+            <tr><td><b>Reflect tool</b></td><td>O</td><td>Mirror an object across a vertical or horizontal axis</td></tr>
+            <tr><td><b>Shape Builder</b></td><td>Shift+M</td><td>Merge or subtract overlapping shapes interactively</td></tr>
+          </table>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <div class="card anim d3">
+            <h3>Pro Tip — The Pen Tool</h3>
+            <p>The Pen tool is the most important and most difficult tool in vector design. The key to mastery is using the <strong>fewest anchor points possible</strong>.</p>
+            <p style="margin-top:8px;">A smooth curve between two points needs exactly two anchor points — one at each end. Adding extra points creates bumps and makes the path harder to edit.</p>
+          </div>
+          <div class="callout anim d4">
+            <b>Practice First</b>
+            Practice drawing smooth curves with only two anchor points before attempting complex logo shapes. Mastery of the Pen tool is what separates amateur from professional vector work.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ SLIDE 3.5 — Image Trace & Interactive Canvas ══ -->
+    <section class="slide" data-section="3.5 — Image Trace">
+      <span class="kicker anim d1"><span class="sw"></span>Part 3 · Section 3.5</span>
+      <h2 class="anim d2">Image Trace &amp; <span class="accent">Pen Tool Practice</span></h2>
+      <div class="h-bar anim d2"></div>
+      <p class="sub anim d3">Auto-tracing as a starting point — and hands-on pen tool practice.</p>
+
+      <div class="slide-body cols2">
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <div class="card anim d3">
+            <h3>When to Use Image Trace</h3>
+            <ul class="checklist">
+              <li>Simple, high-contrast black-and-white sketches</li>
+              <li>Quick first pass to establish basic path structure</li>
+              <li>Organic, irregular shapes difficult to trace manually</li>
+            </ul>
+          </div>
+          <div class="card anim d3">
+            <h3>When NOT to Use Image Trace</h3>
+            <ul class="checklist" style="--check-color:var(--teal);">
+              <li>Logos requiring precise geometric construction</li>
+              <li>Sketches with low contrast or complex shading</li>
+              <li>As a final result — always simplify paths manually</li>
+            </ul>
+          </div>
+          <div class="callout anim d4">
+            <b>Workflow Recommendation</b>
+            Use Image Trace to generate a rough vector, then manually simplify and refine the paths. Never deliver an Image Trace result as a finished logo without editing.
+          </div>
+        </div>
+
+        <!-- Interactive pen canvas -->
+        <div class="card anim d3" style="display:flex; flex-direction:column;">
+          <h3>Interactive: Pen Tool Path Builder</h3>
+          <p style="font-size:11.5px; color:var(--gray); margin-bottom:8px;">Click to place anchor points. Close Path to fill. Clear to reset.</p>
+          <canvas id="penCanvas" style="width:100%; flex:1; border:1px solid var(--line-light); border-radius:8px; cursor:crosshair; background:var(--paper); display:block; min-height:160px;"></canvas>
+          <div style="display:flex; gap:8px; margin-top:8px; align-items:center; flex-shrink:0;">
+            <button id="clearBtn" style="font-family:'JetBrains Mono',monospace; font-size:10px; padding:5px 12px; border-radius:6px; border:1px solid var(--line-light); background:var(--paper); color:var(--charcoal); cursor:pointer;">Clear</button>
+            <button id="closeBtn" style="font-family:'JetBrains Mono',monospace; font-size:10px; padding:5px 12px; border-radius:6px; border:1px solid var(--orange); background:rgba(255,90,31,0.10); color:var(--orange); cursor:pointer;">Close Path</button>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--gray);" id="ptCount">0 pts</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── FOOTER NAV ── -->
+    <nav class="slide-nav" aria-label="Navigation">
+      <div class="snav-parts" id="snavParts"></div>
+      <div class="snav-controls">
+        <button class="snav-btn" id="snavPrev" aria-label="Previous"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Prev</button>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:5px;"><div class="slide-dots" id="snavDots"></div><span class="snav-label" id="snavLabel"></span></div>
+        <button class="snav-btn" id="snavNext" aria-label="Next">Next<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </div>
+    </nav>
+
+  </div><!-- /deck -->
+</div><!-- /app -->
+
+<script src="shared.js"></script>
+<script>
+  buildRail('digitizing');
+  buildSlides();
+  buildMobileNav();
+  buildBgAnimation();
+
+  /* pen canvas */
+  (function () {
+    const canvas = document.getElementById('penCanvas');
+    const ctx    = canvas.getContext('2d');
+    const pts    = [];
+    let closed   = false;
+
+    function resize() {
+      const dpr  = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width  = rect.width  * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.scale(dpr, dpr);
+      redraw(rect.width, rect.height);
+    }
+    function redraw(w, h) {
+      ctx.clearRect(0, 0, w, h);
+      if (pts.length < 2) { drawDots(); return; }
+      ctx.beginPath();
+      ctx.moveTo(pts[0].x, pts[0].y);
+      for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y);
+      if (closed) ctx.closePath();
+      ctx.strokeStyle = '#FF5A1F'; ctx.lineWidth = 2; ctx.stroke();
+      if (closed) { ctx.fillStyle = 'rgba(255,90,31,0.10)'; ctx.fill(); }
+      drawDots();
+    }
+    function drawDots() {
+      pts.forEach((p, i) => {
+        ctx.beginPath(); ctx.arc(p.x, p.y, 4.5, 0, Math.PI * 2);
+        ctx.fillStyle = i === 0 ? '#1B4B4A' : '#FF5A1F'; ctx.fill();
+        ctx.strokeStyle = '#F7F5F0'; ctx.lineWidth = 1.5; ctx.stroke();
+      });
+    }
+    canvas.addEventListener('click', e => {
+      if (closed) return;
+      const r = canvas.getBoundingClientRect();
+      pts.push({ x: e.clientX - r.left, y: e.clientY - r.top });
+      document.getElementById('ptCount').textContent = pts.length + ' pt' + (pts.length !== 1 ? 's' : '');
+      redraw(r.width, r.height);
+    });
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      pts.length = 0; closed = false;
+      document.getElementById('ptCount').textContent = '0 pts';
+      resize();
+    });
+    document.getElementById('closeBtn').addEventListener('click', () => {
+      if (pts.length >= 3) { closed = true; const r = canvas.getBoundingClientRect(); redraw(r.width, r.height); }
+    });
+    window.addEventListener('resize', resize);
+    resize();
+  })();
+</script>
+</body>
+</html>

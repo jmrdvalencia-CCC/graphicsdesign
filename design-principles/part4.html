@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Part 4 – Summary & Assessment</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', sans-serif; background: #0f0f1a; color: #fff; min-height: 100vh; display: flex; flex-direction: column; }
+
+  header {
+    background: rgba(255,255,255,0.04);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding: 14px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .header-left { display: flex; align-items: center; gap: 14px; }
+  .part-badge { background: #f4a261; font-size: 0.68rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 4px 14px; border-radius: 20px; color: #0f0f1a; }
+  .header-title { font-size: 0.95rem; font-weight: 600; color: #ccc; }
+
+
+  .slides { flex: 1; }
+  .slide { display: none; min-height: calc(100vh - 56px - 60px); padding: 44px 60px; animation: fadeIn 0.4s ease; flex-direction: column; overflow-y: auto; }
+  .slide.active { display: flex; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; } }
+
+  .slide-label { font-size: 0.85rem; letter-spacing: 3px; text-transform: uppercase; color: #f4a261; font-weight: 700; margin-bottom: 10px; }
+  h2 { font-size: 2.6rem; font-weight: 800; margin-bottom: 8px; line-height: 1.15; }
+  .slide-sub { font-size: 1.05rem; color: #888; margin-bottom: 30px; }
+
+  /* ── KEY TAKEAWAYS ── */
+  .takeaway-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .takeaway-list li {
+    display: flex; align-items: flex-start; gap: 18px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 18px 22px;
+    font-size: 1.05rem;
+    color: #ddd;
+    line-height: 1.8;
+  }
+  .tk-num {
+    background: #f4a261;
+    color: #0f0f1a;
+    font-weight: 800;
+    font-size: 1rem;
+    min-width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .takeaway-list li strong { color: #fff; }
+
+  .balance-types-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 14px;
+  }
+  .bt-card {
+    border-radius: 12px;
+    padding: 16px 18px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    border: 1px solid;
+  }
+  .bt-card.sym { background: rgba(168,218,220,0.08); border-color: rgba(168,218,220,0.25); color: #a8dadc; }
+  .bt-card.asym { background: rgba(230,57,70,0.08); border-color: rgba(230,57,70,0.25); color: #e63946; }
+  .bt-card.rad { background: rgba(255,183,3,0.08); border-color: rgba(255,183,3,0.25); color: #ffb703; }
+  .bt-card strong { display: block; font-size: 1.05rem; margin-bottom: 4px; }
+  .bt-card span { color: #bbb; font-size: 0.88rem; }
+
+  /* ── ASSESSMENT ── */
+  .q-grid { display: flex; flex-direction: column; gap: 12px; }
+  .q-card {
+    display: flex; align-items: flex-start; gap: 18px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 18px 22px;
+    font-size: 1.05rem;
+    color: #ddd;
+    line-height: 1.7;
+  }
+  .q-badge {
+    background: rgba(244,162,97,0.15);
+    border: 1px solid #f4a261;
+    color: #f4a261;
+    font-weight: 700;
+    font-size: 0.9rem;
+    min-width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  /* ── ASSIGNMENT ── */
+  .assign-box {
+    background: rgba(244,162,97,0.07);
+    border: 1px solid rgba(244,162,97,0.2);
+    border-radius: 16px;
+    padding: 24px 28px;
+    margin-bottom: 20px;
+  }
+  .assign-box h3 { font-size: 1.2rem; font-weight: 700; color: #f4a261; margin-bottom: 14px; }
+  .assign-box p { font-size: 1rem; color: #ddd; line-height: 1.8; margin-bottom: 16px; }
+  .versions-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 14px; }
+  .ver-card {
+    border-radius: 10px;
+    padding: 14px;
+    text-align: center;
+    border: 1px solid;
+  }
+  .ver-card.v1 { background: rgba(168,218,220,0.07); border-color: rgba(168,218,220,0.2); }
+  .ver-card.v2 { background: rgba(230,57,70,0.07); border-color: rgba(230,57,70,0.2); }
+  .ver-card.v3 { background: rgba(255,183,3,0.07); border-color: rgba(255,183,3,0.2); }
+  .ver-label { font-size: 0.82rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+  .v1 .ver-label { color: #a8dadc; }
+  .v2 .ver-label { color: #e63946; }
+  .v3 .ver-label { color: #ffb703; }
+  .ver-name { font-size: 1rem; font-weight: 700; }
+  .tools-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .tool-tag {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 6px 18px;
+    font-size: 0.92rem;
+    color: #bbb;
+  }
+  .submit-box {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 16px 22px;
+    font-size: 1rem;
+    color: #ddd;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .submit-box strong { color: #f4a261; }
+
+  /* ── TIME BREAKDOWN ── */
+  .time-table { width: 100%; border-collapse: collapse; font-size: 1rem; margin-bottom: 24px; }
+  .time-table th { padding: 12px 18px; text-align: left; font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase; color: #777; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .time-table td { padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.05); color: #ddd; font-size: 1rem; }
+  .time-table tr:last-child td { color: #fff; font-weight: 700; border-top: 1px solid rgba(255,255,255,0.1); border-bottom: none; }
+  .time-table td:first-child { color: #f4a261; font-weight: 600; }
+  .time-table tr:last-child td:first-child { color: #fff; }
+
+  .ref-box {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 12px;
+    padding: 20px 24px;
+    font-size: 1rem;
+    color: #aaa;
+    font-style: italic;
+    line-height: 1.8;
+  }
+  .ref-box strong { color: #aaa; font-style: normal; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: rgba(255,255,255,0.03);
+    border-top: 1px solid rgba(255,255,255,0.07);
+    padding: 12px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-btn {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: #fff; padding: 8px 22px; border-radius: 8px;
+    cursor: pointer; font-size: 0.82rem; font-family: inherit;
+    transition: all 0.2s; text-decoration: none; display: inline-block;
+  }
+  .nav-btn:hover { background: rgba(255,255,255,0.14); }
+  .nav-btn.primary { background: #f4a261; border-color: #f4a261; color: #0f0f1a; font-weight: 700; }
+  .nav-btn.primary:hover { background: #e76f51; border-color: #e76f51; }
+  .slide-counter { font-size: 0.78rem; color: #555; }
+  .dots { display: flex; gap: 6px; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.2); cursor: pointer; transition: background 0.2s; }
+  .dot.active { background: #f4a261; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <span class="part-badge">Part 4</span>
+    <span class="header-title">Summary &amp; Assessment</span>
+  </div>
+
+</header>
+
+<div class="slides">
+
+  <!-- SLIDE 1: Key Takeaways -->
+  <div class="slide active" id="slide-1">
+    <div class="slide-label">4.1 — Key Takeaways</div>
+    <h2>What We Learned Today</h2>
+    <p class="slide-sub">Core concepts from this module</p>
+    <ul class="takeaway-list">
+      <li><span class="tk-num">1</span><div><strong>Design Elements</strong> — Line, shape, color, texture, space, form, value, and typography are the building blocks of visual design.</div></li>
+      <li><span class="tk-num">2</span><div><strong>Design Principles</strong> — Guidelines that govern how elements are arranged to create effective compositions.</div></li>
+      <li><span class="tk-num">3</span><div><strong>Balance</strong> — The distribution of visual weight to create stability and harmony in a composition.</div></li>
+      <li>
+        <span class="tk-num">4</span>
+        <div>
+          <strong>Three Types of Balance:</strong>
+          <div class="balance-types-row">
+            <div class="bt-card sym"><strong>Symmetrical</strong><span>Mirror image · Formal · Stable</span></div>
+            <div class="bt-card asym"><strong>Asymmetrical</strong><span>Different but equal weight · Dynamic · Modern</span></div>
+            <div class="bt-card rad"><strong>Radial</strong><span>Radiates from center · Energetic · Focused</span></div>
+          </div>
+        </div>
+      </li>
+      <li><span class="tk-num">5</span><div><strong>Visual Weight</strong> — Influenced by size, color, texture, position, and complexity of elements.</div></li>
+    </ul>
+  </div>
+
+  <!-- SLIDE 2: Assessment Questions -->
+  <div class="slide" id="slide-2">
+    <div class="slide-label">4.2 — Assessment</div>
+    <h2>Short Answer Questions</h2>
+    <p class="slide-sub">Answer individually — 5 questions</p>
+    <div class="q-grid">
+      <div class="q-card"><span class="q-badge">1</span>Define balance in graphic design in your own words.</div>
+      <div class="q-card"><span class="q-badge">2</span>What is the difference between symmetrical and asymmetrical balance?</div>
+      <div class="q-card"><span class="q-badge">3</span>Give one real-world example of radial balance.</div>
+      <div class="q-card"><span class="q-badge">4</span>List three factors that affect visual weight in a composition.</div>
+      <div class="q-card"><span class="q-badge">5</span>Why is balance considered a fundamental principle of design?</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: Assignment -->
+  <div class="slide" id="slide-3">
+    <div class="slide-label">4.3 — Extend</div>
+    <h2>Extended Activity</h2>
+    <p class="slide-sub">Create a Design Composition</p>
+    <div class="assign-box">
+      <h3>📐 Task</h3>
+      <p>Using any drawing or design tool, create <strong>three versions</strong> of the same composition (a simple poster or layout). Label each version and write 2–3 sentences explaining how balance was achieved.</p>
+      <div class="versions-row">
+        <div class="ver-card v1"><div class="ver-label">Version 1</div><div class="ver-name">Symmetrical Balance</div></div>
+        <div class="ver-card v2"><div class="ver-label">Version 2</div><div class="ver-name">Asymmetrical Balance</div></div>
+        <div class="ver-card v3"><div class="ver-label">Version 3</div><div class="ver-name">Radial Balance</div></div>
+      </div>
+      <p style="margin-bottom:12px;font-size:0.95rem;color:#999;">Accepted tools:</p>
+      <div class="tools-row">
+        <span class="tool-tag">Canva</span>
+        <span class="tool-tag">Adobe Express</span>
+        <span class="tool-tag">MS Paint</span>
+        <span class="tool-tag">Hand-drawn</span>
+        <span class="tool-tag">Any design app</span>
+      </div>
+    </div>
+    <div class="submit-box">📅 <strong>Submission:</strong> &nbsp;Next class meeting
+    </div>
+  </div>
+
+  <!-- SLIDE 4: Time Breakdown + Reference -->
+
+
+</div><!-- /slides -->
+
+<footer>
+  <a class="nav-btn" href="part3.html">← Part 3</a>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+    <div class="dots">
+      <div class="dot active" onclick="goTo(1)"></div>
+      <div class="dot" onclick="goTo(2)"></div>
+      <div class="dot" onclick="goTo(3)"></div>
+      <div class="dot" onclick="goTo(4)"></div>
+    </div>
+    <span class="slide-counter" id="counter">Slide 1 of 4</span>
+  </div>
+  <div style="display:flex;gap:10px;">
+    <button class="nav-btn" onclick="prev()">← Prev</button>
+    <button class="nav-btn primary" onclick="next()" id="nextBtn">Next →</button>
+    <a class="nav-btn" href="index.html">🏠 Home</a>
+  </div>
+</footer>
+
+<script>
+  let current = 1;
+  const total = 4;
+  function goTo(n) {
+    document.getElementById('slide-' + current).classList.remove('active');
+    document.querySelectorAll('.dot')[current - 1].classList.remove('active');
+    current = n;
+    document.getElementById('slide-' + current).classList.add('active');
+    document.querySelectorAll('.dot')[current - 1].classList.add('active');
+    document.getElementById('counter').textContent = 'Slide ' + current + ' of ' + total;
+    const btn = document.getElementById('nextBtn');
+    btn.textContent = current === total ? '🏠 Home' : 'Next →';
+    btn.onclick = current === total ? () => location.href = 'index.html' : next;
+  }
+  function next() { if (current < total) goTo(current + 1); else location.href = 'index.html'; }
+  function prev() { if (current > 1) goTo(current - 1); }
+  document.addEventListener('keydown', e => { if (e.key === 'ArrowRight') next(); if (e.key === 'ArrowLeft') prev(); });
+</script>
+</body>
+</html>

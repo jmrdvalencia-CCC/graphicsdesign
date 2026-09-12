@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Part 2 – The Six Tools of Visual Hierarchy</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body { font-family: 'Inter', sans-serif; background: #07070f; color: #fff; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+
+  /* HEADER */
+  header {
+    background: rgba(255,255,255,0.02);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    padding: 0 36px;
+    height: 54px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .hd-left { display: flex; align-items: center; gap: 12px; }
+  .part-badge {
+    background: #7c3aed; font-size: 0.62rem; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    padding: 4px 14px; border-radius: 20px;
+  }
+  .hd-title { font-size: 0.85rem; font-weight: 600; color: #6b7280; }
+  .hd-right { font-size: 0.72rem; color: #374151; }
+
+  /* SLIDES CONTAINER */
+  .slides { flex: 1; overflow: hidden; position: relative; }
+
+  .slide {
+    display: none;
+    position: absolute; inset: 0;
+    padding: 40px 60px;
+    flex-direction: column;
+    overflow-y: auto;
+    animation: fadeIn 0.35s ease;
+  }
+  .slide.active { display: flex; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* SLIDE LABELS */
+  .slide-tag {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 3px;
+    text-transform: uppercase; color: #7c3aed; margin-bottom: 6px;
+  }
+  h2 { font-size: 2.1rem; font-weight: 900; line-height: 1.1; margin-bottom: 6px; }
+  .lead { font-size: 0.95rem; color: #6b7280; margin-bottom: 22px; }
+
+  /* BOXES */
+  .note-box {
+    background: rgba(167,139,250,0.07); border-left: 4px solid #a78bfa;
+    border-radius: 0 10px 10px 0; padding: 16px 22px;
+    font-size: 0.92rem; color: #d1d5db; line-height: 1.75;
+  }
+  .note-box strong { color: #a78bfa; }
+  .discuss-box {
+    background: rgba(124,58,237,0.07); border-left: 4px solid #7c3aed;
+    border-radius: 0 10px 10px 0; padding: 16px 22px;
+    font-size: 0.92rem; color: #d1d5db; line-height: 1.75;
+  }
+  .discuss-box strong { color: #a78bfa; }
+  .warn-box {
+    background: rgba(251,191,36,0.07); border-left: 4px solid #fbbf24;
+    border-radius: 0 10px 10px 0; padding: 16px 22px;
+    font-size: 0.92rem; color: #d1d5db; line-height: 1.75;
+  }
+  .warn-box strong { color: #fbbf24; }
+
+  .two-col { display: flex; gap: 36px; align-items: flex-start; flex: 1; min-height: 0; }
+  .col { flex: 1; min-width: 0; }
+  .col p { font-size: 0.94rem; color: #d1d5db; line-height: 1.8; margin-bottom: 14px; }
+  .col-label { font-size: 0.7rem; color: #4b5563; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 14px; }
+
+  ul.points { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+  ul.points li {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 0.9rem; color: #d1d5db; line-height: 1.65;
+  }
+  ul.points li::before { content: '→'; color: #7c3aed; flex-shrink: 0; }
+
+  /* Overview list (stagger animation, clickable jump) */
+  .obj-list { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+  .obj-item {
+    display: flex; align-items: center; gap: 16px;
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px; padding: 14px 20px;
+    font-size: 0.98rem; line-height: 1.6; color: #d1d5db;
+    opacity: 0; transform: translateX(-18px); transition: all 0.4s ease, background 0.2s, border-color 0.2s;
+    cursor: pointer;
+  }
+  .obj-item.visible { opacity: 1; transform: translateX(0); }
+  .obj-item:hover { background: rgba(124,58,237,0.1); border-color: rgba(124,58,237,0.35); }
+  .obj-item:hover .obj-arrow { opacity: 1; transform: translateX(3px); }
+  .obj-num {
+    background: #7c3aed; color: #fff; font-weight: 800; font-size: 0.85rem;
+    min-width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .obj-arrow { margin-left: auto; color: #4b5563; opacity: 0; transition: all 0.2s; flex-shrink: 0; }
+  .obj-item strong { color: #fff; }
+
+  /* Pills / preset buttons */
+  .pill-group { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+  .pill {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09);
+    color: #9ca3af; padding: 8px 16px; border-radius: 20px;
+    font-size: 0.76rem; font-weight: 600; font-family: inherit;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .pill:hover { background: rgba(255,255,255,0.09); color: #fff; }
+  .pill.active { background: #7c3aed; border-color: #7c3aed; color: #fff; }
+
+  /* Tool card grid (why-grid style, reused) */
+  .why-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 18px; }
+  .why-card {
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px; padding: 16px 14px; text-align: center;
+    transition: border-color 0.25s, background 0.25s, transform 0.2s;
+  }
+  .why-card:hover { background: rgba(124,58,237,0.08); border-color: rgba(124,58,237,0.3); transform: translateY(-2px); }
+  .why-title { font-size: 0.82rem; font-weight: 700; color: #c4b5fd; margin-bottom: 4px; }
+  .why-desc { font-size: 0.74rem; color: #6b7280; line-height: 1.5; }
+
+  /* ── SLIDE: SIZE ── */
+  .size-stage {
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px; padding: 30px; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 10px; min-height: 180px; margin-bottom: 16px;
+  }
+  #sizeSample { font-weight: 900; color: #fff; transition: font-size 0.3s ease; line-height: 1; }
+  #sizeMeta { font-size: 0.76rem; color: #7c3aed; font-weight: 700; letter-spacing: 1px; }
+
+  /* ── SLIDE: COLOR ── */
+  .swatch-row { display: flex; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+  .swatch-btn {
+    width: 58px; height: 58px; border-radius: 12px; border: 2px solid transparent;
+    cursor: pointer; transition: transform 0.2s, border-color 0.2s; flex-shrink: 0;
+  }
+  .swatch-btn.active { border-color: #fff; transform: scale(1.1); }
+  .q-cards { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+  .q-card {
+    display: flex; align-items: center; gap: 14px;
+    border-radius: 12px; padding: 12px 16px;
+    border: 1px solid rgba(255,255,255,0.07); background: rgba(255,255,255,0.02);
+    font-size: 0.86rem; color: #9ca3af; line-height: 1.55; transition: all 0.2s;
+  }
+  .q-card.match { background: rgba(124,58,237,0.14); border-color: rgba(124,58,237,0.4); color: #d1d5db; }
+  .q-card strong { color: #c4b5fd; }
+
+  /* ── SLIDE: CONTRAST ── */
+  .toggle-wrap { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+  .toggle {
+    width: 46px; height: 26px; border-radius: 14px; background: rgba(255,255,255,0.1);
+    position: relative; cursor: pointer; transition: background 0.25s; flex-shrink: 0;
+  }
+  .toggle.on { background: #7c3aed; }
+  .toggle-knob { position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; transition: left 0.25s; }
+  .toggle.on .toggle-knob { left: 23px; }
+  .toggle-label { font-size: 0.85rem; color: #9ca3af; }
+  .contrast-stage {
+    background: #fff; border-radius: 14px; padding: 34px; text-align: center;
+    font-size: 1.3rem; font-weight: 800; margin-bottom: 18px; transition: color 0.3s;
+    color: #d9d9d9;
+  }
+  .contrast-stage.high { color: #07070f; }
+
+  .ladder { display: flex; flex-direction: column; gap: 8px; }
+  .rung { display: flex; align-items: center; gap: 14px; border-radius: 10px; padding: 11px 16px; font-weight: 700; cursor: default; transition: transform 0.2s; }
+  .rung:hover { transform: translateX(5px); }
+  .rung-n { font-size: 0.62rem; letter-spacing: 2px; color: rgba(255,255,255,0.35); min-width: 22px; }
+  .rung-label { flex: 1; }
+  .rung-note { font-size: 0.72rem; font-weight: 400; color: rgba(255,255,255,0.45); text-align: right; }
+  .r1 { background: #7c3aed; width: 100%; }
+  .r2 { background: rgba(124,58,237,0.45); width: 80%; }
+  .r3 { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.09); width: 60%; }
+  .r3 .rung-label { color: #9ca3af; font-size: 0.85rem; }
+  .r3 .rung-note { color: #4b5563; }
+
+  /* ── SLIDE: SPACING ── */
+  .spacing-stage {
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px; padding: 24px; margin-bottom: 18px; min-height: 150px;
+    display: flex; align-items: center; justify-content: center; transition: padding 0.35s ease;
+  }
+  .spacing-stage.open { padding: 56px 24px; }
+  .tight-view { display: flex; flex-direction: column; gap: 3px; width: 100%; }
+  .tight-view div { font-size: 0.78rem; color: #9ca3af; padding: 3px 0; border-bottom: 1px dashed rgba(255,255,255,0.06); }
+  .open-view { display: none; text-align: center; font-weight: 800; font-size: 1.2rem; color: #fff; }
+  .spacing-stage.open .tight-view { display: none; }
+  .spacing-stage.open .open-view { display: block; }
+
+  /* ── SLIDE: TYPOGRAPHY ── */
+  .type-ladder { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+  .type-rung {
+    display: flex; align-items: baseline; gap: 18px; padding: 12px 18px;
+    border-radius: 10px; border: 1px solid rgba(255,255,255,0.07); background: rgba(255,255,255,0.02);
+    cursor: pointer; transition: all 0.25s; opacity: 1;
+  }
+  .type-rung.dim { opacity: 0.35; }
+  .type-rung:hover { background: rgba(124,58,237,0.08); border-color: rgba(124,58,237,0.3); }
+  .type-rung .tmeta { font-size: 0.66rem; color: #6b7280; letter-spacing: 1.5px; width: 110px; flex-shrink: 0; }
+  .type-rung .tsample { font-weight: 800; color: #fff; }
+
+  /* ── SLIDE: PLACEMENT ── */
+  .tab-group { display: flex; gap: 8px; margin-bottom: 18px; }
+  .tab-btn {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09);
+    color: #9ca3af; padding: 9px 18px; border-radius: 10px; font-family: inherit;
+    font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
+  }
+  .tab-btn.active { background: #7c3aed; border-color: #7c3aed; color: #fff; }
+  .pattern-panel { display: none; }
+  .pattern-panel.active { display: flex; gap: 28px; align-items: center; }
+  .pattern-panel svg { width: 240px; height: 168px; flex-shrink: 0; }
+  .pattern-path { stroke-dasharray: 500; stroke-dashoffset: 500; animation: draw 1.1s ease forwards; }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+  .pattern-desc-title { font-size: 0.85rem; font-weight: 800; color: #c4b5fd; margin-bottom: 8px; }
+  .pattern-desc-text { font-size: 0.85rem; color: #9ca3af; line-height: 1.65; }
+
+  /* ── SLIDE: COMBINING ── */
+  .check-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+  .check-row {
+    display: flex; align-items: center; gap: 10px;
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 10px; padding: 11px 14px; cursor: pointer; transition: all 0.2s;
+  }
+  .check-row:hover { border-color: rgba(124,58,237,0.35); }
+  .check-row input { accent-color: #7c3aed; width: 15px; height: 15px; cursor: pointer; }
+  .check-row label { font-size: 0.82rem; color: #d1d5db; cursor: pointer; }
+  .demo-stage {
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px; padding: 30px; margin-bottom: 12px; min-height: 130px;
+    display: flex; align-items: center; transition: all 0.3s ease;
+  }
+  .demo-stage.contrastOn { background: #fff; border-color: #fff; }
+  .demo-headline {
+    font-size: 1.1rem; font-weight: 400; color: #9ca3af; line-height: 1.3; width: 100%;
+    transition: all 0.3s ease;
+  }
+  .demo-headline.sizeOn { font-size: 2.5rem; font-weight: 800; }
+  .demo-headline.weightOn { font-weight: 900; }
+  .demo-headline.spacingOn { padding: 20px 0; }
+  .demo-headline.placementOn { text-align: center; }
+  .demo-stage.contrastOn .demo-headline { color: #07070f; }
+  .demo-headline.colorOn { color: #7c3aed; }
+  .demo-stage.grayscale { filter: grayscale(1); }
+  .demo-toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .demo-score { font-size: 0.74rem; color: #6b7280; font-weight: 700; letter-spacing: 1px; }
+  .gray-btn {
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #9ca3af;
+    padding: 6px 14px; border-radius: 8px; font-size: 0.72rem; font-family: inherit;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .gray-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+  .gray-btn.active { background: #374151; color: #fff; border-color: #4b5563; }
+
+  /* FOOTER */
+  footer {
+    background: rgba(255,255,255,0.02);
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding: 0 36px; height: 58px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .nav-btn {
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.09);
+    color: #9ca3af; padding: 7px 20px; border-radius: 8px;
+    cursor: pointer; font-size: 0.78rem; font-family: inherit;
+    transition: all 0.2s; text-decoration: none; display: inline-block;
+  }
+  .nav-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+  .nav-btn.primary { background: #7c3aed; border-color: #7c3aed; color: #fff; }
+  .nav-btn.primary:hover { background: #6d28d9; }
+  .dots { display: flex; gap: 6px; align-items: center; }
+  .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: rgba(255,255,255,0.15); cursor: pointer; transition: all 0.25s;
+  }
+  .dot.active { background: #7c3aed; width: 22px; border-radius: 4px; }
+  .slide-counter { font-size: 0.72rem; color: #374151; margin-top: 5px; text-align: center; }
+
+  @media (max-width: 900px) {
+    .slide { padding: 28px 24px; }
+    .two-col { flex-direction: column; }
+    .why-grid { grid-template-columns: repeat(2, 1fr); }
+    .check-grid { grid-template-columns: 1fr; }
+    .pattern-panel.active { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hd-left">
+    <span class="part-badge">Part 2</span>
+    <span class="hd-title">The Six Tools of Visual Hierarchy · 55 min</span>
+  </div>
+  <span class="hd-right">Mrantinkovic et al. (2020)</span>
+</header>
+
+<div class="slides">
+
+  <!-- ══ SLIDE 1: OVERVIEW ══ -->
+  <div class="slide active" id="slide-1">
+    <div class="slide-tag">Section Overview</div>
+    <h2>Six Tools. One Goal.</h2>
+    <p class="lead">Hierarchy is not achieved by accident — it is built using six specific, controllable design tools. Click any tool below to jump straight to it.</p>
+    <ul class="obj-list" id="objList">
+      <li class="obj-item" onclick="goTo(2)"><span class="obj-num">1</span><div><strong>Size</strong> — larger elements are perceived as more important</div><span class="obj-arrow">→</span></li>
+      <li class="obj-item" onclick="goTo(3)"><span class="obj-num">2</span><div><strong>Color</strong> — saturation, warmth, and contrast create focal points</div><span class="obj-arrow">→</span></li>
+      <li class="obj-item" onclick="goTo(4)"><span class="obj-num">3</span><div><strong>Contrast</strong> — the highest-contrast element is always seen first</div><span class="obj-arrow">→</span></li>
+      <li class="obj-item" onclick="goTo(5)"><span class="obj-num">4</span><div><strong>Spacing</strong> — white space elevates whatever it surrounds</div><span class="obj-arrow">→</span></li>
+      <li class="obj-item" onclick="goTo(6)"><span class="obj-num">5</span><div><strong>Typography</strong> — six variables, one unmistakable scale</div><span class="obj-arrow">→</span></li>
+      <li class="obj-item" onclick="goTo(7)"><span class="obj-num">6</span><div><strong>Placement</strong> — position on the page controls reading order</div><span class="obj-arrow">→</span></li>
+      <li class="obj-item" onclick="goTo(8)"><span class="obj-num">+</span><div><strong>2.7 Combining</strong> — using all six tools together</div><span class="obj-arrow">→</span></li>
+    </ul>
+    <div class="note-box"><strong>Reference:</strong> Mrantinkovic, Piestun, Fouda, Killings, Hajj, Parveen, Krunic, Pehcevski, Nur, Stephen &amp; Michelle. (2020). <em>3G Handy Guide: Graphic Designing</em>. 3G E-Learning LLC.</div>
+  </div>
+
+  <!-- ══ SLIDE 2: SIZE ══ -->
+  <div class="slide" id="slide-2">
+    <div class="slide-tag">2.1 — Size</div>
+    <h2>Tool 1: Size</h2>
+    <p class="lead">The most immediate and powerful tool of visual hierarchy. Try the presets on the right.</p>
+    <div class="two-col">
+      <div class="col">
+        <ul class="points">
+          <li>Larger elements are perceived as more important — this is instinctive.</li>
+          <li>A large headline immediately signals: "this is the most important thing here."</li>
+          <li>Differences must be significant to be effective — 20px vs. 22px is invisible; 20px vs. 48px is unmistakable.</li>
+          <li>Size hierarchy applies to images, shapes, icons, and text alike.</li>
+        </ul>
+        <div class="note-box"><strong>Real-World Example:</strong> A movie poster — the film title is always the largest text element, often 5–10× larger than the cast names below it.</div>
+      </div>
+      <div class="col">
+        <div class="col-label">Try It — Click a Level</div>
+        <div class="size-stage">
+          <span id="sizeSample">Aa</span>
+          <span id="sizeMeta">HEADLINE · 64PX · 4× BODY</span>
+        </div>
+        <div class="pill-group" id="sizePills">
+          <button class="pill active" data-size="64" data-ratio="4× body" data-name="HEADLINE">Headline</button>
+          <button class="pill" data-size="28" data-ratio="1.75× body" data-name="SUBHEADING">Subheading</button>
+          <button class="pill" data-size="17" data-ratio="base size" data-name="BODY">Body</button>
+          <button class="pill" data-size="12" data-ratio="0.75× body" data-name="CAPTION">Caption</button>
+        </div>
+      </div>
+    </div>
+    <div class="discuss-box"><strong>💬 Discussion:</strong> Find a poster where the size hierarchy is broken — where the title is smaller than another element. How does it feel? What message does it accidentally send?</div>
+  </div>
+
+  <!-- ══ SLIDE 3: COLOR ══ -->
+  <div class="slide" id="slide-3">
+    <div class="slide-tag">2.2 — Color</div>
+    <h2>Tool 2: Color</h2>
+    <p class="lead">Color creates hierarchy through contrast, saturation, and psychological weight. Click a swatch to see its technique.</p>
+    <div class="two-col">
+      <div class="col">
+        <div class="col-label">Click a Swatch</div>
+        <div class="swatch-row">
+          <div class="swatch-btn active" style="background:#7c3aed" data-technique="0" title="Accent Color"></div>
+          <div class="swatch-btn" style="background:#111827" data-technique="1" title="Color Contrast"></div>
+          <div class="swatch-btn" style="background:#4b5563" data-technique="2" title="Desaturation"></div>
+          <div class="swatch-btn" style="background:#a78bfa" data-technique="3" title="Color Coding"></div>
+        </div>
+        <div class="note-box" id="colorDesc"><strong>Accent Color:</strong> One vivid color on a neutral palette draws the eye. Example: a red "Buy Now" button on a white page.</div>
+      </div>
+      <div class="col">
+        <div class="col-label">Techniques</div>
+        <div class="q-cards" id="colorCards">
+          <div class="q-card match" data-t="0"><strong>Warm colors</strong> (red, orange, yellow) advance visually — they feel closer and more urgent.</div>
+          <div class="q-card" data-t="1"><strong>Cool colors</strong> (blue, green, purple) recede — they feel calmer and more secondary.</div>
+          <div class="q-card" data-t="2"><strong>Desaturation</strong> — muting secondary elements makes the primary stand out.</div>
+          <div class="q-card" data-t="3"><strong>Color coding</strong> — a consistent color per hierarchy level trains the viewer.</div>
+        </div>
+        <div class="warn-box"><strong>⚠️ Common Mistake:</strong> Using too many vivid colors at the same saturation level. Hierarchy requires restraint — use strong color for the most important element only.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 4: CONTRAST ══ -->
+  <div class="slide" id="slide-4">
+    <div class="slide-tag">2.3 — Contrast</div>
+    <h2>Tool 3: Contrast</h2>
+    <p class="lead">The element with the highest contrast against its background will always be seen first.</p>
+    <div class="two-col">
+      <div class="col">
+        <div class="col-label">Toggle the Demo</div>
+        <div class="toggle-wrap">
+          <div class="toggle" id="contrastToggle" onclick="toggleContrast()"><div class="toggle-knob"></div></div>
+          <span class="toggle-label" id="contrastToggleLabel">Low contrast — hard to read</span>
+        </div>
+        <div class="contrast-stage" id="contrastStage">Read Me</div>
+        <div class="discuss-box"><strong>💬 Discussion:</strong> Why is low contrast both a hierarchy problem <em>and</em> an accessibility problem?</div>
+      </div>
+      <div class="col">
+        <div class="col-label">Contrast Levels</div>
+        <div class="ladder">
+          <div class="rung r1"><span class="rung-n">01</span><span class="rung-label">HIGH CONTRAST</span><span class="rung-note">Seen first · Most important</span></div>
+          <div class="rung r2"><span class="rung-n">02</span><span class="rung-label">Medium Contrast</span><span class="rung-note">Seen second · Supporting</span></div>
+          <div class="rung r3"><span class="rung-n">03</span><span class="rung-label">low contrast</span><span class="rung-note">Seen last · Supplementary</span></div>
+        </div>
+        <div class="note-box" style="margin-top:16px;"><strong>Real-World Example:</strong> The Nike swoosh — a simple black shape on a white background. Maximum contrast, minimum complexity.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 5: SPACING ══ -->
+  <div class="slide" id="slide-5">
+    <div class="slide-tag">2.4 — Spacing (White Space)</div>
+    <h2>Tool 4: Spacing</h2>
+    <p class="lead">Space is not empty — it is an active design element that creates hierarchy through isolation.</p>
+    <div class="two-col">
+      <div class="col">
+        <div class="col-label">Toggle the Layout</div>
+        <div class="toggle-wrap">
+          <div class="toggle" id="spacingToggle" onclick="toggleSpacing()"><div class="toggle-knob"></div></div>
+          <span class="toggle-label" id="spacingToggleLabel">Tight — reads as equal, grouped</span>
+        </div>
+        <div class="spacing-stage" id="spacingStage">
+          <div class="tight-view">
+            <div>Line item one</div><div>Line item two</div><div>Line item three</div>
+            <div>Line item four</div><div>Line item five</div><div>Line item six</div>
+          </div>
+          <div class="open-view">The Only Thing<br>That Matters</div>
+        </div>
+        <div class="note-box"><strong>Real-World Example:</strong> Apple product pages — a single product image centered on a vast white background says: "this is the only thing that matters."</div>
+      </div>
+      <div class="col">
+        <div class="col-label">Spacing Hierarchy Rules</div>
+        <ul class="points">
+          <li>More space around an element increases its perceived importance.</li>
+          <li>Less space between elements groups them as equal-level content.</li>
+          <li>Consistent spacing per level trains the viewer to recognize hierarchy levels.</li>
+          <li>Padding inside a container makes the content inside feel more important.</li>
+        </ul>
+        <div class="discuss-box"><strong>💬 Discussion:</strong> Compare a cluttered flyer to a minimalist poster. Which feels more important? Which is easier to read? Why?</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 6: TYPOGRAPHY ══ -->
+  <div class="slide" id="slide-6">
+    <div class="slide-tag">2.5 — Typography</div>
+    <h2>Tool 5: Typography</h2>
+    <p class="lead">The most nuanced tool for text-heavy designs. Click a level below to isolate it.</p>
+    <div class="two-col">
+      <div class="col">
+        <div class="col-label">Six Variables</div>
+        <div class="q-cards">
+          <div class="q-card"><strong>Size</strong> — larger = more important (64px vs. 16px)</div>
+          <div class="q-card"><strong>Weight</strong> — bold = more important than regular or thin</div>
+          <div class="q-card"><strong>Style</strong> — italic or ALL CAPS signals a different level</div>
+          <div class="q-card"><strong>Font family</strong> — different typefaces signal different levels</div>
+          <div class="q-card"><strong>Color</strong> — colored or high-contrast text stands out</div>
+          <div class="q-card"><strong>Tracking</strong> — wide letter-spacing on labels signals a level</div>
+        </div>
+        <div class="note-box"><strong>Rule:</strong> Never rely on size alone. Combine size + weight + color for a clear, unmistakable typographic hierarchy.</div>
+      </div>
+      <div class="col">
+        <div class="col-label">Click to Isolate a Level</div>
+        <div class="type-ladder" id="typeLadder">
+          <div class="type-rung" data-level="0"><span class="tmeta">HEADLINE<br>64px · Bold</span><span class="tsample" style="font-size:2.4rem;">Headline</span></div>
+          <div class="type-rung" data-level="1"><span class="tmeta">SUBHEADING<br>28px · SemiBold</span><span class="tsample" style="font-size:1.4rem; font-weight:600;">Subheading</span></div>
+          <div class="type-rung" data-level="2"><span class="tmeta">BODY<br>16px · Regular</span><span class="tsample" style="font-size:1rem; font-weight:400; color:#9ca3af;">Body paragraph text</span></div>
+          <div class="type-rung" data-level="3"><span class="tmeta">CAPTION<br>13px · Italic</span><span class="tsample" style="font-size:0.8rem; font-weight:400; font-style:italic; color:#6b7280;">Caption text</span></div>
+        </div>
+        <div class="discuss-box"><strong>💬 Discussion:</strong> Open any website. Count the distinct typographic levels. Are they clearly different, or do some look too similar?</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 7: PLACEMENT ══ -->
+  <div class="slide" id="slide-7">
+    <div class="slide-tag">2.6 — Placement</div>
+    <h2>Tool 6: Placement</h2>
+    <p class="lead">Where an element sits on the page directly affects how important it feels. Compare the three reading patterns below.</p>
+    <div class="tab-group">
+      <button class="tab-btn active" data-pattern="0">F-Pattern</button>
+      <button class="tab-btn" data-pattern="1">Z-Pattern</button>
+      <button class="tab-btn" data-pattern="2">Gutenberg Diagram</button>
+    </div>
+    <div id="patternPanels">
+      <div class="pattern-panel active" data-panel="0">
+        <svg viewBox="0 0 200 140"><rect x="10" y="10" width="180" height="120" fill="none" stroke="rgba(255,255,255,0.15)"/><path class="pattern-path" d="M20 25 H180 M20 25 V130" fill="none" stroke="#a78bfa" stroke-width="4" stroke-linecap="round"/><path d="M20 60 H140" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="4" stroke-linecap="round"/><path d="M20 95 H110" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="4" stroke-linecap="round"/></svg>
+        <div><div class="pattern-desc-title">F-Pattern</div><div class="pattern-desc-text">Eyes scan left-to-right across the top, then down the left side. Common in text-heavy pages, articles, and emails.</div></div>
+      </div>
+      <div class="pattern-panel" data-panel="1">
+        <svg viewBox="0 0 200 140"><rect x="10" y="10" width="180" height="120" fill="none" stroke="rgba(255,255,255,0.15)"/><path class="pattern-path" d="M20 25 H180 L20 115 H180" fill="none" stroke="#a78bfa" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div><div class="pattern-desc-title">Z-Pattern</div><div class="pattern-desc-text">Top-left → top-right → diagonal → bottom-left → bottom-right. Common in simple layouts, landing pages, and posters.</div></div>
+      </div>
+      <div class="pattern-panel" data-panel="2">
+        <svg viewBox="0 0 200 140"><rect x="10" y="10" width="180" height="120" fill="none" stroke="rgba(255,255,255,0.15)"/><circle cx="30" cy="30" r="9" fill="#a78bfa"/><circle cx="170" cy="30" r="4" fill="rgba(255,255,255,0.3)"/><circle cx="30" cy="110" r="4" fill="rgba(255,255,255,0.3)"/><circle cx="170" cy="110" r="9" fill="#a78bfa"/><path class="pattern-path" d="M30 30 L170 110" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="4 5"/></svg>
+        <div><div class="pattern-desc-title">Gutenberg Diagram</div><div class="pattern-desc-text">Attention is highest at top-left and bottom-right; lowest at top-right and bottom-left. Common in print layouts and advertisements.</div></div>
+      </div>
+    </div>
+    <div class="discuss-box" style="margin-top:20px;"><strong>💬 Discussion:</strong> Look at a website homepage. Where is the most important call-to-action placed? How does its placement reinforce its importance?</div>
+  </div>
+
+  <!-- ══ SLIDE 8: COMBINING ══ -->
+  <div class="slide" id="slide-8">
+    <div class="slide-tag">2.7 — Combining the Six Tools</div>
+    <h2>Weak Alone. Unmistakable Together.</h2>
+    <p class="lead">Check the tools below and watch the headline build its own hierarchy in real time.</p>
+    <div class="check-grid">
+      <div class="check-row"><input type="checkbox" id="c-size" data-effect="sizeOn"><label for="c-size">Size — 3× larger</label></div>
+      <div class="check-row"><input type="checkbox" id="c-color" data-effect="colorOn"><label for="c-color">Color — high contrast</label></div>
+      <div class="check-row"><input type="checkbox" id="c-weight" data-effect="weightOn"><label for="c-weight">Weight — bold 700–900</label></div>
+      <div class="check-row"><input type="checkbox" id="c-spacing" data-effect="spacingOn"><label for="c-spacing">Spacing — extra margin</label></div>
+      <div class="check-row"><input type="checkbox" id="c-placement" data-effect="placementOn"><label for="c-placement">Placement — centered top</label></div>
+      <div class="check-row"><input type="checkbox" id="c-contrast" data-effect="contrastOn" data-stage="1"><label for="c-contrast">Contrast — light surroundings</label></div>
+    </div>
+    <div class="demo-toolbar">
+      <span class="demo-score" id="demoScore">0 / 6 TOOLS APPLIED</span>
+      <button class="gray-btn" id="grayBtn" onclick="toggleGray()">Preview in Greyscale</button>
+    </div>
+    <div class="demo-stage" id="demoStage">
+      <div class="demo-headline" id="demoHeadline">This Is A Headline</div>
+    </div>
+    <div class="note-box"><strong>Rule of Thumb:</strong> If you removed the color from your design and viewed it in greyscale, the hierarchy should still be completely clear. If it isn't, your hierarchy relies too heavily on color alone.</div>
+  </div>
+
+</div>
+
+<footer>
+  <a class="nav-btn" href="part1.html">← Part 1</a>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:5px;">
+    <div class="dots" id="dots">
+      <div class="dot active" onclick="goTo(1)"></div>
+      <div class="dot" onclick="goTo(2)"></div>
+      <div class="dot" onclick="goTo(3)"></div>
+      <div class="dot" onclick="goTo(4)"></div>
+      <div class="dot" onclick="goTo(5)"></div>
+      <div class="dot" onclick="goTo(6)"></div>
+      <div class="dot" onclick="goTo(7)"></div>
+      <div class="dot" onclick="goTo(8)"></div>
+    </div>
+    <span class="slide-counter" id="counter">Slide 1 of 8</span>
+  </div>
+  <div style="display:flex;gap:10px;" id="footerRight">
+    <button class="nav-btn" onclick="prev()">← Prev</button>
+    <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+  </div>
+</footer>
+
+<script>
+  let current = 1;
+  const total = 8;
+
+  function saveProgress(n) {
+    localStorage.setItem('h_p2', Math.max(parseInt(localStorage.getItem('h_p2') || 0), n));
+  }
+
+  function goTo(n) {
+    document.getElementById('slide-' + current).classList.remove('active');
+    document.querySelectorAll('.dot')[current - 1].classList.remove('active');
+    current = n;
+    document.getElementById('slide-' + current).classList.add('active');
+    document.querySelectorAll('.dot')[current - 1].classList.add('active');
+    document.getElementById('counter').textContent = 'Slide ' + current + ' of ' + total;
+    const fr = document.getElementById('footerRight');
+    if (current === total) {
+      fr.innerHTML = '<a href="index.html" class="nav-btn">🏠 Home</a><a href="part3.html" class="nav-btn primary">Part 3 →</a>';
+    } else {
+      fr.innerHTML = '<button class="nav-btn" onclick="prev()">← Prev</button><button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>';
+    }
+    saveProgress(current);
+    if (current === 1) animateObjectives();
+  }
+
+  function next() { if (current < total) goTo(current + 1); else goTo(1); }
+  function prev() { if (current > 1) goTo(current - 1); }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') next();
+    if (e.key === 'ArrowLeft') prev();
+  });
+
+  function animateObjectives() {
+    document.querySelectorAll('.obj-item').forEach((el, i) => {
+      el.classList.remove('visible');
+      setTimeout(() => el.classList.add('visible'), i * 130 + 80);
+    });
+  }
+  animateObjectives();
+
+  /* ---- SIZE slide ---- */
+  document.querySelectorAll('#sizePills .pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+      document.querySelectorAll('#sizePills .pill').forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      const px = pill.dataset.size;
+      document.getElementById('sizeSample').style.fontSize = px + 'px';
+      document.getElementById('sizeMeta').textContent = pill.dataset.name + ' · ' + px + 'PX · ' + pill.dataset.ratio.toUpperCase();
+    });
+  });
+
+  /* ---- COLOR slide ---- */
+  const colorTechniques = [
+    { title: 'Accent Color', body: 'One vivid color on a neutral palette draws the eye. Example: a red "Buy Now" button on a white page.' },
+    { title: 'Color Contrast', body: 'Dark on light or light on dark creates dominance. Example: a black headline on a white background.' },
+    { title: 'Desaturation', body: 'Muting secondary elements makes the primary stand out. Example: grey body text vs. a black headline.' },
+    { title: 'Color Coding', body: 'A consistent color per hierarchy level trains the viewer. Example: all H1s purple, all H2s blue.' }
+  ];
+  document.querySelectorAll('.swatch-btn').forEach(sw => {
+    sw.addEventListener('click', () => {
+      document.querySelectorAll('.swatch-btn').forEach(s => s.classList.remove('active'));
+      sw.classList.add('active');
+      const t = colorTechniques[sw.dataset.technique];
+      document.getElementById('colorDesc').innerHTML = '<strong>' + t.title + ':</strong> ' + t.body;
+      document.querySelectorAll('.q-card').forEach(c => c.classList.toggle('match', c.dataset.t === sw.dataset.technique));
+    });
+  });
+
+  /* ---- CONTRAST slide ---- */
+  function toggleContrast() {
+    const t = document.getElementById('contrastToggle');
+    const stage = document.getElementById('contrastStage');
+    const label = document.getElementById('contrastToggleLabel');
+    const on = t.classList.toggle('on');
+    stage.classList.toggle('high', on);
+    label.textContent = on ? 'High contrast — easy to read' : 'Low contrast — hard to read';
+  }
+
+  /* ---- SPACING slide ---- */
+  function toggleSpacing() {
+    const t = document.getElementById('spacingToggle');
+    const stage = document.getElementById('spacingStage');
+    const label = document.getElementById('spacingToggleLabel');
+    const on = t.classList.toggle('on');
+    stage.classList.toggle('open', on);
+    label.textContent = on ? 'Open — reads as elevated' : 'Tight — reads as equal, grouped';
+  }
+
+  /* ---- TYPOGRAPHY slide ---- */
+  document.querySelectorAll('.type-rung').forEach(row => {
+    row.addEventListener('click', () => {
+      const isFocused = row.classList.contains('focused');
+      document.querySelectorAll('.type-rung').forEach(r => r.classList.remove('focused', 'dim'));
+      if (!isFocused) {
+        row.classList.add('focused');
+        document.querySelectorAll('.type-rung').forEach(r => { if (r !== row) r.classList.add('dim'); });
+      }
+    });
+  });
+
+  /* ---- PLACEMENT slide ---- */
+  document.querySelectorAll('.tab-btn').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      document.querySelectorAll('.pattern-panel').forEach(p => p.classList.remove('active'));
+      const panel = document.querySelector('.pattern-panel[data-panel="' + tab.dataset.pattern + '"]');
+      panel.classList.add('active');
+      const path = panel.querySelector('.pattern-path');
+      path.style.animation = 'none';
+      void path.offsetWidth;
+      path.style.animation = null;
+    });
+  });
+
+  /* ---- COMBINING slide ---- */
+  const demoHeadline = document.getElementById('demoHeadline');
+  const demoStage = document.getElementById('demoStage');
+  const demoScore = document.getElementById('demoScore');
+  document.querySelectorAll('#slide-8 input[type="checkbox"]').forEach(cb => {
+    cb.addEventListener('change', () => {
+      const effect = cb.dataset.effect;
+      const target = cb.dataset.stage ? demoStage : demoHeadline;
+      target.classList.toggle(effect, cb.checked);
+      const count = document.querySelectorAll('#slide-8 input[type="checkbox"]:checked').length;
+      demoScore.textContent = count + ' / 6 TOOLS APPLIED';
+    });
+  });
+  function toggleGray() {
+    const on = demoStage.classList.toggle('grayscale');
+    document.getElementById('grayBtn').classList.toggle('active', on);
+  }
+</script>
+</body>
+</html>

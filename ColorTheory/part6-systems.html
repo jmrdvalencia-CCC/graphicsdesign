@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Part 6 — Color Systems · Color Theory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+<div class="app">
+  <nav class="rail" aria-label="Module sections">
+    <div class="brand">
+      <span class="eyebrow">Graphic Design · Module 03</span>
+      <h1>Color&nbsp;Theory</h1>
+    </div>
+    <div class="wheel-wrap" aria-hidden="true">
+      <div class="wheel-disc"></div>
+      <div class="wheel-center-label" id="wheelCenterLabel"></div>
+    </div>
+    <div class="tabstrip" id="tabstrip"></div>
+    <ul class="navlist" id="navlist"></ul>
+    <div class="rail-foot">Ref. Mrantinkovic et al. (2020)<br>3G Handy Guide: Graphic Designing</div>
+  </nav>
+
+  <main>
+    <span class="kicker"><span class="sw"></span>Part 4 · 15 min</span>
+    <h2>Systems &amp; practical process</h2>
+    <p class="sub">A color that is correct on screen and a color that is correct on paper are two different problems. Toggle the lights and inks below to feel why.</p>
+
+    <div class="mixer-wrap">
+      <div class="mixer-card">
+        <h4>RGB — additive light</h4>
+        <div class="hint">Tap the circles to switch lights on</div>
+        <div class="mixer-stage additive" id="stageAdd">
+          <div class="mixer-circle on" data-c="r" style="background:#ff2d3a; left:8px; top:14px;"></div>
+          <div class="mixer-circle on" data-c="g" style="background:#22e06b; left:52px; top:14px;"></div>
+          <div class="mixer-circle on" data-c="b" style="background:#2d6bff; left:30px; top:48px;"></div>
+        </div>
+        <div class="mixer-legend"><span><i style="background:#ff2d3a"></i>Red</span><span><i style="background:#22e06b"></i>Green</span><span><i style="background:#2d6bff"></i>Blue</span></div>
+      </div>
+      <div class="mixer-card">
+        <h4>CMYK — subtractive ink</h4>
+        <div class="hint">Tap the circles to lay down ink</div>
+        <div class="mixer-stage subtractive" id="stageSub">
+          <div class="mixer-circle on" data-c="c" style="background:#00c2d1; left:8px; top:14px;"></div>
+          <div class="mixer-circle on" data-c="m" style="background:#ff36a3; left:52px; top:14px;"></div>
+          <div class="mixer-circle on" data-c="y" style="background:#ffe62e; left:30px; top:48px;"></div>
+        </div>
+        <div class="mixer-legend"><span><i style="background:#00c2d1"></i>Cyan</span><span><i style="background:#ff36a3"></i>Magenta</span><span><i style="background:#ffe62e"></i>Yellow</span></div>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top:24px;"><b>Critical rule</b>Design in RGB for screen, convert to CMYK for print — never the reverse. Always request a physical proof before final printing.</div>
+
+    <table class="data" style="margin-top:26px;">
+      <tr><th>Notation</th><th>Format</th><th>Used in</th></tr>
+      <tr><td>Hex</td><td class="mono">#7c3aed</td><td>Web, CSS</td></tr>
+      <tr><td>RGB</td><td class="mono">rgb(124,58,237)</td><td>Web, screen</td></tr>
+      <tr><td>HSL</td><td class="mono">hsl(262,83%,58%)</td><td>Intuitive design tools</td></tr>
+      <tr><td>RGBA</td><td class="mono">rgba(124,58,237,0.5)</td><td>Web/CSS with transparency</td></tr>
+      <tr><td>CMYK</td><td class="mono">C48 M76 Y0 K7</td><td>Print / InDesign</td></tr>
+      <tr><td>Pantone</td><td class="mono">PMS 2665 C</td><td>Brand standards</td></tr>
+    </table>
+
+    <h3 style="margin-top:32px; font-size:20px;">The six-step selection process</h3>
+    <ol class="checklist" style="list-style:none;">
+      <li>Define the intent — emotion, audience, brand personality.</li>
+      <li>Choose a base hue aligned with that intent.</li>
+      <li>Choose a harmony — simple/elegant → monochromatic or analogous; high-energy → complementary or triadic.</li>
+      <li>Adjust value &amp; saturation for contrast and hierarchy.</li>
+      <li>Apply 60-30-10, then test the layout in greyscale.</li>
+      <li>Test accessibility — 4.5:1 contrast minimum, and color-blind safety (~8% of men have some deficiency).</li>
+    </ol>
+
+    <div class="pager">
+      <a class="pagebtn prev" href="part5-psychology.html"><span class="lbl">Back</span><span class="name">← Psychology &amp; Culture</span></a>
+      <a class="pagebtn next" href="part6b-rgbcmyk.html"><span class="lbl">Next</span><span class="name">How RGB &amp; CMYK Work →</span></a>
+    </div>
+  </main>
+</div>
+
+<script src="shared.js"></script>
+<script>
+buildRail('systems');
+document.querySelectorAll('.mixer-circle').forEach(c => {
+  c.addEventListener('click', () => c.classList.toggle('on'));
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design Principles & Elements – Visual Hierarchy</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  /* ── DARK (default) ── */
+  :root {
+    --bg: #07070f; --surface: rgba(255,255,255,0.03); --border: rgba(255,255,255,0.07);
+    --text: #fff; --muted: #6b7280; --sub: #374151;
+    --card-hover-bg: rgba(255,255,255,0.05);
+    --prog-track: rgba(255,255,255,0.06);
+    --mini-track: rgba(255,255,255,0.06);
+    --arrow-bg: rgba(255,255,255,0.05); --arrow-border: rgba(255,255,255,0.1);
+    --back-bg: rgba(255,255,255,0.04); --back-border: rgba(255,255,255,0.08);
+  }
+  /* ── LIGHT ── */
+  html.light {
+    --bg: #f3f4f6; --surface: #ffffff; --border: #e5e7eb;
+    --text: #111827; --muted: #6b7280; --sub: #9ca3af;
+    --card-hover-bg: #f9fafb;
+    --prog-track: #e5e7eb;
+    --mini-track: #e5e7eb;
+    --arrow-bg: #f3f4f6; --arrow-border: #e5e7eb;
+    --back-bg: #ffffff; --back-border: #e5e7eb;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  /* ── ANIMATED BG ── */
+  #bgCanvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+  /* ── THEME TOGGLE ── */
+  .theme-toggle {
+    position: fixed; top: 16px; right: 20px; z-index: 100;
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--text); width: 40px; height: 40px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 1.1rem; transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  .theme-toggle:hover { transform: scale(1.1); }
+
+  /* ── WRAPPER ── */
+  .page { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 60px 24px 80px; }
+
+  /* ── HEADER ── */
+  .top-label {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.35);
+    color: #a78bfa; font-size: 0.72rem; font-weight: 700; letter-spacing: 3px;
+    text-transform: uppercase; padding: 6px 18px; border-radius: 30px;
+    margin-bottom: 28px; animation: fadeUp 0.6s ease both;
+  }
+  html.light .top-label { background: rgba(124,58,237,0.08); }
+  .top-label span { width: 7px; height: 7px; background: #7c3aed; border-radius: 50%; display: inline-block; animation: pulse 1.8s infinite; }
+
+  h1 {
+    font-size: clamp(2.4rem, 5vw, 3.8rem); font-weight: 900; line-height: 1.08;
+    margin-bottom: 14px; animation: fadeUp 0.6s 0.1s ease both; color: var(--text);
+  }
+  h1 em {
+    font-style: normal;
+    background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 50%, #4f46e5 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+
+  .subtitle {
+    font-size: 1.05rem; color: var(--muted); max-width: 600px; line-height: 1.7;
+    margin-bottom: 10px; animation: fadeUp 0.6s 0.15s ease both;
+  }
+  .ref {
+    font-size: 0.72rem; color: var(--sub); margin-bottom: 52px;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  /* ── PROGRESS BAR ── */
+  .prog-wrap { margin-bottom: 52px; animation: fadeUp 0.6s 0.25s ease both; }
+  .prog-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .prog-top span { font-size: 0.72rem; color: var(--sub); letter-spacing: 2px; text-transform: uppercase; }
+  .prog-top strong { font-size: 0.72rem; color: #7c3aed; }
+  .prog-bar { height: 3px; background: var(--prog-track); border-radius: 3px; overflow: hidden; }
+  .prog-fill { height: 100%; background: linear-gradient(90deg, #7c3aed, #a78bfa); border-radius: 3px; transition: width 0.8s ease; }
+
+  /* ── CARDS GRID ── */
+  .cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; animation: fadeUp 0.6s 0.3s ease both; }
+
+  .card {
+    position: relative; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 20px; padding: 32px 28px 28px; text-decoration: none; color: var(--text);
+    overflow: hidden; transition: transform 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+    cursor: pointer;
+  }
+  .card::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(circle at 0% 0%, var(--glow) 0%, transparent 60%);
+    opacity: 0; transition: opacity 0.4s ease;
+  }
+  .card:hover { transform: translateY(-6px); border-color: var(--accent); background: var(--card-hover-bg); }
+  .card:hover::before { opacity: 1; }
+
+  .card-part {
+    font-size: 0.65rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
+  }
+  .card-part::before { content: ''; display: inline-block; width: 24px; height: 2px; background: var(--accent); border-radius: 2px; }
+
+  .card-icon { font-size: 2.4rem; margin-bottom: 16px; display: block; filter: drop-shadow(0 0 12px var(--accent)); }
+
+  .card h2 { font-size: 1.25rem; font-weight: 800; line-height: 1.3; margin-bottom: 10px; color: var(--text); }
+  .card p { font-size: 0.88rem; color: var(--muted); line-height: 1.7; margin-bottom: 24px; }
+
+  .card-footer { display: flex; align-items: center; justify-content: space-between; }
+  .card-time { font-size: 0.72rem; color: var(--sub); display: flex; align-items: center; gap: 6px; }
+  .card-time::before { content: '⏱'; font-size: 0.8rem; }
+
+  .card-arrow {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--arrow-bg); border: 1px solid var(--arrow-border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; transition: all 0.3s ease; color: var(--accent);
+  }
+  .card:hover .card-arrow { background: var(--accent); border-color: var(--accent); color: #fff; transform: translateX(4px); }
+
+  .done-badge {
+    position: absolute; top: 16px; right: 16px; background: var(--accent); color: #fff;
+    font-size: 0.6rem; font-weight: 700; letter-spacing: 1px;
+    padding: 3px 10px; border-radius: 20px; opacity: 0; transition: opacity 0.3s;
+  }
+  .card.done .done-badge { opacity: 1; }
+
+  .mini-prog { height: 2px; background: var(--mini-track); border-radius: 2px; margin-top: 18px; overflow: hidden; }
+  .mini-fill { height: 100%; background: var(--accent); border-radius: 2px; width: 0%; transition: width 0.8s ease; }
+
+  .c1 { --accent: #7c3aed; --glow: rgba(124,58,237,0.15); }
+  .c2 { --accent: #2563eb; --glow: rgba(37,99,235,0.15); }
+  .c3 { --accent: #059669; --glow: rgba(5,150,105,0.15); }
+  .c4 { --accent: #d97706; --glow: rgba(217,119,6,0.15); }
+
+  /* ── BOTTOM INFO ── */
+  .bottom {
+    margin-top: 48px; display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 16px; animation: fadeUp 0.6s 0.45s ease both;
+  }
+  .bottom-left { font-size: 0.78rem; color: var(--sub); line-height: 1.7; }
+  .bottom-left strong { color: var(--muted); }
+  .back-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--back-bg); border: 1px solid var(--back-border);
+    color: var(--muted); font-size: 0.78rem; font-family: inherit;
+    padding: 8px 18px; border-radius: 10px; cursor: pointer;
+    text-decoration: none; transition: all 0.2s;
+  }
+  .back-btn:hover { background: var(--card-hover-bg); color: var(--text); }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  @media (max-width: 700px) {
+    .cards { grid-template-columns: 1fr; }
+    h1 { font-size: 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="bgCanvas"></canvas>
+<button class="theme-toggle" id="themeBtn" title="Toggle light/dark mode">🌙</button>
+
+<div class="page">
+
+  <div class="top-label"><span></span> Graphics Design</div>
+
+  <h1>Design Principles<br>&amp; <em>Visual Hierarchy</em></h1>
+  <p class="subtitle">Learn how to control what viewers see first, second, and last — and why it is the backbone of every effective design.</p>
+  <p class="ref">Mrantinkovic, Piestun, Fouda, Killings, Hajj, Parveen, Krunic, Pehcevski, Nur, Stephen &amp; Michelle (2020). <em>3G Handy Guide: Graphic Designing</em>. 3G E-Learning LLC.</p>
+
+  <div class="prog-wrap">
+    <div class="prog-top">
+      <span>Module Progress</span>
+      <strong id="progPct">0%</strong>
+    </div>
+    <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+  </div>
+
+  <div class="cards">
+
+    <a class="card c1" href="part1.html" id="card1">
+      <div class="done-badge">✓ Done</div>
+      <div class="card-part">Part 1</div>
+      <span class="card-icon">👁️</span>
+      <h2>What Is Visual Hierarchy?</h2>
+      <p>Understand the definition, the hierarchy ladder, why it matters, and how it differs from balance. The foundation of everything that follows.</p>
+      <div class="card-footer"><span class="card-arrow">→</span></div>
+      <div class="mini-prog"><div class="mini-fill" id="f1"></div></div>
+    </a>
+
+    <a class="card c2" href="part2.html" id="card2">
+      <div class="done-badge">✓ Done</div>
+      <div class="card-part">Part 2</div>
+      <span class="card-icon">🛠️</span>
+      <h2>The Six Tools of Visual Hierarchy</h2>
+      <p>Deep dive into Size, Color, Contrast, Spacing, Typography, and Placement — the six controllable tools that build hierarchy in any design.</p>
+      <div class="card-footer"><span class="card-arrow">→</span></div>
+      <div class="mini-prog"><div class="mini-fill" id="f2"></div></div>
+    </a>
+
+    <a class="card c3" href="part3.html" id="card3">
+      <div class="done-badge">✓ Done</div>
+      <div class="card-part">Part 3</div>
+      <span class="card-icon">🎨</span>
+      <h2>Design Critique &amp; Redesign</h2>
+      <p>Group activity — analyze real designs for strong and weak hierarchy, map hierarchy levels, and propose improvements through structured critique.</p>
+      <div class="card-footer"><span class="card-arrow">→</span></div>
+      <div class="mini-prog"><div class="mini-fill" id="f3"></div></div>
+    </a>
+
+    <a class="card c4" href="part4.html" id="card4">
+      <div class="done-badge">✓ Done</div>
+      <div class="card-part">Part 4</div>
+      <span class="card-icon">📋</span>
+      <h2>Summary &amp; Assessment</h2>
+      <p>Review the six key takeaways, answer short-assessment questions, compare strong vs. weak hierarchy, and complete the take-home assignment.</p>
+      <div class="card-footer"><span class="card-arrow">→</span></div>
+      <div class="mini-prog"><div class="mini-fill" id="f4"></div></div>
+    </a>
+
+  </div>
+
+  <div class="bottom">
+    <div class="bottom-left">
+      <strong>Focus:</strong> Visual Hierarchy &nbsp;·&nbsp;
+      <strong>Reference:</strong> Mrantinkovic et al. (2020)
+    </div>
+    <a class="back-btn" href="../index.html">← Back to Modules</a>
+  </div>
+
+</div>
+
+<script>
+  /* ── Theme toggle ── */
+  const html = document.documentElement;
+  const btn = document.getElementById('themeBtn');
+  const saved = localStorage.getItem('theme');
+  if (saved === 'light') { html.classList.add('light'); btn.textContent = '☀️'; }
+  btn.addEventListener('click', () => {
+    const isLight = html.classList.toggle('light');
+    btn.textContent = isLight ? '☀️' : '🌙';
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+  });
+
+  /* ── Animated particle background ── */
+  const canvas = document.getElementById('bgCanvas');
+  const ctx = canvas.getContext('2d');
+  let W, H;
+  const particles = Array.from({length: 55}, () => ({
+    x: Math.random() * 1600, y: Math.random() * 1000,
+    r: Math.random() * 1.4 + 0.3,
+    vx: (Math.random() - 0.5) * 0.25,
+    vy: (Math.random() - 0.5) * 0.25,
+    a: Math.random() * 0.35 + 0.04
+  }));
+  function resize() { W = canvas.width = innerWidth; H = canvas.height = innerHeight; }
+  resize(); window.addEventListener('resize', resize);
+  (function draw() {
+    ctx.clearRect(0, 0, W, H);
+    const isLight = html.classList.contains('light');
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
+      if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = isLight ? `rgba(124,58,237,${p.a * 0.35})` : `rgba(167,139,250,${p.a})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  })();
+
+  /* ── Progress from localStorage ── */
+  const totals = { p1: 4, p2: 7, p3: 3, p4: 4 };
+  const keys   = ['h_p1','h_p2','h_p3','h_p4'];
+  const fills  = ['f1','f2','f3','f4'];
+  const cards  = ['card1','card2','card3','card4'];
+  let totalDone = 0, totalMax = 18;
+
+  setTimeout(() => {
+    keys.forEach((k, i) => {
+      const val = parseInt(localStorage.getItem(k) || 0);
+      const pct = Math.min(100, Math.round((val / totals['p' + (i+1)]) * 100));
+      document.getElementById(fills[i]).style.width = pct + '%';
+      totalDone += val;
+      if (val >= totals['p' + (i+1)]) document.getElementById(cards[i]).classList.add('done');
+    });
+    const overall = Math.round((totalDone / totalMax) * 100);
+    document.getElementById('progFill').style.width = overall + '%';
+    document.getElementById('progPct').textContent = overall + '%';
+  }, 500);
+</script>
+</body>
+</html>

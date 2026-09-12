@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Slide 11 / 20 &mdash; Graphic Design for Digital Media</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&family=Baloo+2:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--y:#FFD93D;--c:#FF6B6B;--p:#FF4ECD;--t:#00D4FF;--v:#7C3AED;--o:#FF8C42;--g:#06D6A0;--w:#fff;--d:#1a1a2e}
+html,body{width:100%;height:100%;overflow:hidden;font-family:'Poppins',sans-serif;background:var(--d)}
+#deck{width:100vw;height:100vh;position:relative;overflow:hidden}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 40px 80px;text-align:center;opacity:0;pointer-events:none;transition:opacity .45s ease,transform .45s ease;transform:translateX(60px);overflow:hidden}
+.slide.active{opacity:1;pointer-events:all;transform:translateX(0)}
+.slide.exit-left{opacity:0;transform:translateX(-60px)}
+.bg1{background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460)}
+.bg2{background:linear-gradient(135deg,#FF6B6B,#FF4ECD,#7C3AED)}
+.bg3{background:linear-gradient(135deg,#FFD93D,#FF8C42,#FF6B6B)}
+.bg4{background:linear-gradient(135deg,#06D6A0,#00D4FF,#7C3AED)}
+.bg5{background:linear-gradient(135deg,#FF4ECD,#FF6B6B,#FFD93D)}
+.bg6{background:linear-gradient(135deg,#7C3AED,#FF4ECD,#FF6B6B)}
+.bg7{background:linear-gradient(135deg,#00D4FF,#06D6A0,#FFD93D)}
+.bg8{background:linear-gradient(135deg,#FF8C42,#FF6B6B,#FF4ECD)}
+.bg9{background:linear-gradient(135deg,#1a1a2e,#7C3AED,#FF4ECD)}
+.bg10{background:linear-gradient(135deg,#06D6A0,#00D4FF)}
+.bg11{background:linear-gradient(135deg,#FFD93D,#FF8C42)}
+.bg12{background:linear-gradient(135deg,#FF4ECD,#7C3AED)}
+.bg13{background:linear-gradient(135deg,#FF6B6B,#FF8C42,#FFD93D)}
+.bg14{background:linear-gradient(135deg,#1a1a2e,#0f3460,#7C3AED)}
+.bg15{background:linear-gradient(135deg,#06D6A0,#7C3AED)}
+.bg16{background:linear-gradient(135deg,#FF6B6B,#FF4ECD)}
+.bg17{background:linear-gradient(135deg,#FFD93D,#06D6A0)}
+.bg18{background:linear-gradient(135deg,#00D4FF,#FF4ECD)}
+.bg19{background:linear-gradient(135deg,#7C3AED,#00D4FF)}
+.bg20{background:linear-gradient(135deg,#1a1a2e,#16213e)}
+.blob{position:absolute;border-radius:50%;filter:blur(70px);opacity:.2;animation:flt 8s ease-in-out infinite;pointer-events:none}
+.b1{width:400px;height:400px;background:var(--y);top:-120px;left:-120px;animation-delay:0s}
+.b2{width:300px;height:300px;background:var(--p);bottom:-80px;right:-80px;animation-delay:3s}
+.b3{width:200px;height:200px;background:var(--t);top:40%;left:75%;animation-delay:1.5s}
+@keyframes flt{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-28px) scale(1.06)}}
+.tag{font-size:.65rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;background:rgba(255,255,255,.18);color:#fff;padding:5px 14px;border-radius:20px;margin-bottom:14px;display:inline-block;backdrop-filter:blur(8px)}
+.ttl{font-family:'Baloo 2',cursive;font-size:clamp(1.8rem,5vw,3.6rem);font-weight:800;color:#fff;line-height:1.1;margin-bottom:14px;text-shadow:0 4px 20px rgba(0,0,0,.3)}
+.ttl span{background:linear-gradient(90deg,var(--y),var(--c));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sub{font-size:clamp(.85rem,2vw,1.1rem);color:rgba(255,255,255,.85);line-height:1.7;max-width:720px;margin:0 auto 20px}
+.sub strong,.sub b{color:var(--y);-webkit-text-fill-color:var(--y)}
+.cards{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;width:100%;max-width:960px;margin-top:8px}
+.card{background:rgba(255,255,255,.14);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.22);border-radius:18px;padding:18px 20px;flex:1;min-width:180px;max-width:260px;text-align:left;transition:transform .2s,box-shadow .2s}
+.card:hover{transform:translateY(-5px);box-shadow:0 18px 36px rgba(0,0,0,.2)}
+.ci{font-size:1.8rem;margin-bottom:8px}
+.ct{font-size:.88rem;font-weight:700;color:#fff;margin-bottom:5px}
+.cb{font-size:.74rem;color:rgba(255,255,255,.78);line-height:1.5}
+.tbl{width:100%;max-width:860px;border-collapse:collapse;margin-top:10px;font-size:.74rem}
+.tbl th{background:rgba(255,255,255,.18);color:#fff;font-weight:700;padding:9px 12px;text-align:left;border-bottom:2px solid rgba(255,255,255,.25)}
+.tbl td{padding:8px 12px;color:rgba(255,255,255,.88);border-bottom:1px solid rgba(255,255,255,.1)}
+.tbl tr:hover td{background:rgba(255,255,255,.07)}
+.pills{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin-top:14px}
+.pill{background:rgba(255,255,255,.18);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.28);color:#fff;font-size:.78rem;font-weight:600;padding:7px 16px;border-radius:28px;transition:background .2s}
+.pill:hover{background:rgba(255,255,255,.32)}
+.ladder{display:flex;flex-direction:column;gap:9px;width:100%;max-width:580px;margin:14px auto 0}
+.rung{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.12);border-radius:12px;padding:11px 18px;border-left:4px solid var(--y)}
+.rn{font-size:1.3rem;font-weight:900;color:var(--y);min-width:32px}
+.rt{text-align:left}
+.rtitle{font-size:.88rem;font-weight:700;color:#fff}
+.rdesc{font-size:.7rem;color:rgba(255,255,255,.72)}
+.stats{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+.sbox{background:rgba(255,255,255,.14);backdrop-filter:blur(10px);border-radius:18px;padding:22px 28px;min-width:150px;border:1px solid rgba(255,255,255,.22)}
+.snum{font-family:'Baloo 2',cursive;font-size:2.6rem;font-weight:800;color:var(--y);line-height:1}
+.slbl{font-size:.72rem;color:rgba(255,255,255,.78);margin-top:4px}
+.cta{display:inline-flex;align-items:center;gap:8px;background:var(--y);color:#1a1a2e;font-weight:800;font-size:.95rem;padding:13px 30px;border-radius:50px;border:none;cursor:pointer;margin-top:18px;transition:transform .2s,box-shadow .2s;text-decoration:none;box-shadow:0 8px 24px rgba(255,217,61,.4)}
+.cta:hover{transform:translateY(-3px);box-shadow:0 14px 32px rgba(255,217,61,.5)}
+#pbar{position:fixed;top:0;left:0;height:4px;background:linear-gradient(90deg,var(--y),var(--c),var(--p));transition:width .4s ease;z-index:100;border-radius:0 4px 4px 0}
+#dots{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);display:flex;gap:7px;z-index:100}
+.dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.32);cursor:pointer;transition:all .3s;border:none}
+.dot.active{background:#fff;width:22px;border-radius:4px}
+.nbtn{position:fixed;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.14);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.22);color:#fff;width:46px;height:46px;border-radius:50%;font-size:1.1rem;cursor:pointer;z-index:100;transition:background .2s,transform .3s;display:flex;align-items:center;justify-content:center}
+.nbtn:hover{background:rgba(255,255,255,.28);transform:translateY(-50%) scale(1.1)}
+#bp{left:14px}
+#bn{right:14px}
+#ctr{position:fixed;top:14px;right:18px;font-size:.72rem;font-weight:700;color:rgba(255,255,255,.55);z-index:100;letter-spacing:1px}
+#sbar{position:fixed;top:14px;left:18px;display:flex;gap:8px;z-index:100}
+.si{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.14);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.2);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.85rem;text-decoration:none;transition:background .2s,transform .2s}
+.si:hover{background:rgba(255,255,255,.28);transform:scale(1.15)}
+#sbtn{position:fixed;bottom:56px;right:14px;background:var(--p);color:#fff;border:none;border-radius:50px;padding:9px 16px;font-size:.74rem;font-weight:700;cursor:pointer;z-index:100;display:flex;align-items:center;gap:6px;box-shadow:0 6px 20px rgba(255,78,205,.4);transition:transform .2s}
+#sbtn:hover{transform:scale(1.05)}
+#toast{position:fixed;bottom:106px;right:14px;background:#1a1a2e;color:#fff;padding:9px 16px;border-radius:10px;font-size:.74rem;font-weight:600;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none;border:1px solid rgba(255,255,255,.14)}
+#toast.show{opacity:1}
+.htag{font-family:'Baloo 2',cursive;font-size:clamp(1.6rem,4vw,2.8rem);font-weight:800;color:var(--y);text-shadow:0 0 40px rgba(255,217,61,.5);margin:10px 0}
+.slide.active .tag{animation:su .5s .1s both}
+.slide.active .ttl{animation:su .5s .2s both}
+.slide.active .sub{animation:su .5s .3s both}
+.slide.active .card:nth-child(1){animation:su .5s .2s both}
+.slide.active .card:nth-child(2){animation:su .5s .3s both}
+.slide.active .card:nth-child(3){animation:su .5s .4s both}
+.slide.active .card:nth-child(4){animation:su .5s .5s both}
+.slide.active .card:nth-child(5){animation:su .5s .55s both}
+.slide.active .card:nth-child(6){animation:su .5s .6s both}
+.slide.active .rung:nth-child(1){animation:su .4s .2s both}
+.slide.active .rung:nth-child(2){animation:su .4s .3s both}
+.slide.active .rung:nth-child(3){animation:su .4s .4s both}
+.slide.active .rung:nth-child(4){animation:su .4s .5s both}
+.slide.active .rung:nth-child(5){animation:su .4s .6s both}
+.slide.active .sbox:nth-child(1){animation:bi .5s .2s both}
+.slide.active .sbox:nth-child(2){animation:bi .5s .35s both}
+.slide.active .sbox:nth-child(3){animation:bi .5s .5s both}
+.slide.active .tbl{animation:su .5s .3s both}
+.slide.active .pill:nth-child(1){animation:su .4s .1s both}
+.slide.active .pill:nth-child(2){animation:su .4s .2s both}
+.slide.active .pill:nth-child(3){animation:su .4s .3s both}
+.slide.active .pill:nth-child(4){animation:su .4s .4s both}
+.slide.active .pill:nth-child(5){animation:su .4s .5s both}
+.slide.active .pill:nth-child(6){animation:su .4s .6s both}
+@keyframes su{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes bi{0%{opacity:0;transform:scale(.5)}70%{transform:scale(1.08)}100%{opacity:1;transform:scale(1)}}
+@media(max-width:600px){.slide{padding:50px 18px 76px}.ttl{font-size:1.7rem}.cards{gap:9px}.card{min-width:130px;padding:12px}.tbl{font-size:.64rem}.tbl th,.tbl td{padding:6px 7px}#sbar{gap:5px}.si{width:28px;height:28px;font-size:.72rem}}
+
+/* page-mode overrides */
+html,body{width:100%;height:100%;overflow:hidden}
+.slide{opacity:1;pointer-events:all;transform:none;position:absolute;inset:0}
+#pbar{width:55.0%}
+</style>
+</head>
+<body>
+<div id="deck">
+<div id="pbar"></div>
+<div id="sbar">
+<a class="si" href="https://instagram.com" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+<a class="si" href="https://facebook.com" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+<a class="si" href="https://tiktok.com" target="_blank" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+<a class="si" href="https://linkedin.com" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+</div>
+<div id="ctr">11 / 20</div>
+<!-- SLIDE 11 WHAT IS A BANNER AD -->
+<section class="slide bg11 active" id="s11">
+<div class="blob b1"></div><div class="blob b2"></div>
+<div class="tag">Part 3</div>
+<div class="ttl">What is a <span>Banner Ad?</span> &#128227;</div>
+<div class="sub">A <b>rectangular graphic advertisement</b> embedded within a website, app, or digital platform. Every pixel must work toward one goal: <b>getting the viewer to click.</b></div>
+<div class="cards">
+<div class="card"><div class="ci">&#128421;</div><div class="ct">Website Display</div><div class="cb">Embedded in news sites, blogs, and content platforms</div></div>
+<div class="card"><div class="ci">&#128269;</div><div class="ct">Search Engine</div><div class="cb">Image ads shown alongside Google search results</div></div>
+<div class="card"><div class="ci">&#128241;</div><div class="ct">In-App Ads</div><div class="cb">Displayed within mobile applications</div></div>
+</div>
+</section>
+<a class="nbtn" id="bp" href="slide-10.html" aria-label="Previous"><i class="fas fa-chevron-left"></i></a>
+<a class="nbtn" id="bn" href="slide-12.html" aria-label="Next"><i class="fas fa-chevron-right"></i></a>
+<div id="dots" role="tablist" aria-label="Slide navigation"><a class="dot" href="slide-01.html" role="tab" aria-label="Slide 1"></a><a class="dot" href="slide-02.html" role="tab" aria-label="Slide 2"></a><a class="dot" href="slide-03.html" role="tab" aria-label="Slide 3"></a><a class="dot" href="slide-04.html" role="tab" aria-label="Slide 4"></a><a class="dot" href="slide-05.html" role="tab" aria-label="Slide 5"></a><a class="dot" href="slide-06.html" role="tab" aria-label="Slide 6"></a><a class="dot" href="slide-07.html" role="tab" aria-label="Slide 7"></a><a class="dot" href="slide-08.html" role="tab" aria-label="Slide 8"></a><a class="dot" href="slide-09.html" role="tab" aria-label="Slide 9"></a><a class="dot" href="slide-10.html" role="tab" aria-label="Slide 10"></a><a class="dot active" href="slide-11.html" role="tab" aria-label="Slide 11"></a><a class="dot" href="slide-12.html" role="tab" aria-label="Slide 12"></a><a class="dot" href="slide-13.html" role="tab" aria-label="Slide 13"></a><a class="dot" href="slide-14.html" role="tab" aria-label="Slide 14"></a><a class="dot" href="slide-15.html" role="tab" aria-label="Slide 15"></a><a class="dot" href="slide-16.html" role="tab" aria-label="Slide 16"></a><a class="dot" href="slide-17.html" role="tab" aria-label="Slide 17"></a><a class="dot" href="slide-18.html" role="tab" aria-label="Slide 18"></a><a class="dot" href="slide-19.html" role="tab" aria-label="Slide 19"></a><a class="dot" href="slide-20.html" role="tab" aria-label="Slide 20"></a></div>
+<button id="sbtn" onclick="sharePresentation()" aria-label="Share"><i class="fas fa-share-alt"></i> Share</button>
+<div id="toast">&#128203; Link copied!</div>
+</div>
+<script>
+document.addEventListener('keydown',function(e){
+  if(e.key==='ArrowRight'||e.key==='ArrowDown') window.location='slide-12.html';
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp') window.location='slide-10.html';
+});
+var startX=0;
+document.addEventListener('touchstart',function(e){startX=e.touches[0].clientX;},{passive:true});
+document.addEventListener('touchend',function(e){
+  var dx=e.changedTouches[0].clientX-startX;
+  if(Math.abs(dx)>50) window.location=dx<0?'slide-12.html':'slide-10.html';
+});
+function sharePresentation(){
+  var url=window.location.href;
+  var data={title:'Graphic Design for Digital Media',text:'Check out this presentation!',url:url};
+  if(navigator.share){navigator.share(data).catch(function(){});}
+  else{navigator.clipboard.writeText(url).then(function(){
+    var t=document.getElementById('toast');t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2500);
+  });}
+}
+</script>
+</body>
+</html>

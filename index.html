@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Graphics Design – Home</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a14; --surface: #1f2937; --border: #374151;
+      --text: #f9fafb; --muted: #9ca3af; --label: #4b5563;
+      --divider: #1f2937; --surface2: #111827;
+    }
+    html.light {
+      --bg: #f3f4f6; --surface: #ffffff; --border: #e5e7eb;
+      --text: #111827; --muted: #6b7280; --label: #9ca3af;
+      --divider: #e5e7eb; --surface2: #f9fafb;
+    }
+
+    body { font-family: 'Inter', Arial, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; transition: background 0.3s, color 0.3s; }
+
+    .theme-toggle {
+      position: fixed; top: 16px; right: 20px; z-index: 100;
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--text); width: 40px; height: 40px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 1.1rem; transition: all 0.2s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .theme-toggle:hover { transform: scale(1.1); }
+
+    header { text-align: center; padding: 56px 16px 32px; }
+    header .badge {
+      display: inline-block; background: linear-gradient(135deg, #e63946, #c1121f);
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
+      padding: 5px 20px; border-radius: 20px; margin-bottom: 18px; color: #fff;
+    }
+    header h1 { font-size: 2.6rem; font-weight: 800; line-height: 1.1; margin-bottom: 10px; }
+    html.light header h1 span { background: linear-gradient(135deg, #111827 40%, #0e7490); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    html:not(.light) header h1 span { background: linear-gradient(135deg, #fff 40%, #a8dadc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    header p { color: var(--muted); font-size: 15px; }
+
+    main { max-width: 960px; margin: 0 auto; padding: 0 20px 60px; }
+
+    .section-label {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
+      color: var(--label); margin: 40px 0 16px; display: flex; align-items: center; gap: 12px;
+    }
+    .section-label::after { content: ''; flex: 1; height: 1px; background: var(--divider); }
+
+    /* ── CAROUSEL ── */
+    .carousel-wrap { position: relative; padding: 0 0 32px; }
+    .carousel {
+      display: flex; gap: 18px;
+      overflow-x: auto; scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch; scrollbar-width: none;
+      padding: 8px 4px 12px;
+    }
+    .carousel::-webkit-scrollbar { display: none; }
+    .carousel > * { scroll-snap-align: center; flex: 0 0 min(340px, 82vw); }
+    .carousel-btn {
+      position: absolute; top: 42%; transform: translateY(-50%);
+      width: 34px; height: 34px; border-radius: 50%;
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--text); font-size: 15px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 2; transition: background .15s, border-color .15s, color .15s;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+    }
+    .carousel-btn:hover { border-color: var(--c-accent, #38bdf8); color: var(--c-accent, #38bdf8); }
+    .carousel-btn.prev { left: -17px; }
+    .carousel-btn.next { right: -17px; }
+    .carousel-dots {
+      display: flex; justify-content: center; gap: 6px;
+      position: absolute; bottom: 6px; left: 0; right: 0;
+    }
+    .carousel-dots span {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--border); cursor: pointer;
+      transition: background .2s, width .2s, border-radius .2s;
+    }
+    .carousel-dots span.active { width: 18px; border-radius: 3px; background: var(--c-accent, #38bdf8); }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 18px; }
+
+    /* ── LESSON CARD ── */
+    .lesson-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+      overflow: hidden; transition: border-color 0.2s, background 0.3s;
+      display: flex; flex-direction: column;
+    }
+    .lesson-card:hover { border-color: var(--accent, #38bdf8); }
+
+    .lesson-header {
+      padding: 22px 22px 16px; display: flex; align-items: flex-start; gap: 14px;
+      text-decoration: none; color: var(--text);
+    }
+    .lesson-header:hover .lesson-arrow { transform: translateX(3px); }
+    .lesson-icon { font-size: 36px; flex-shrink: 0; }
+    .lesson-meta { flex: 1; min-width: 0; }
+    .lesson-tag {
+      font-size: 0.6rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--accent, #38bdf8); margin-bottom: 4px;
+    }
+    .lesson-title { font-size: 15px; font-weight: 700; line-height: 1.4; margin-bottom: 4px; }
+    .lesson-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+    .lesson-arrow { color: var(--accent, #38bdf8); font-size: 1rem; margin-top: 2px; transition: transform 0.2s; flex-shrink: 0; }
+
+    /* ── PARTS LIST ── */
+    .parts-list {
+      border-top: 1px solid var(--border);
+      display: flex; flex-direction: column;
+    }
+    .part-link {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 22px; text-decoration: none; color: var(--muted);
+      font-size: 12px; font-weight: 600; transition: all 0.15s;
+      border-bottom: 1px solid var(--border);
+    }
+    .part-link:last-child { border-bottom: none; }
+    .part-link:hover { background: var(--surface2); color: var(--text); padding-left: 28px; }
+    .part-link:hover .part-dot { background: var(--accent, #38bdf8); }
+    .part-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--border); flex-shrink: 0; transition: background 0.15s;
+    }
+    .part-num { font-size: 0.6rem; letter-spacing: 1px; text-transform: uppercase; color: var(--accent, #38bdf8); min-width: 42px; }
+
+    /* ── ACTIVITY CARD ── */
+    .act-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+      padding: 24px 22px; text-decoration: none; color: var(--text);
+      transition: transform 0.2s, border-color 0.2s, background 0.3s;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .act-card:hover { transform: translateY(-5px); border-color: var(--accent, #38bdf8); }
+    .act-card .icon { font-size: 38px; }
+    .act-card .tag {
+      font-size: 0.6rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--accent, #38bdf8);
+    }
+    .act-card h2 { font-size: 14px; font-weight: 700; line-height: 1.4; }
+    .act-card p { font-size: 12px; color: var(--muted); line-height: 1.5; }
+  </style>
+</head>
+<body>
+
+<button class="theme-toggle" id="themeBtn" title="Toggle light/dark mode">🌙</button>
+
+<header>
+  <div class="badge">Graphics Design · 26–27 1st Sem</div>
+  <h1><span>Activities &amp; Lessons</span></h1>
+  <p>Select a lesson or activity to begin</p>
+</header>
+
+<main>
+
+  <!-- LESSONS -->
+  <div class="section-label">Lessons</div>
+  <div class="grid">
+
+      <!-- Design Principles -->
+      <div class="lesson-card" style="--accent:#a8dadc;">
+        <a class="lesson-header" href="design-principles/index.html">
+          <div class="lesson-icon">🎨</div>
+          <div class="lesson-meta">
+            <div class="lesson-tag">Lesson</div>
+            <div class="lesson-title">Design Principles &amp; Elements</div>
+            <div class="lesson-desc">Balance, elements overview, application &amp; assessment — 4-part module.</div>
+          </div>
+          <span class="lesson-arrow">→</span>
+        </a>
+        <div class="parts-list">
+          <a class="part-link" href="design-principles/part1.html"><span class="part-dot"></span><span class="part-num">Part 1</span>Elements &amp; Principles Overview</a>
+          <a class="part-link" href="design-principles/part2.html"><span class="part-dot"></span><span class="part-num">Part 2</span>Balance in Graphic Design</a>
+          <a class="part-link" href="design-principles/part3.html"><span class="part-dot"></span><span class="part-num">Part 3</span>Application &amp; Analysis</a>
+          <a class="part-link" href="design-principles/part4.html"><span class="part-dot"></span><span class="part-num">Part 4</span>Summary &amp; Assessment</a>
+        </div>
+      </div>
+
+      <!-- Visual Hierarchy -->
+      <div class="lesson-card" style="--accent:#a78bfa;">
+        <a class="lesson-header" href="Hierarchy/index.html">
+          <div class="lesson-icon">📐</div>
+          <div class="lesson-meta">
+            <div class="lesson-tag">Lesson</div>
+            <div class="lesson-title">Visual Hierarchy</div>
+            <div class="lesson-desc">Six tools of hierarchy, group critique &amp; redesign activity — 4-part module.</div>
+          </div>
+          <span class="lesson-arrow">→</span>
+        </a>
+        <div class="parts-list">
+          <a class="part-link" href="Hierarchy/part1.html"><span class="part-dot"></span><span class="part-num">Part 1</span>What Is Visual Hierarchy?</a>
+          <a class="part-link" href="Hierarchy/part2.html"><span class="part-dot"></span><span class="part-num">Part 2</span>The Six Tools of Visual Hierarchy</a>
+          <a class="part-link" href="Hierarchy/part3.html"><span class="part-dot"></span><span class="part-num">Part 3</span>Design Critique &amp; Redesign</a>
+          <a class="part-link" href="Hierarchy/part4.html"><span class="part-dot"></span><span class="part-num">Part 4</span>Summary &amp; Assessment</a>
+        </div>
+      </div>
+
+      <!-- Color Theory -->
+      <div class="lesson-card" style="--accent:#e0672c;">
+        <a class="lesson-header" href="ColorTheory/index.html">
+          <div class="lesson-icon">🌈</div>
+          <div class="lesson-meta">
+            <div class="lesson-tag">Lesson</div>
+            <div class="lesson-title">Color Theory</div>
+            <div class="lesson-desc">Color wheels, harmonies, psychology &amp; systems — 7-part module.</div>
+          </div>
+          <span class="lesson-arrow">→</span>
+        </a>
+        <div class="parts-list">
+          <a class="part-link" href="ColorTheory/part1a-definition.html"><span class="part-dot"></span><span class="part-num">Part 1</span>Foundations &amp; Definition</a>
+          <a class="part-link" href="ColorTheory/part2-properties.html"><span class="part-dot"></span><span class="part-num">Part 2</span>Wheel &amp; Properties</a>
+          <a class="part-link" href="ColorTheory/part3-harmonies.html"><span class="part-dot"></span><span class="part-num">Part 3</span>Harmonies &amp; Schemes</a>
+          <a class="part-link" href="ColorTheory/part4-ratio.html"><span class="part-dot"></span><span class="part-num">Part 4</span>The 60-30-10 Rule</a>
+          <a class="part-link" href="ColorTheory/part5-psychology.html"><span class="part-dot"></span><span class="part-num">Part 5</span>Psychology &amp; Culture</a>
+          <a class="part-link" href="ColorTheory/part6-systems.html"><span class="part-dot"></span><span class="part-num">Part 6</span>Systems: RGB / CMYK</a>
+          <a class="part-link" href="ColorTheory/part7-activity.html"><span class="part-dot"></span><span class="part-num">Part 7</span>Activity &amp; Summary</a>
+        </div>
+      </div>
+
+      <!-- Photoshop Essentials -->
+      <div class="lesson-card" style="--accent:#31A8FF;">
+        <a class="lesson-header" href="Photoshop/index.html">
+          <div class="lesson-icon">🖼️</div>
+          <div class="lesson-meta">
+            <div class="lesson-tag">Lesson</div>
+            <div class="lesson-title">Photoshop Essentials</div>
+            <div class="lesson-desc">CS6 interface, 17 essential tools, raster vs vector &amp; AI comparison — interactive slide module.</div>
+          </div>
+          <span class="lesson-arrow">→</span>
+        </a>
+        <div class="parts-list">
+          <a class="part-link" href="Photoshop/index.html#slide-0"><span class="part-dot"></span><span class="part-num">Intro</span>What is Photoshop?</a>
+          <a class="part-link" href="Photoshop/index.html#slide-1"><span class="part-dot"></span><span class="part-num">Pre</span>AI vs Photoshop</a>
+          <a class="part-link" href="Photoshop/index.html#slide-5"><span class="part-dot"></span><span class="part-num">Sec 01</span>Exploring the Workspace</a>
+          <a class="part-link" href="Photoshop/index.html#slide-9"><span class="part-dot"></span><span class="part-num">Sec 02</span>Essential Tools</a>
+          <a class="part-link" href="Photoshop/index.html#slide-28"><span class="part-dot"></span><span class="part-num">Bonus</span>CS6 → Photoshop 2025</a>
+        </div>
+      </div>
+
+    
+
+      <!-- Logo Design -->
+      <div class="lesson-card" style="--accent:#FF5A1F;">
+        <a class="lesson-header" href="LogoDesign/index.html">
+          <div class="lesson-icon">🔷</div>
+          <div class="lesson-meta">
+            <div class="lesson-tag">Lesson</div>
+            <div class="lesson-title">Logo Design Techniques</div>
+            <div class="lesson-desc">From pencil to pixel — sketching, digitizing, scalability &amp; file formats. 5-part module.</div>
+          </div>
+          <span class="lesson-arrow">→</span>
+        </a>
+        <div class="parts-list">
+          <a class="part-link" href="LogoDesign/part1-intro.html"><span class="part-dot"></span><span class="part-num">Part 1</span>What is Logo Design?</a>
+          <a class="part-link" href="LogoDesign/part2-sketching.html"><span class="part-dot"></span><span class="part-num">Part 2</span>Sketching Techniques</a>
+          <a class="part-link" href="LogoDesign/part3-digitizing.html"><span class="part-dot"></span><span class="part-num">Part 3</span>Digitizing Your Sketch</a>
+          <a class="part-link" href="LogoDesign/part4-scalability.html"><span class="part-dot"></span><span class="part-num">Part 4</span>Scalability &amp; File Formats</a>
+          <a class="part-link" href="LogoDesign/part5-summary.html"><span class="part-dot"></span><span class="part-num">Part 5</span>Activity &amp; Summary</a>
+        </div>
+      </div>
+  <!-- Graphic Design for Digital Media -->
+      <div class="lesson-card" style="--accent:#FF5A1F;">
+        <a class="lesson-header" href="Graphic-Design-for-Digital-Media/index.html">
+          <div class="lesson-icon">💻</div>
+          <div class="lesson-meta">
+            <div class="lesson-tag">Lesson</div>
+            <div class="lesson-title">Graphic Design for Digital Media</div>
+            <div class="lesson-desc">Social media campaigns &amp; banner ads — 20-slide module.</div>
+          </div>
+          <span class="lesson-arrow">→</span>
+        </a>
+        <div class="parts-list">
+          <a class="part-link" href="Graphic-Design-for-Digital-Media/slide-01.html"><span class="part-dot"></span><span class="part-num">Part 1</span>Introduction &amp; Campaigns</a>
+          <a class="part-link" href="Graphic-Design-for-Digital-Media/slide-04.html"><span class="part-dot"></span><span class="part-num">Part 2</span>Social Media Design</a>
+          <a class="part-link" href="Graphic-Design-for-Digital-Media/slide-08.html"><span class="part-dot"></span><span class="part-num">Part 3</span>Design Principles</a>
+          <a class="part-link" href="Graphic-Design-for-Digital-Media/slide-11.html"><span class="part-dot"></span><span class="part-num">Part 4</span>Banner Ads</a>
+          <a class="part-link" href="Graphic-Design-for-Digital-Media/slide-16.html"><span class="part-dot"></span><span class="part-num">Part 5</span>Process, Activity &amp; Summary</a>
+        </div>
+      </div>
+  </div>
+
+  <!-- ACTIVITIES -->
+  <div class="section-label">Activities</div>
+  <div class="grid">
+
+      <a class="act-card" href="zoom-acitivty.html" style="--accent:#38bdf8;">
+        <div class="icon">🔍</div>
+        <div class="tag">Activity</div>
+        <h2>Find the Difference</h2>
+        <p>Compare pixelated vs smooth zoom rendering on a canvas image.</p>
+      </a>
+      <a class="act-card" href="activity3.html" style="--accent:#2ecc71;">
+        <div class="icon">🎯</div>
+        <div class="tag">Activity</div>
+        <h2>Guess the Fix!</h2>
+        <p>Spot common design mistakes — raster vs vector, RGB vs CMYK, contrast — and reveal the correct fix.</p>
+      </a>
+      <a class="act-card" href="image-zoom-comparison.html" style="--accent:#f59e0b;">
+        <div class="icon">🖼️</div>
+        <div class="tag">Activity</div>
+        <h2>Raster vs Vector Zoom</h2>
+        <p>Drag a slider to zoom in and see how raster images pixelate while vector graphics stay crisp.</p>
+      </a>
+      
+<a class="act-card" href="LogoDesign/part2-sketching.html?slide=6" style="--accent:#FF5A1F;">
+        <div class="icon">✏️</div>
+        <div class="tag">Logo Design · Activity</div>
+        <h2>Thumbnail Ideation Grid</h2>
+        <p>Draw directly in 20 boxes to simulate the professional thumbnail sketching process. Star your strongest ideas to refine.</p>
+      </a>
+  </div>
+
+  <footer style="text-align:center; padding:32px 20px 48px; border-top:1px solid var(--divider); margin-top:40px;">
+    <p style="font-size:11px; color:var(--label); line-height:1.8;">
+      © 2026 <strong style="color:var(--muted);">Jonimari Ross Valencia</strong> · All rights reserved
+    </p>
+    <p style="font-size:10px; color:var(--label); margin-top:4px; letter-spacing:0.05em;">
+      Powered by <strong style="color:var(--muted);">AWS Q</strong>
+    </p>
+  </footer>
+
+</main>
+
+<script>
+  const html = document.documentElement;
+  const btn = document.getElementById('themeBtn');
+  const saved = localStorage.getItem('theme');
+  if (saved === 'light') { html.classList.add('light'); btn.textContent = '☀️'; }
+  btn.addEventListener('click', () => {
+    const isLight = html.classList.toggle('light');
+    btn.textContent = isLight ? '☀️' : '🌙';
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+  });
+
+  function initCarousel(carouselId, dotsId) {
+    const track = document.getElementById(carouselId);
+    const dotsEl = document.getElementById(dotsId);
+    const cards = Array.from(track.children);
+    let current = 0;
+
+    /* build dots */
+    cards.forEach((_, i) => {
+      const d = document.createElement('span');
+      if (i === 0) d.classList.add('active');
+      d.addEventListener('click', () => scrollTo(i));
+      dotsEl.appendChild(d);
+    });
+
+    function scrollTo(idx) {
+      current = Math.max(0, Math.min(idx, cards.length - 1));
+      cards[current].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      dotsEl.querySelectorAll('span').forEach((d, i) => d.classList.toggle('active', i === current));
+    }
+
+    /* sync dots on native scroll */
+    track.addEventListener('scroll', () => {
+      const center = track.scrollLeft + track.offsetWidth / 2;
+      let closest = 0, minDist = Infinity;
+      cards.forEach((c, i) => {
+        const dist = Math.abs(c.offsetLeft + c.offsetWidth / 2 - center);
+        if (dist < minDist) { minDist = dist; closest = i; }
+      });
+      if (closest !== current) {
+        current = closest;
+        dotsEl.querySelectorAll('span').forEach((d, i) => d.classList.toggle('active', i === current));
+      }
+    }, { passive: true });
+
+    /* wire prev/next buttons */
+    track.closest('.carousel-wrap').querySelectorAll('.carousel-btn').forEach(b => {
+      b.addEventListener('click', () => {
+        scrollTo(current + (b.classList.contains('next') ? 1 : -1));
+      });
+    });
+  }
+
+
+</script>
+</body>
+</html>

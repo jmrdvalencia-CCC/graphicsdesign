@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Part 4 — 60-30-10 Rule · Color Theory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+<div class="app">
+  <nav class="rail" aria-label="Module sections">
+    <div class="brand">
+      <span class="eyebrow">Graphic Design · Module 03</span>
+      <h1>Color&nbsp;Theory</h1>
+    </div>
+    <div class="wheel-wrap" aria-hidden="true">
+      <div class="wheel-disc"></div>
+      <div class="wheel-center-label" id="wheelCenterLabel"></div>
+    </div>
+    <div class="tabstrip" id="tabstrip"></div>
+    <ul class="navlist" id="navlist"></ul>
+    <div class="rail-foot">Ref. Mrantinkovic et al. (2020)<br>3G Handy Guide: Graphic Designing</div>
+  </nav>
+
+  <main>
+    <span class="kicker"><span class="sw"></span>Part 2 · continued</span>
+    <h2>The 60–30–10 rule</h2>
+    <p class="sub">Whichever harmony you pick, this proportion is the most reliable formula for applying it. Build your own below — drag a slider and the other two rebalance automatically.</p>
+
+    <div class="ratio-build">
+      <div class="ratio-bar" id="ratioBar"></div>
+      <div class="ratio-controls" id="ratioControls"></div>
+    </div>
+
+    <table class="data" style="margin-top:26px;">
+      <tr><th>Area</th><th>Color</th><th>Proportion</th></tr>
+      <tr><td>Page background</td><td>Light grey (neutral)</td><td>60%</td></tr>
+      <tr><td>Section headers &amp; cards</td><td>Deep navy blue</td><td>30%</td></tr>
+      <tr><td>Call-to-action buttons, links</td><td>Vivid orange</td><td>10%</td></tr>
+    </table>
+
+    <div class="callout" style="margin-top:24px;"><b>Common mistake</b>Using two complementary colors at equal saturation and equal proportion. Without a clear dominant, the pairing vibrates and reads as chaos rather than energy.</div>
+
+    <div class="pager">
+      <a class="pagebtn prev" href="part3-harmonies.html"><span class="lbl">Back</span><span class="name">← Harmonies</span></a>
+      <a class="pagebtn next" href="part5-psychology.html"><span class="lbl">Next</span><span class="name">Psychology &amp; Culture →</span></a>
+    </div>
+  </main>
+</div>
+
+<script src="shared.js"></script>
+<script>
+buildRail('ratio');
+
+const ratioBar      = document.getElementById('ratioBar');
+const ratioControls = document.getElementById('ratioControls');
+let ratio       = { dominant:60, secondary:30, accent:10 };
+let ratioColors = { dominant:'#3a3546', secondary:'#8a3ae8', accent:'#d69a1f' };
+const RATIO_KEYS = ['dominant','secondary','accent'];
+
+RATIO_KEYS.forEach(k => {
+  const wrap = document.createElement('div');
+  wrap.className = 'ratio-ctrl';
+  wrap.innerHTML = `
+    <div class="row1"><span>${k}</span><span id="ratioNum-${k}">${ratio[k]}%</span></div>
+    <input type="color" id="ratioColor-${k}" value="${ratioColors[k]}">
+    <input type="range" id="ratioSlide-${k}" min="5" max="90" value="${ratio[k]}">`;
+  ratioControls.appendChild(wrap);
+});
+RATIO_KEYS.forEach(k => {
+  document.getElementById('ratioColor-'+k).addEventListener('input', e => { ratioColors[k]=e.target.value; renderRatio(); });
+  document.getElementById('ratioSlide-'+k).addEventListener('input', e => {
+    let val = +e.target.value;
+    const others = RATIO_KEYS.filter(x => x !== k);
+    const remaining = 100 - val;
+    const otherSum = ratio[others[0]] + ratio[others[1]];
+    if(otherSum <= 0){
+      ratio[others[0]] = remaining/2; ratio[others[1]] = remaining/2;
+    } else {
+      ratio[others[0]] = Math.max(2, remaining * (ratio[others[0]]/otherSum));
+      ratio[others[1]] = Math.max(2, remaining * (ratio[others[1]]/otherSum));
+    }
+    ratio[k] = val;
+    renderRatio();
+  });
+});
+function renderRatio(){
+  ratioBar.innerHTML = RATIO_KEYS.map(k=>`<div class="ratio-seg" style="width:${ratio[k]}%; background:${ratioColors[k]}">${Math.round(ratio[k])}%</div>`).join('');
+  RATIO_KEYS.forEach(k => {
+    document.getElementById('ratioNum-'+k).textContent = Math.round(ratio[k])+'%';
+    document.getElementById('ratioSlide-'+k).value = ratio[k];
+  });
+}
+renderRatio();
+</script>
+</body>
+</html>

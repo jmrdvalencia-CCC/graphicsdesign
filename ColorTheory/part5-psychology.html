@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Part 5 — Psychology &amp; Culture · Color Theory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+<div class="app">
+  <nav class="rail" aria-label="Module sections">
+    <div class="brand">
+      <span class="eyebrow">Graphic Design · Module 03</span>
+      <h1>Color&nbsp;Theory</h1>
+    </div>
+    <div class="wheel-wrap" aria-hidden="true">
+      <div class="wheel-disc"></div>
+      <div class="wheel-center-label" id="wheelCenterLabel"></div>
+    </div>
+    <div class="tabstrip" id="tabstrip"></div>
+    <ul class="navlist" id="navlist"></ul>
+    <div class="rail-foot">Ref. Mrantinkovic et al. (2020)<br>3G Handy Guide: Graphic Designing</div>
+  </nav>
+
+  <main>
+    <span class="kicker"><span class="sw"></span>Part 3 · 20 min</span>
+    <h2>Psychology &amp; cultural meaning</h2>
+    <p class="sub">Color psychology describes tendencies, not absolutes — but the patterns are consistent enough to be reliable design tools. Color increases brand recognition by up to 80% and influences up to 85% of purchase decisions.</p>
+
+    <div class="spotlight-wrap">
+      <div class="swatch-grid" id="swatchGrid"></div>
+      <div class="spotlight-panel" id="spotlightPanel"></div>
+    </div>
+
+    <h3 style="margin-top:32px; font-size:20px;">Brands built on one color</h3>
+    <div class="pill-row">
+      <span class="pill">McDonald's — red + yellow → hunger + happiness</span>
+      <span class="pill">Meta — blue → trust</span>
+      <span class="pill">Spotify — green → growth, energy</span>
+      <span class="pill">Tiffany &amp; Co. — robin's egg blue → exclusivity</span>
+      <span class="pill">IKEA — blue + yellow → Swedish trust + optimism</span>
+      <span class="pill">Coca-Cola — red → energy, excitement, passion</span>
+    </div>
+
+    <h3 style="margin-top:32px; font-size:20px;">Color is not universal</h3>
+    <table class="data">
+      <tr><th>Color</th><th>Western meaning</th><th>Elsewhere</th></tr>
+      <tr><td>White</td><td>Purity, weddings</td><td class="mismatch">Mourning, death (China, Japan, Korea)</td></tr>
+      <tr><td>Red</td><td>Danger, passion</td><td>Luck &amp; prosperity (China); purity (India)</td></tr>
+      <tr><td>Green</td><td>Nature, "go"</td><td class="mismatch">Infidelity (China); death (parts of Latin America)</td></tr>
+      <tr><td>Yellow</td><td>Happiness</td><td class="mismatch">Mourning (Egypt); sacred/imperial (China)</td></tr>
+      <tr><td>Purple</td><td>Luxury, royalty</td><td class="mismatch">Mourning (Brazil, Thailand)</td></tr>
+      <tr><td>Blue</td><td>Trust, calm, corporate</td><td>Immortality (Iran); mourning (Korea); protection (Middle East)</td></tr>
+    </table>
+    <div class="callout"><b>Design warning</b>A palette that reads perfectly for a North American audience can send an unintended message to an Asian or Latin American one. Always research cultural color associations for international work.</div>
+
+    <div class="pager">
+      <a class="pagebtn prev" href="part4-ratio.html"><span class="lbl">Back</span><span class="name">← 60-30-10 Rule</span></a>
+      <a class="pagebtn next" href="part6-systems.html"><span class="lbl">Next</span><span class="name">Color Systems →</span></a>
+    </div>
+  </main>
+</div>
+
+<script src="shared.js"></script>
+<script>
+buildRail('psychology');
+
+const COLOR_MEANINGS = [
+  { name:'Red',    hex:'#c53a3a', pos:'Energy, passion, urgency, love',       neg:'Danger, aggression, warning',    ind:'Food, retail sales, emergency' },
+  { name:'Orange', hex:'#d76a2c', pos:'Warmth, enthusiasm, creativity',       neg:'Cheapness, over-stimulation',    ind:'Food, fitness, kids products' },
+  { name:'Yellow', hex:'#c9a324', pos:'Optimism, happiness, clarity',         neg:'Caution, anxiety',               ind:'Food, warnings, taxis' },
+  { name:'Green',  hex:'#3f8a4d', pos:'Nature, health, growth, wealth',       neg:'Envy, inexperience',             ind:'Health, finance, environment' },
+  { name:'Blue',   hex:'#3a6fc9', pos:'Trust, reliability, calm',             neg:'Coldness, sadness, distance',    ind:'Tech, finance, healthcare' },
+  { name:'Violet', hex:'#8a3ae8', pos:'Luxury, creativity, wisdom',           neg:'Excess, artificiality',          ind:'Beauty, luxury goods' },
+  { name:'Pink',   hex:'#d9558f', pos:'Romance, softness, playfulness',       neg:'Weakness, immaturity',           ind:'Beauty, fashion, kids products' },
+  { name:'Brown',  hex:'#8a6338', pos:'Earthiness, reliability, warmth',      neg:'Dullness, heaviness',            ind:'Coffee, outdoor, furniture' },
+  { name:'Black',  hex:'#20202a', pos:'Sophistication, power, elegance',      neg:'Death, mourning, emptiness',     ind:'Luxury, fashion, tech' },
+  { name:'White',  hex:'#a9a58f', pos:'Cleanliness, purity, space',           neg:'Coldness, sterility',            ind:'Healthcare, tech, minimalism' },
+  { name:'Grey',   hex:'#77757e', pos:'Neutrality, balance, timelessness',    neg:'Boredom, indecision',            ind:'Corporate, automotive' },
+];
+const swatchGrid    = document.getElementById('swatchGrid');
+const spotlightPanel = document.getElementById('spotlightPanel');
+COLOR_MEANINGS.forEach((c,i) => {
+  const b = document.createElement('button');
+  b.className = 'swatch-btn'; b.style.background = c.hex; b.dataset.i = i;
+  b.setAttribute('aria-label', c.name);
+  b.addEventListener('click', () => setSpotlight(i));
+  swatchGrid.appendChild(b);
+});
+function setSpotlight(i){
+  const c = COLOR_MEANINGS[i];
+  document.querySelectorAll('.swatch-btn').forEach((b,idx) => b.classList.toggle('active', idx===i));
+  spotlightPanel.style.background = c.hex;
+  spotlightPanel.innerHTML = `
+    <h4>${c.name}</h4>
+    <div class="sp-row">
+      <div class="sp-col"><div class="sp-label">Positive</div><p>${c.pos}</p></div>
+      <div class="sp-col"><div class="sp-label">Negative</div><p>${c.neg}</p></div>
+      <div class="sp-col"><div class="sp-label">Industries</div><p>${c.ind}</p></div>
+    </div>`;
+}
+setSpotlight(0);
+</script>
+</body>
+</html>

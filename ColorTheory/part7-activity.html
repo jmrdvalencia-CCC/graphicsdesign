@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Part 7 — Activity &amp; Summary · Color Theory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+<div class="app">
+  <nav class="rail" aria-label="Module sections">
+    <div class="brand">
+      <span class="eyebrow">Graphic Design · Module 03</span>
+      <h1>Color&nbsp;Theory</h1>
+    </div>
+    <div class="wheel-wrap" aria-hidden="true">
+      <div class="wheel-disc"></div>
+      <div class="wheel-center-label" id="wheelCenterLabel"></div>
+    </div>
+    <div class="tabstrip" id="tabstrip"></div>
+    <ul class="navlist" id="navlist"></ul>
+    <div class="rail-foot">Ref. Mrantinkovic et al. (2020)<br>3G Handy Guide: Graphic Designing</div>
+  </nav>
+
+  <main>
+    <span class="kicker"><span class="sw"></span>Parts 5–6 · 25 min</span>
+    <h2>Group critique &amp; wrap-up</h2>
+    <p class="sub">Three groups, one design sample each. 12 minutes to analyze, 2–3 minutes each to present. Tap a card to flip it for the discussion questions.</p>
+
+    <div class="activity-grid" id="activityGrid"></div>
+
+    <div class="callout" style="margin-top:28px;"><b>Presentation format (2–3 min per group)</b>Each group shares: (1) the design analyzed and palette identified, (2) the harmony type and psychological associations, (3) one strength and one weakness in the color use, (4) their proposed improvement or redesign.</div>
+
+    <h3 style="margin-top:40px; font-size:20px;">Key takeaways</h3>
+    <ul class="checklist">
+      <li>Color theory is the systematic framework for how colors relate, interact, and communicate.</li>
+      <li>Four properties define every color: hue, value, saturation, temperature.</li>
+      <li>Six harmonies each carry a different energy: monochromatic, analogous, complementary, split-complementary, triadic, tetradic.</li>
+      <li>60-30-10 is the go-to formula for applying any palette.</li>
+      <li>Psychology is a reliable tendency, not a universal law — culture always matters.</li>
+      <li>RGB is for screens, CMYK is for print — using the wrong one breaks consistency.</li>
+      <li>The most important element should carry the most dominant color treatment.</li>
+    </ul>
+
+    <h3 style="margin-top:36px; font-size:20px;">Effective vs. ineffective color use</h3>
+    <table class="data">
+      <tr><th>Feature</th><th>Effective</th><th>Ineffective</th></tr>
+      <tr><td>Harmony</td><td>Colors chosen from a deliberate harmony</td><td>Colors chosen randomly with no relationship</td></tr>
+      <tr><td>Hierarchy</td><td>Most important element has the most dominant color</td><td>All elements compete with equal color weight</td></tr>
+      <tr><td>Proportion</td><td>60-30-10 applied — one color clearly dominates</td><td>All colors used in equal amounts</td></tr>
+      <tr><td>Psychology</td><td>Color mood matches the design's intent and audience</td><td>Color mood contradicts the message (e.g., red for a spa)</td></tr>
+      <tr><td>Contrast</td><td>Sufficient value contrast for readability</td><td>Low contrast makes text hard to read</td></tr>
+      <tr><td>Consistency</td><td>Palette is consistent throughout the design</td><td>Colors change randomly between sections</td></tr>
+      <tr><td>Cultural fit</td><td>Colors are appropriate for the target culture</td><td>Colors carry unintended cultural meanings</td></tr>
+      <tr><td>Media accuracy</td><td>Correct model used (RGB for screen, CMYK for print)</td><td>Wrong model causes color shifts between media</td></tr>
+    </table>
+
+    <h3 style="margin-top:36px; font-size:20px;">Self-check questions</h3>
+    <div class="assess">
+      <div class="q"><p>Define color theory in your own words — why is it foundational to graphic design?</p></div>
+      <div class="q"><p>Explain hue vs. value vs. saturation, with one example of each building visual hierarchy.</p></div>
+      <div class="q"><p>A children's party poster uses dark monochromatic navy. What's the problem, and what harmony fixes it?</p></div>
+      <div class="q"><p>Why does 60-30-10 outperform using three colors in equal amounts?</p></div>
+      <div class="q"><p>A design looks right on screen but dull once printed — what is the likely cause, and how do you prevent it?</p></div>
+    </div>
+
+    <div class="card" style="margin-top:28px;">
+      <h3>Assignment — build a color palette</h3>
+      <p>Pick a brief: cafe brand, fitness app, children's book cover, or luxury watch ad. Build <b>Palette A</b> (a harmony that deliberately clashes with the brief's mood) and <b>Palette B</b> (one that fits, run through 60-30-10). Apply Palette B to a mock-up and write a 5–7 sentence reflection on harmony, psychology, and proportion. Due next class.</p>
+      <p style="margin-top:10px; font-size:13.5px; color:var(--ink-soft);"><b style="font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--accent);">Evaluation criteria</b><br>
+      Palette A clearly demonstrates a color/mood mismatch with written explanation · Palette B uses a named, identifiable harmony · 60-30-10 is visibly applied in the mock-up · Written reflection accurately identifies harmony, psychology, and proportion · Mock-up demonstrates color hierarchy (most important element has most dominant color)</p>
+    </div>
+
+    <footer class="credit">Mrantinkovic, Piestun, Fouda, Killings, Hajj, Parveen, Krunic, Pehcevski, Nur, Stephen, &amp; Michelle. (2020). 3G Handy Guide: Graphic Designing. 3G E-Learning LLC.</footer>
+
+    <div class="pager">
+      <a class="pagebtn prev" href="part6-systems.html"><span class="lbl">Back</span><span class="name">← Color Systems</span></a>
+      <span class="pagebtn hidden"></span>
+    </div>
+  </main>
+</div>
+
+<script src="shared.js"></script>
+<script>
+buildRail('activity');
+
+const ACTIVITIES = [
+  { tag:'Group 1', title:'Brand color analysis',
+    steps:['Identify the harmony used','Describe each color\u2019s psychology','Explain fit with the brand message','Propose an alternative palette'],
+    q:['Would you trust the brand more or less with different colors?','Does the palette fit its industry?','Does it stand out from competitors, or blend in?'] },
+  { tag:'Group 2', title:'Poster color critique',
+    steps:['Estimate the 60-30-10 split','Check color hierarchy vs visual hierarchy','Flag any psychology mismatches','Redesign with a different harmony'],
+    q:['Does the palette match the target audience?','Is there a clear focal point created by color?','Would the design still work in greyscale?'] },
+  { tag:'Group 3', title:'Accessibility audit',
+    steps:['List the site\u2019s main colors','Evaluate text-to-background contrast','Identify the harmony in use','Name one strength, one fix'],
+    q:['Can you read all the text easily?','Does the palette feel consistent across the site?','Does the accent color mark interactive elements clearly?'] },
+];
+const activityGrid = document.getElementById('activityGrid');
+ACTIVITIES.forEach(a => {
+  const card = document.createElement('div');
+  card.className = 'flip-outer activity-card';
+  card.innerHTML = `
+    <div class="flip-inner">
+      <div class="flip-front">
+        <span class="tag">${a.tag}</span>
+        <h4>${a.title}</h4>
+        <ol>${a.steps.map(s=>`<li>${s}</li>`).join('')}</ol>
+        <div class="flip-hint">Tap to flip \u2192 guide questions</div>
+      </div>
+      <div class="flip-back">
+        <span class="tag">${a.tag}</span>
+        <h4>Guide questions</h4>
+        <ul>${a.q.map(s=>`<li>${s}</li>`).join('')}</ul>
+        <div class="flip-hint">Tap to flip back</div>
+      </div>
+    </div>`;
+  card.addEventListener('click', () => card.classList.toggle('flipped'));
+  activityGrid.appendChild(card);
+});
+</script>
+</body>
+</html>

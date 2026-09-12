@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Your Colors Say — A Color Preference Test</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Space+Mono:wght@400;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F2EEF8;
+    --paper-edge:#E7E0F2;
+    --ink:#2A2640;
+    --ink-soft:#5A5470;
+    --accent:#F2A93B;
+    --accent-dark:#D98E1F;
+    --card:#FFFDF9;
+    --line:#DAD2EC;
+
+    --red:#E4483A;    --red-soft:#F7C4BD;
+    --orange:#F2892E; --orange-soft:#FBD2A3;
+    --yellow:#EFB92E; --yellow-soft:#FAE49E;
+    --green:#469B5B;  --green-soft:#BEE3C4;
+    --blue:#3568B0;   --blue-soft:#BBD1EE;
+    --purple:#7B4FA0; --purple-soft:#DAC6EC;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    min-height:100vh;
+    background:var(--paper);
+    font-family:'Nunito',sans-serif;
+    color:var(--ink);
+    position:relative;
+    overflow-x:hidden;
+    padding:24px 16px 64px;
+  }
+
+  #bgCanvas{
+    position:fixed; inset:0; width:100%; height:100%;
+    z-index:0; pointer-events:none;
+  }
+
+  .wrap{
+    position:relative;
+    z-index:1;
+    max-width:700px;
+    margin:0 auto;
+  }
+
+  header{ text-align:center; margin-bottom:28px; }
+  .eyebrow{
+    font-family:'Space Mono',monospace;
+    font-size:12px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:var(--card);
+    border:1px solid var(--line);
+    padding:6px 14px;
+    border-radius:99px;
+    margin-bottom:16px;
+  }
+  .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);display:inline-block;animation:pulse 1.6s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.5);opacity:.5;}}
+
+  h1{
+    font-family:'Permanent Marker',cursive;
+    font-weight:400;
+    font-size:clamp(32px,6vw,50px);
+    line-height:1.08;
+    margin:0 0 10px;
+    color:var(--ink);
+    transform:rotate(-1deg);
+  }
+  h1 span{color:var(--accent-dark);}
+  .sub{
+    color:var(--ink-soft);
+    font-size:15.5px;
+    max-width:460px;
+    margin:0 auto;
+    font-weight:600;
+    line-height:1.5;
+  }
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:22px;
+    padding:30px 26px 32px;
+    box-shadow:0 18px 40px -20px rgba(42,38,64,.35), 0 2px 0 var(--line);
+    position:relative;
+  }
+
+  .jar-row{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    margin-bottom:16px;
+  }
+  #mixJar{ display:block; border-radius:50%; background:#fff; border:2px solid var(--line); }
+  .jar-label{ font-family:'Space Mono',monospace; font-size:11px; color:var(--ink-soft); letter-spacing:.05em; }
+
+  .rank-count{
+    text-align:center;
+    font-family:'Space Mono',monospace;
+    font-size:12px;
+    color:var(--accent-dark);
+    font-weight:700;
+    letter-spacing:.1em;
+    margin-bottom:4px;
+  }
+  .instruction{
+    text-align:center;
+    font-weight:800;
+    font-size:clamp(18px,3.2vw,22px);
+    margin:0 0 6px;
+  }
+  .instruction-sub{
+    text-align:center;
+    color:var(--ink-soft);
+    font-size:13.5px;
+    font-weight:600;
+    margin:0 0 24px;
+  }
+
+  #swatchGrid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
+    margin-bottom:8px;
+  }
+  @media(max-width:480px){ #swatchGrid{grid-template-columns:repeat(2,1fr);} }
+
+  .swatch{
+    position:relative;
+    aspect-ratio:1/1;
+    border-radius:26px 26px 26px 6px;
+    border:none;
+    cursor:pointer;
+    transform:rotate(0deg);
+    transition:transform .2s cubic-bezier(.34,1.56,.64,1), box-shadow .2s ease, filter .2s ease;
+    box-shadow:inset 0 -8px 0 rgba(0,0,0,.14), 0 10px 18px -10px rgba(0,0,0,.4);
+  }
+  .swatch:nth-child(2n){ border-radius:26px 26px 6px 26px; }
+  .swatch:hover:not(.picked){ transform:translateY(-4px) scale(1.04) rotate(-2deg); }
+  .swatch:active:not(.picked){ transform:scale(.96); }
+  .swatch.picked{
+    cursor:default;
+    filter:grayscale(.55) brightness(1.06);
+    box-shadow:inset 0 -8px 0 rgba(0,0,0,.08);
+  }
+  .swatch .badge{
+    position:absolute;
+    top:8px; left:8px;
+    width:28px;height:28px;
+    border-radius:50%;
+    background:var(--ink);
+    color:#fff;
+    font-family:'Space Mono',monospace;
+    font-weight:700;
+    font-size:13px;
+    display:flex; align-items:center; justify-content:center;
+    opacity:0;
+    transform:scale(.4);
+    transition:all .25s cubic-bezier(.34,1.56,.64,1);
+  }
+  .swatch.picked .badge{ opacity:1; transform:scale(1); }
+
+  /* results */
+  #resultCard{ display:none; text-align:center; }
+  #revealCanvas{ display:block; margin:0 auto 6px; border-radius:16px; }
+  .result-eyebrow{
+    font-family:'Space Mono',monospace;
+    font-size:12px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+  #resultTitle{
+    font-family:'Permanent Marker',cursive;
+    font-weight:400;
+    font-size:clamp(30px,5.6vw,44px);
+    margin:2px 0 4px;
+    transform:rotate(-1deg);
+  }
+  #resultTagline{ font-size:15.5px; font-weight:700; color:var(--ink-soft); margin-bottom:16px; }
+  #resultDesc{
+    text-align:left;
+    font-size:15.5px;
+    line-height:1.65;
+    color:var(--ink);
+    max-width:520px;
+    margin:0 auto 16px;
+  }
+  #traits{ display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:22px; }
+  .trait{
+    font-family:'Space Mono',monospace;
+    font-size:12px;
+    font-weight:700;
+    padding:6px 12px;
+    border-radius:99px;
+    border:1.5px solid var(--line);
+    background:var(--paper);
+  }
+
+  .side-notes{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    text-align:left;
+    margin-bottom:22px;
+  }
+  @media(max-width:520px){ .side-notes{grid-template-columns:1fr;} }
+  .note{
+    background:var(--paper);
+    border:1.5px solid var(--line);
+    border-radius:14px;
+    padding:14px 16px;
+  }
+  .note .label{
+    font-family:'Space Mono',monospace;
+    font-size:10.5px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    display:flex;
+    align-items:center;
+    gap:6px;
+    margin-bottom:6px;
+  }
+  .note .chip{ width:12px;height:12px;border-radius:50%;display:inline-block; }
+  .note p{ margin:0; font-size:13.5px; line-height:1.5; }
+
+  .breakdown-label{
+    font-family:'Space Mono',monospace;
+    font-size:11px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin:8px 0 8px;
+    text-align:left;
+  }
+  #scoreChart{ display:block; width:100%; height:auto; margin-bottom:20px; }
+
+  button{
+    font-family:'Nunito',sans-serif;
+    font-weight:800;
+    font-size:15px;
+    border:none;
+    border-radius:99px;
+    padding:13px 26px;
+    cursor:pointer;
+    background:var(--ink);
+    color:var(--paper);
+    transition:transform .15s ease;
+  }
+  button:hover{ transform:translateY(-2px); }
+  button:active{ transform:translateY(0); }
+
+  footer{
+    text-align:center;
+    margin-top:26px;
+    font-size:12.5px;
+    color:var(--ink-soft);
+    font-family:'Space Mono',monospace;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:.001s !important; transition-duration:.001s !important; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="bgCanvas"></canvas>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow"><span class="dot"></span> A COLOR-ONLY PREFERENCE TEST</div>
+    <h1>What Your <span>Colors</span> Say</h1>
+    <p class="sub">No questions, no words — just tap the six colors below in the order they pull you in. Most drawn to first, least drawn to last.</p>
+  </header>
+
+  <div class="card" id="rankCard">
+    <div class="jar-row">
+      <canvas id="mixJar" width="46" height="46"></canvas>
+      <span class="jar-label">your blend so far</span>
+    </div>
+    <div class="rank-count" id="rankCount">0 OF 6 RANKED</div>
+    <p class="instruction">Tap in the order they pull you in</p>
+    <p class="instruction-sub">1st tap = most drawn to · 6th tap = least drawn to</p>
+    <div id="swatchGrid"></div>
+  </div>
+
+  <div class="card" id="resultCard">
+    <canvas id="revealCanvas" width="560" height="230"></canvas>
+    <div class="result-eyebrow">YOUR RESULT</div>
+    <h2 id="resultTitle"></h2>
+    <p id="resultTagline"></p>
+    <p id="resultDesc"></p>
+    <div id="traits"></div>
+
+    <div class="side-notes">
+      <div class="note" id="secondNote">
+        <div class="label"><span class="chip" id="secondChip"></span>RUNNER-UP</div>
+        <p id="secondText"></p>
+      </div>
+      <div class="note" id="lastNote">
+        <div class="label"><span class="chip" id="lastChip"></span>LEAST DRAWN TO</div>
+        <p id="lastText"></p>
+      </div>
+    </div>
+
+    <div class="breakdown-label">Your full ranking</div>
+    <canvas id="scoreChart" width="560" height="190"></canvas>
+    <button id="retakeBtn">Rank again</button>
+  </div>
+
+  <footer>Inspired by color-preference psychology (Lüscher-style ranking) — a fun self-reflection prompt, not a clinical assessment.</footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const COLORS = {
+    red:    { hex:'#E4483A', soft:'#F7C4BD', name:'The Igniter',
+      tagline:'Bold. Fast. First off the line.',
+      desc:"Red-first people run on momentum. You'd rather try something imperfectly today than plan it perfectly for next week. In class or on a team, you're the one who says \u201clet's just start\u201d — which is exactly the push a stalled group usually needs. The growth edge: not every situation needs your top speed, and slowing down for input from quieter teammates usually makes the final result stronger.",
+      traits:['Competitive','Decisive','Fearless starter','Impatient with delay'],
+      avoided:"Right now, high-pressure competition or head-on conflict feels like something to avoid rather than chase." },
+    orange: { hex:'#F2892E', soft:'#FBD2A3', name:'The Spark',
+      tagline:'Loud laugh, louder ideas.',
+      desc:"Orange-first people make rooms warmer just by walking in. You collect people the way others collect playlists, and you're usually the reason a dull group project turns into something people actually enjoy showing up for. The growth edge: your energy is contagious, but it can also outrun your follow-through — pairing your spark with someone who tracks the details keeps momentum from fizzling.",
+      traits:['Sociable','Spontaneous','Magnetic energy','Idea-first'],
+      avoided:"Big social spotlight or fully spontaneous plans feel like a lot right now — you're leaning toward quieter, smaller settings." },
+    yellow: { hex:'#EFB92E', soft:'#FAE49E', name:'The Sunbeam',
+      tagline:'Curious about literally everything.',
+      desc:"Yellow-first people treat every subject like it might turn out to be their new favorite thing. You ask the questions other people are quietly thinking, and your optimism tends to be what keeps a group from spiraling before a deadline. The growth edge: your attention loves novelty, so finishing the tenth idea can matter more than starting the eleventh.",
+      traits:['Optimistic','Playful','Idea machine','Easily distracted'],
+      avoided:"Nonstop novelty and no-plan chaos isn't appealing right now — you're craving fewer scattered ideas and more depth on one thing." },
+    green:  { hex:'#469B5B', soft:'#BEE3C4', name:'The Anchor',
+      tagline:'The one who keeps the group steady.',
+      desc:"Green-first people are the quiet infrastructure of every friend group and every classroom — the person others check in with, and the one who notices when someone's gone unusually quiet. You value harmony over winning an argument, which makes you an excellent mediator. The growth edge: keeping the peace shouldn't mean disappearing your own opinion — your steady take is worth voicing, not just holding.",
+      traits:['Dependable','Caring','Peacemaker','Conflict-avoidant'],
+      avoided:"Blending in and quietly keeping the peace isn't where your energy wants to go right now — you're ready to be a little louder." },
+    blue:   { hex:'#3568B0', soft:'#BBD1EE', name:'The Cartographer',
+      tagline:'Maps things out before moving.',
+      desc:"Blue-first people think in structure — outlines, checklists, plans B and C. You're the reason group projects have an actual document instead of a group chat full of good intentions, and people trust your calm read of a stressful situation. The growth edge: not every moment needs a plan first; some of the best ideas only show up once you've let yourself act without one.",
+      traits:['Logical','Calm under pressure','Trustworthy','Slow to improvise'],
+      avoided:"Rigid structure and over-planning feel restrictive right now — you're craving more room to improvise." },
+    purple: { hex:'#7B4FA0', soft:'#DAC6EC', name:'The Dreamweaver',
+      tagline:'Half here, half in an imagined world.',
+      desc:"Purple-first people notice the version of things that doesn't exist yet — the story angle nobody pitched, the design choice nobody expected. You bring originality to assignments that would otherwise be forgettable, and your inner world is genuinely rich. The growth edge: not every idea needs to be fully-formed before you share it — saying the half-baked version out loud is often exactly what a group needs to build on.",
+      traits:['Imaginative','Intuitive','Original','Prone to overthinking'],
+      avoided:"Abstract or dreamy thinking feels like a detour right now — you're craving something practical and concrete instead." },
+  };
+  const ORDER = ['red','orange','yellow','green','blue','purple'];
+
+  const rankCard = document.getElementById('rankCard');
+  const resultCard = document.getElementById('resultCard');
+  const swatchGrid = document.getElementById('swatchGrid');
+  const rankCountEl = document.getElementById('rankCount');
+
+  let rankOrder = [];      // color keys in click order
+  const scores = {};       // weight per color, 6=most drawn to ... 1=least
+
+  function buildSwatches(){
+    swatchGrid.innerHTML = '';
+    rankOrder = [];
+    ORDER.forEach(k=> scores[k]=0);
+    ORDER.forEach(k=>{
+      const btn = document.createElement('button');
+      btn.className = 'swatch';
+      btn.style.background = COLORS[k].hex;
+      btn.dataset.color = k;
+      btn.innerHTML = `<span class="badge"></span>`;
+      btn.addEventListener('click', ()=> pick(k, btn));
+      swatchGrid.appendChild(btn);
+    });
+    rankCountEl.textContent = '0 OF 6 RANKED';
+    drawJar();
+  }
+
+  function pick(colorKey, btnEl){
+    if(btnEl.classList.contains('picked')) return;
+    rankOrder.push(colorKey);
+    btnEl.classList.add('picked');
+    btnEl.querySelector('.badge').textContent = rankOrder.length;
+    scores[colorKey] = 7 - rankOrder.length; // 6..1
+    rankCountEl.textContent = `${rankOrder.length} OF 6 RANKED`;
+    burstAtJar(colorKey);
+    if(rankOrder.length === 6){
+      setTimeout(showResult, 500);
+    }
+  }
+
+  // ---------- mix jar ----------
+  const jar = document.getElementById('mixJar');
+  const jctx = jar.getContext('2d');
+  function hexToRgb(hex){ const n=parseInt(hex.slice(1),16); return [(n>>16)&255,(n>>8)&255,n&255]; }
+  function mixedColor(){
+    let r=0,g=0,b=0,total=0;
+    ORDER.forEach(k=>{
+      if(scores[k]>0){
+        const [rr,gg,bb]=hexToRgb(COLORS[k].hex);
+        r+=rr*scores[k]; g+=gg*scores[k]; b+=bb*scores[k]; total+=scores[k];
+      }
+    });
+    if(total===0) return [230,225,240];
+    return [r/total,g/total,b/total];
+  }
+  function drawJar(){
+    const w=jar.width,h=jar.height;
+    jctx.clearRect(0,0,w,h);
+    const [r,g,b]=mixedColor();
+    const grad=jctx.createRadialGradient(w*0.35,h*0.32,2,w/2,h/2,w/2);
+    grad.addColorStop(0, `rgba(${Math.min(255,r+40)},${Math.min(255,g+40)},${Math.min(255,b+40)},1)`);
+    grad.addColorStop(1, `rgb(${r|0},${g|0},${b|0})`);
+    jctx.beginPath(); jctx.arc(w/2,h/2,w/2-2,0,Math.PI*2); jctx.fillStyle=grad; jctx.fill();
+  }
+  let jarParticles=[];
+  function burstAtJar(colorKey){
+    if(reduceMotion){ drawJar(); return; }
+    const hex=COLORS[colorKey].hex;
+    for(let i=0;i<10;i++){
+      jarParticles.push({x:jar.width/2,y:jar.height/2,vx:(Math.random()-0.5)*3,vy:(Math.random()-0.5)*3,life:1,color:hex,r:1.5+Math.random()*1.5});
+    }
+  }
+  function animateJar(){
+    drawJar();
+    jarParticles.forEach(p=>{
+      p.x+=p.vx; p.y+=p.vy; p.life-=0.045;
+      if(p.life>0){
+        jctx.globalAlpha=Math.max(p.life,0);
+        jctx.beginPath(); jctx.arc(p.x,p.y,p.r,0,Math.PI*2); jctx.fillStyle=p.color; jctx.fill();
+        jctx.globalAlpha=1;
+      }
+    });
+    jarParticles = jarParticles.filter(p=>p.life>0);
+    requestAnimationFrame(animateJar);
+  }
+  requestAnimationFrame(animateJar);
+
+  // ---------- ambient background ----------
+  const bg = document.getElementById('bgCanvas');
+  const bctx = bg.getContext('2d');
+  let W,H;
+  function resizeBg(){ W=bg.width=window.innerWidth; H=bg.height=window.innerHeight; }
+  resizeBg();
+  window.addEventListener('resize', resizeBg);
+  const blobs = ORDER.map(k=>({ a: Math.PI*2*Math.random(), r:90+Math.random()*90, color:COLORS[k].hex, speed:0.0015+Math.random()*0.0015 }));
+  function animateBg(){
+    bctx.clearRect(0,0,W,H);
+    blobs.forEach(b=>{
+      b.a += b.speed;
+      const cx = W*(0.2+0.6*((Math.sin(b.a*0.7)+1)/2));
+      const cy = H*(0.15+0.7*((Math.cos(b.a*0.9)+1)/2));
+      const grad = bctx.createRadialGradient(cx,cy,0,cx,cy,b.r);
+      grad.addColorStop(0, b.color+'33');
+      grad.addColorStop(1, b.color+'00');
+      bctx.beginPath(); bctx.arc(cx,cy,b.r,0,Math.PI*2); bctx.fillStyle=grad; bctx.fill();
+    });
+    if(!reduceMotion) requestAnimationFrame(animateBg);
+  }
+  animateBg();
+
+  // ---------- results ----------
+  function showResult(){
+    rankCard.style.display='none';
+    resultCard.style.display='block';
+
+    const winner = rankOrder[0];
+    const second = rankOrder[1];
+    const last = rankOrder[5];
+    const data = COLORS[winner];
+
+    document.getElementById('resultTitle').textContent = data.name;
+    document.getElementById('resultTitle').style.color = data.hex;
+    document.getElementById('resultTagline').textContent = data.tagline;
+    document.getElementById('resultDesc').textContent = data.desc;
+
+    const traitsEl = document.getElementById('traits');
+    traitsEl.innerHTML='';
+    data.traits.forEach(t=>{
+      const s=document.createElement('span');
+      s.className='trait'; s.textContent=t;
+      s.style.borderColor=data.hex; s.style.color=data.hex;
+      traitsEl.appendChild(s);
+    });
+
+    document.getElementById('secondChip').style.background = COLORS[second].hex;
+    document.getElementById('secondText').textContent = `A touch of ${COLORS[second].name} in you too — ${COLORS[second].tagline.toLowerCase()}`;
+
+    document.getElementById('lastChip').style.background = COLORS[last].hex;
+    document.getElementById('lastText').textContent = COLORS[last].avoided;
+
+    drawReveal(winner);
+    drawScoreChart();
+  }
+
+  function drawReveal(winner){
+    const cv = document.getElementById('revealCanvas');
+    const ctx = cv.getContext('2d');
+    const w=cv.width,h=cv.height;
+    const hex = COLORS[winner].hex;
+    const soft = COLORS[winner].soft;
+
+    let particles=[];
+    for(let i=0;i<16;i++){
+      const cx = w/2 + (Math.random()-0.5)*w*0.5;
+      const cy = h/2 + (Math.random()-0.5)*h*0.4;
+      particles.push({
+        x:cx,y:cy,r:0,
+        target: 20+Math.random()*46,
+        color: Math.random() < 0.55 ? hex : COLORS[ORDER[Math.floor(Math.random()*6)]].hex,
+        speed: 2+Math.random()*2
+      });
+    }
+    let frame=0;
+    const maxFrame = reduceMotion ? 1 : 42;
+    let t=0;
+
+    function paint(pulseVal){
+      ctx.clearRect(0,0,w,h);
+      ctx.fillStyle = soft; ctx.globalAlpha=0.35; ctx.fillRect(0,0,w,h); ctx.globalAlpha=1;
+      particles.forEach(p=>{
+        ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        ctx.fillStyle=p.color; ctx.globalAlpha=0.85; ctx.fill(); ctx.globalAlpha=1;
+      });
+      ctx.beginPath(); ctx.arc(w/2,h/2,46+pulseVal,0,Math.PI*2);
+      const grad = ctx.createRadialGradient(w/2-14,h/2-14,4,w/2,h/2,54);
+      grad.addColorStop(0,'#ffffff'); grad.addColorStop(0.25,hex); grad.addColorStop(1,hex);
+      ctx.fillStyle=grad; ctx.fill();
+      ctx.font = "700 13px 'Space Mono', monospace";
+      ctx.fillStyle='#ffffff'; ctx.textAlign='center';
+      ctx.fillText(COLORS[winner].name.toUpperCase(), w/2, h/2+5);
+    }
+
+    function grow(){
+      frame++;
+      particles.forEach(p=>{ if(p.r<p.target) p.r+=p.speed; });
+      paint(reduceMotion?0:Math.sin(frame*0.12)*3);
+      if(frame<maxFrame) requestAnimationFrame(grow);
+      else if(!reduceMotion) requestAnimationFrame(idle);
+    }
+    function idle(){ t+=0.02; paint(Math.sin(t*3)*3); requestAnimationFrame(idle); }
+    requestAnimationFrame(grow);
+  }
+
+  function drawScoreChart(){
+    const cv = document.getElementById('scoreChart');
+    const ctx = cv.getContext('2d');
+    const w=cv.width,h=cv.height;
+    const ranked = [...rankOrder]; // rank 1..6
+    const rowH = h/ranked.length;
+    let frame=0;
+    const maxFrame = reduceMotion ? 1 : 30;
+
+    function tick(){
+      frame++;
+      ctx.clearRect(0,0,w,h);
+      const p = reduceMotion ? 1 : Math.min(frame/maxFrame,1);
+      ranked.forEach((k,i)=>{
+        const y = i*rowH + rowH*0.22;
+        const barH = rowH*0.56;
+        const weight = 6-i; // 6..1
+        const fullW = (w-150) * (weight/6);
+        const barW = fullW * p;
+
+        ctx.font = "700 12px 'Space Mono', monospace";
+        ctx.fillStyle = '#5A5470'; ctx.textAlign='left';
+        ctx.fillText(`#${i+1}`, 0, y+barH*0.75);
+
+        ctx.font = "700 13px 'Nunito', sans-serif";
+        ctx.fillStyle = '#2A2640';
+        ctx.fillText(COLORS[k].name.replace('The ',''), 26, y+barH*0.75);
+
+        ctx.fillStyle = COLORS[k].soft;
+        roundRect(ctx,150,y,w-150,barH,8); ctx.fill();
+        ctx.fillStyle = COLORS[k].hex;
+        roundRect(ctx,150,y,Math.max(barW,2),barH,8); ctx.fill();
+      });
+      if(frame<maxFrame) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+  function roundRect(ctx,x,y,w,h,r){
+    ctx.beginPath();
+    ctx.moveTo(x+r,y);
+    ctx.arcTo(x+w,y,x+w,y+h,r);
+    ctx.arcTo(x+w,y+h,x,y+h,r);
+    ctx.arcTo(x,y+h,x,y,r);
+    ctx.arcTo(x,y,x+w,y,r);
+    ctx.closePath();
+  }
+
+  document.getElementById('retakeBtn').addEventListener('click', ()=>{
+    resultCard.style.display='none';
+    rankCard.style.display='block';
+    buildSwatches();
+  });
+
+  buildSwatches();
+})();
+</script>
+</body>
+</html>
