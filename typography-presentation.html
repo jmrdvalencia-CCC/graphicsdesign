@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Typography Mastery — Font Pairing & Layouts</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&family=Bebas+Neue&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --ink:#0d0d0d;--paper:#faf8f4;--cream:#f0ebe0;
+  --gold:#c9a84c;--gold2:#e8c96a;
+  --rose:#e05c6f;--teal:#2ec4b6;--violet:#7c5cbf;--blue:#3a86ff;
+  --muted:#6b6560;--border:#d4cfc5;
+  --panel:#1a1714;--panel2:#252118;
+  --mono:'Space Mono',monospace;
+  --serif:'Playfair Display',serif;
+  --sans:'Inter',sans-serif;
+}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--ink);font-family:var(--sans)}
+#deck{width:100vw;height:100vh;position:relative;overflow:hidden}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:64px 48px 80px;opacity:0;pointer-events:none;transition:opacity .4s ease,transform .4s ease;transform:translateX(60px);overflow:hidden}
+.slide.active{opacity:1;pointer-events:all;transform:translateX(0)}
+.slide.exit{opacity:0;transform:translateX(-60px)}
+
+/* backgrounds */
+.bg-ink{background:var(--ink)}
+.bg-paper{background:var(--paper)}
+.bg-cream{background:var(--cream)}
+.bg-dark{background:#111009}
+.bg-gold{background:linear-gradient(135deg,#1a1408,#2a1f08,#1a1408)}
+.bg-rose{background:linear-gradient(135deg,#1a0810,#2a0d18,#1a0810)}
+.bg-teal{background:linear-gradient(135deg,#081a18,#0d2a26,#081a18)}
+.bg-violet{background:linear-gradient(135deg,#100a1a,#1a1028,#100a1a)}
+.bg-blue{background:linear-gradient(135deg,#080f1a,#0d1828,#080f1a)}
+.bg-split{background:linear-gradient(135deg,#0d0d0d 50%,#1a1714 50%)}
+
+/* noise texture overlay */
+.slide::before{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.5}
+.slide>*{position:relative;z-index:1}
+
+/* chrome */
+#pbar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--rose),var(--teal));transition:width .4s;z-index:200;border-radius:0 2px 2px 0}
+#ctr{position:fixed;top:14px;right:18px;font-family:var(--mono);font-size:.65rem;color:rgba(255,255,255,.35);z-index:200;letter-spacing:.1em}
+#dots{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:200}
+.dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.2);cursor:pointer;border:none;transition:all .3s}
+.dot.active{background:var(--gold);width:18px;border-radius:3px}
+.nbtn{position:fixed;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.06);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.6);width:40px;height:40px;border-radius:50%;font-size:1rem;cursor:pointer;z-index:200;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.nbtn:hover{background:rgba(255,255,255,.14);color:#fff}
+#bp{left:12px}#bn{right:12px}
+
+/* typography */
+.eyebrow{font-family:var(--mono);font-size:.6rem;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;display:flex;align-items:center;gap:10px}
+.eyebrow .ln{flex:0 0 24px;height:1px;background:var(--gold);opacity:.5}
+.ttl{font-family:var(--serif);font-size:clamp(2rem,5vw,4rem);font-weight:900;line-height:1.05;color:#fff;margin-bottom:12px}
+.ttl .acc{color:var(--gold)}
+.ttl.dark{color:var(--ink)}
+.ttl.dark .acc{color:var(--rose)}
+.sub{font-size:clamp(.85rem,1.6vw,1.05rem);color:rgba(255,255,255,.65);line-height:1.7;max-width:680px}
+.sub.dark{color:var(--muted)}
+.sub strong,.sub b{color:var(--gold)}
+.sub.dark strong,.sub.dark b{color:var(--rose)}
+.label{font-family:var(--mono);font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.label.rose{color:var(--rose)}
+.label.teal{color:var(--teal)}
+.label.violet{color:var(--violet)}
+
+/* cards */
+.cards{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;width:100%;max-width:1000px;margin-top:10px}
+.card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:16px 18px;flex:1;min-width:170px;max-width:240px;transition:transform .2s,border-color .2s}
+.card:hover{transform:translateY(-4px);border-color:var(--gold)}
+.card.dark{background:rgba(0,0,0,.06);border-color:var(--border)}
+.card.dark:hover{border-color:var(--rose)}
+.ci{font-size:1.6rem;margin-bottom:6px}
+.ct{font-size:.82rem;font-weight:700;color:#fff;margin-bottom:4px}
+.ct.dark{color:var(--ink)}
+.cb{font-size:.72rem;color:rgba(255,255,255,.6);line-height:1.5}
+.cb.dark{color:var(--muted)}
+
+/* tables */
+.tbl{width:100%;max-width:900px;border-collapse:collapse;font-size:.72rem}
+.tbl th{background:rgba(201,168,76,.12);color:var(--gold);font-weight:700;padding:9px 12px;text-align:left;border-bottom:1px solid rgba(201,168,76,.25);font-family:var(--mono);letter-spacing:.06em;font-size:.62rem;text-transform:uppercase}
+.tbl td{padding:8px 12px;color:rgba(255,255,255,.8);border-bottom:1px solid rgba(255,255,255,.06)}
+.tbl tr:hover td{background:rgba(255,255,255,.04)}
+.tbl.dark th{background:rgba(0,0,0,.06);color:var(--rose);border-bottom-color:rgba(224,92,111,.2)}
+.tbl.dark td{color:var(--ink);border-bottom-color:var(--border)}
+.tbl.dark tr:hover td{background:rgba(0,0,0,.04)}
+
+/* pills */
+.pills{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:12px}
+.pill{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.8);font-size:.72rem;font-weight:600;padding:6px 14px;border-radius:20px;font-family:var(--mono);letter-spacing:.05em}
+.pill.gold{background:rgba(201,168,76,.15);border-color:rgba(201,168,76,.4);color:var(--gold2)}
+.pill.rose{background:rgba(224,92,111,.15);border-color:rgba(224,92,111,.4);color:#f08090}
+.pill.teal{background:rgba(46,196,182,.15);border-color:rgba(46,196,182,.4);color:#5de0d8}
+.pill.violet{background:rgba(124,92,191,.15);border-color:rgba(124,92,191,.4);color:#a88de0}
+
+/* type demo boxes */
+.type-demo{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:20px 24px;text-align:left}
+.type-demo.paper{background:var(--paper);border-color:var(--border)}
+
+/* interactive tabs */
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.tab{font-family:var(--mono);font-size:.68rem;padding:7px 14px;border-radius:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.55);cursor:pointer;transition:all .2s;letter-spacing:.06em}
+.tab:hover{color:#fff;border-color:rgba(255,255,255,.25)}
+.tab.active{background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:700}
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* flip cards */
+.flip-row{display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
+.fc{width:clamp(180px,22vw,260px);height:160px;perspective:900px;cursor:pointer}
+.fc-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}
+.fc.flipped .fc-inner{transform:rotateY(180deg)}
+.fc-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:12px;padding:14px;display:flex;flex-direction:column;justify-content:center;gap:6px}
+.fc-front{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)}
+.fc-back{background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.35);transform:rotateY(180deg)}
+.fc-face .fk{font-family:var(--mono);font-size:.6rem;color:var(--gold);letter-spacing:.1em;text-transform:uppercase}
+.fc-face .ft{font-size:.82rem;color:#fff;line-height:1.4}
+.fc-face .fh{font-size:.62rem;color:rgba(255,255,255,.35)}
+
+/* pair preview */
+.pair-preview{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:24px 28px;max-width:560px;width:100%}
+.pair-preview.paper{background:var(--paper);border-color:var(--border)}
+
+/* stat boxes */
+.stats{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:12px}
+.sbox{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:18px 22px;min-width:130px;text-align:center}
+.snum{font-family:var(--serif);font-size:2.4rem;font-weight:900;color:var(--gold);line-height:1}
+.slbl{font-size:.65rem;color:rgba(255,255,255,.5);margin-top:4px;font-family:var(--mono);letter-spacing:.08em;text-transform:uppercase}
+
+/* ladder */
+.ladder{display:flex;flex-direction:column;gap:8px;width:100%;max-width:620px}
+.rung{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.05);border-radius:10px;padding:10px 16px;border-left:3px solid var(--gold)}
+.rung.rose{border-left-color:var(--rose)}
+.rung.teal{border-left-color:var(--teal)}
+.rung.violet{border-left-color:var(--violet)}
+.rn{font-family:var(--mono);font-size:1.1rem;font-weight:700;color:var(--gold);min-width:28px}
+.rn.rose{color:var(--rose)}
+.rn.teal{color:var(--teal)}
+.rt{text-align:left}
+.rtitle{font-size:.85rem;font-weight:700;color:#fff}
+.rdesc{font-size:.68rem;color:rgba(255,255,255,.55)}
+
+/* alignment demo */
+.align-box{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:18px 22px;min-height:120px;font-size:.82rem;color:rgba(255,255,255,.75);line-height:1.7;max-width:480px;width:100%}
+
+/* spacing slider */
+.slider-wrap{width:100%;max-width:500px}
+input[type=range]{-webkit-appearance:none;width:100%;height:4px;border-radius:2px;background:rgba(255,255,255,.15);outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--gold);cursor:pointer;border:2px solid var(--ink)}
+.slider-label{font-family:var(--mono);font-size:.65rem;color:var(--gold);letter-spacing:.1em;margin-top:6px;text-align:center}
+
+/* grid visual */
+.grid-vis{display:grid;gap:4px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:12px;max-width:480px;width:100%}
+.gcol{background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.2);border-radius:4px;height:80px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.58rem;color:rgba(201,168,76,.6);letter-spacing:.08em}
+
+/* hierarchy demo */
+.hier-demo{background:var(--paper);border-radius:14px;padding:22px 26px;max-width:480px;width:100%;text-align:left}
+
+/* activity cards */
+.act-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:16px 18px;flex:1;min-width:200px;max-width:280px}
+.act-num{font-family:var(--serif);font-size:2rem;font-weight:900;color:var(--gold);line-height:1;margin-bottom:6px}
+.act-title{font-size:.88rem;font-weight:700;color:#fff;margin-bottom:6px}
+.act-body{font-size:.7rem;color:rgba(255,255,255,.55);line-height:1.5}
+
+/* rubric */
+.rubric{width:100%;max-width:700px;border-collapse:collapse;font-size:.72rem}
+.rubric th{background:rgba(201,168,76,.15);color:var(--gold);font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:8px 12px;text-align:left;border-bottom:1px solid rgba(201,168,76,.3)}
+.rubric td{padding:7px 12px;color:rgba(255,255,255,.8);border-bottom:1px solid rgba(255,255,255,.06)}
+.rubric .pts{color:var(--gold);font-weight:700;font-family:var(--mono);text-align:right}
+.rubric .total td{color:var(--gold);font-weight:700;border-top:1px solid rgba(201,168,76,.4)}
+
+/* entrance animations */
+.slide.active .eyebrow{animation:su .5s .05s both}
+.slide.active .ttl{animation:su .5s .15s both}
+.slide.active .sub{animation:su .5s .25s both}
+.slide.active .cards .card:nth-child(1){animation:su .4s .15s both}
+.slide.active .cards .card:nth-child(2){animation:su .4s .25s both}
+.slide.active .cards .card:nth-child(3){animation:su .4s .35s both}
+.slide.active .cards .card:nth-child(4){animation:su .4s .45s both}
+.slide.active .cards .card:nth-child(5){animation:su .4s .5s both}
+.slide.active .rung:nth-child(1){animation:su .4s .15s both}
+.slide.active .rung:nth-child(2){animation:su .4s .25s both}
+.slide.active .rung:nth-child(3){animation:su .4s .35s both}
+.slide.active .rung:nth-child(4){animation:su .4s .45s both}
+.slide.active .rung:nth-child(5){animation:su .4s .5s both}
+.slide.active .sbox:nth-child(1){animation:bi .5s .15s both}
+.slide.active .sbox:nth-child(2){animation:bi .5s .28s both}
+.slide.active .sbox:nth-child(3){animation:bi .5s .41s both}
+.slide.active .tbl{animation:su .5s .2s both}
+.slide.active .rubric{animation:su .5s .2s both}
+@keyframes su{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes bi{0%{opacity:0;transform:scale(.6)}70%{transform:scale(1.06)}100%{opacity:1;transform:scale(1)}}
+
+/* share btn */
+#sbtn{position:fixed;bottom:50px;right:12px;background:var(--rose);color:#fff;border:none;border-radius:50px;padding:8px 14px;font-size:.68rem;font-weight:700;cursor:pointer;z-index:200;display:flex;align-items:center;gap:5px;box-shadow:0 4px 16px rgba(224,92,111,.4);transition:transform .2s;font-family:var(--mono);letter-spacing:.06em}
+#sbtn:hover{transform:scale(1.05)}
+#toast{position:fixed;bottom:100px;right:12px;background:var(--panel);color:#fff;padding:8px 14px;border-radius:8px;font-size:.68rem;font-weight:600;z-index:300;opacity:0;transition:opacity .3s;pointer-events:none;border:1px solid rgba(255,255,255,.1);font-family:var(--mono)}
+#toast.show{opacity:1}
+
+@media(max-width:600px){
+  .slide{padding:48px 18px 72px}
+  .ttl{font-size:1.8rem}
+  .cards{gap:8px}
+  .card{min-width:140px;padding:12px}
+  .tbl{font-size:.62rem}
+  .tbl th,.tbl td{padding:6px 8px}
+}
+</style>
+</head>
+<body>
+<div id="deck">
+<div id="pbar"></div>
+<div id="ctr">1 / 30</div>
+
+<!-- S1 TITLE -->
+<section class="slide bg-ink active" id="s1">
+<div class="eyebrow"><span class="ln"></span>Graphics Design &bull; 26&ndash;27 1st Sem<span class="ln"></span></div>
+<div style="text-align:center">
+  <div style="font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:.3em;color:rgba(201,168,76,.5);margin-bottom:18px;text-transform:uppercase">Module 05</div>
+  <div style="font-family:'Playfair Display',serif;font-size:clamp(3rem,8vw,6.5rem);font-weight:900;line-height:.95;color:#fff;margin-bottom:6px">Typography</div>
+  <div style="font-family:'Playfair Display',serif;font-size:clamp(3rem,8vw,6.5rem);font-weight:900;line-height:.95;color:var(--gold);font-style:italic;margin-bottom:24px">Mastery</div>
+  <div style="font-family:'Inter',sans-serif;font-size:clamp(.8rem,1.5vw,.95rem);color:rgba(255,255,255,.45);letter-spacing:.12em;text-transform:uppercase;margin-bottom:28px">Font Pairing &nbsp;&bull;&nbsp; Typography Layouts</div>
+  <div class="pills" style="justify-content:center">
+    <span class="pill gold">&#128292; Classifications</span>
+    <span class="pill rose">&#127912; Font Pairing</span>
+    <span class="pill teal">&#128203; Layouts</span>
+    <span class="pill violet">&#9998; Spacing</span>
+  </div>
+  <div style="margin-top:22px;font-family:'Space Mono',monospace;font-size:.6rem;color:rgba(255,255,255,.2);letter-spacing:.1em">Mrantinkovic et al. (2020) &mdash; 3G Handy Guide: Graphic Designing</div>
+</div>
+</section>
+
+<!-- S2 OBJECTIVES -->
+<section class="slide bg-dark" id="s2">
+<div class="eyebrow"><span class="ln"></span>Learning Objectives</div>
+<div class="ttl">What You Will <span class="acc">Learn</span></div>
+<div class="ladder" style="max-width:700px">
+  <div class="rung"><div class="rn">01</div><div class="rt"><div class="rtitle">Define Typography</div><div class="rdesc">Explain its role as a design element beyond mere text</div></div></div>
+  <div class="rung rose"><div class="rn rose">02</div><div class="rt"><div class="rtitle">Classify Typefaces</div><div class="rdesc">Identify the 5 classifications and their appropriate use cases</div></div></div>
+  <div class="rung teal"><div class="rn teal">03</div><div class="rt"><div class="rtitle">Apply Font Pairing</div><div class="rdesc">Create harmonious, functional typographic combinations</div></div></div>
+  <div class="rung violet"><div class="rn violet">04</div><div class="rt"><div class="rtitle">Construct Layouts</div><div class="rdesc">Use hierarchy, alignment, spacing, and grid principles</div></div></div>
+  <div class="rung"><div class="rn">05</div><div class="rt"><div class="rtitle">Critique Designs</div><div class="rdesc">Propose improvements using module vocabulary</div></div></div>
+</div>
+</section>
+
+<!-- S3 WHAT IS TYPOGRAPHY -->
+<section class="slide bg-gold" id="s3">
+<div class="eyebrow"><span class="ln"></span>Part 1 &bull; 25 Minutes</div>
+<div class="ttl">What is <span class="acc">Typography?</span></div>
+<div class="sub" style="margin-bottom:18px">The art and technique of arranging type to make written language <b>legible, readable, and visually appealing</b>. It communicates not just <em>what</em> is said, but <em>how</em> it feels.</div>
+<div class="cards">
+  <div class="card"><div class="ci">&#128483;</div><div class="ct">Communication</div><div class="cb">Delivers the written message clearly and efficiently — a headline readable at a glance</div></div>
+  <div class="card"><div class="ci">&#127917;</div><div class="ct">Expression</div><div class="cb">Conveys tone, personality, and emotion through letterform — before a word is read</div></div>
+  <div class="card"><div class="ci">&#127959;</div><div class="ct">Structure</div><div class="cb">Organizes information into a visual hierarchy — headline, deck, byline, body</div></div>
+</div>
+<div style="margin-top:18px;background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.3);border-radius:12px;padding:14px 18px;max-width:680px;font-size:.8rem;color:rgba(255,255,255,.7);line-height:1.6">
+  &#128161; <strong style="color:var(--gold2)">Key Concept:</strong> Typography is never neutral. Every typeface choice sends a message before a single word is read.
+</div>
+</section>
+
+<!-- S4 TYPEFACE VS FONT -->
+<section class="slide bg-paper" id="s4">
+<div class="eyebrow" style="color:var(--rose)"><span class="ln" style="background:var(--rose)"></span>Terminology</div>
+<div class="ttl dark">Typeface vs Font vs <span class="acc">Typography</span></div>
+<div class="sub dark" style="margin-bottom:18px">Three terms constantly confused — understanding the distinction is essential for professional communication.</div>
+<table class="tbl dark" style="max-width:780px">
+  <tr><th>Term</th><th>Definition</th><th>Example</th></tr>
+  <tr><td><strong>Typeface</strong></td><td>The overall design of a set of letterforms — the family</td><td style="font-family:'Playfair Display',serif;color:#c9a84c"><em>Playfair Display</em></td></tr>
+  <tr><td><strong>Font</strong></td><td>A specific instance at a particular weight and style</td><td style="font-family:'Playfair Display',serif;font-weight:700;color:#e05c6f"><em>Playfair Display Bold Italic</em></td></tr>
+  <tr><td><strong>Typography</strong></td><td>The practice of arranging type in a design — the craft</td><td style="color:var(--muted)">Choosing, sizing, spacing, placing type</td></tr>
+</table>
+<div style="margin-top:18px;background:rgba(224,92,111,.08);border-left:3px solid var(--rose);border-radius:0 10px 10px 0;padding:12px 16px;max-width:680px;font-size:.82rem;color:var(--muted);line-height:1.6">
+  &#128172; <strong style="color:var(--rose)">Analogy:</strong> A typeface is like a song. A font is like a specific recording (acoustic, live, remix). Typography is the act of curating a playlist.
+</div>
+</section>
+
+<!-- S5 CLASSIFICATIONS INTRO -->
+<section class="slide bg-dark" id="s5">
+<div class="eyebrow"><span class="ln"></span>Part 1.3 &bull; The Five Classifications</div>
+<div class="ttl" style="text-align:center">Every Typeface Belongs to a <span class="acc">Family</span></div>
+<div class="cards" style="max-width:1000px">
+  <div class="card" style="text-align:center;border-color:rgba(201,168,76,.3)">
+    <div style="font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:900;color:var(--gold);margin-bottom:6px">Serif</div>
+    <div class="cb">Traditional &bull; Authoritative</div>
+  </div>
+  <div class="card" style="text-align:center;border-color:rgba(46,196,182,.3)">
+    <div style="font-family:'Inter',sans-serif;font-size:2.4rem;font-weight:800;color:var(--teal);margin-bottom:6px">Sans</div>
+    <div class="cb">Modern &bull; Clean</div>
+  </div>
+  <div class="card" style="text-align:center;border-color:rgba(224,92,111,.3)">
+    <div style="font-family:'Lora',serif;font-size:2.4rem;font-style:italic;color:var(--rose);margin-bottom:6px">Script</div>
+    <div class="cb">Elegant &bull; Personal</div>
+  </div>
+  <div class="card" style="text-align:center;border-color:rgba(124,92,191,.3)">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:2.4rem;color:var(--violet);margin-bottom:6px">Display</div>
+    <div class="cb">Bold &bull; Expressive</div>
+  </div>
+  <div class="card" style="text-align:center;border-color:rgba(58,134,255,.3)">
+    <div style="font-family:'Space Mono',monospace;font-size:1.8rem;font-weight:700;color:var(--blue);margin-bottom:6px">Mono</div>
+    <div class="cb">Technical &bull; Precise</div>
+  </div>
+</div>
+<div class="sub" style="text-align:center;margin-top:14px;font-size:.78rem">Click through the next 5 slides to explore each classification in depth</div>
+</section>
+
+<!-- S6 SERIF -->
+<section class="slide bg-gold" id="s6">
+<div class="eyebrow"><span class="ln"></span>Classification 01 / 05</div>
+<div style="display:flex;gap:clamp(20px,4vw,56px);align-items:center;flex-wrap:wrap;width:100%;max-width:960px">
+  <div style="flex:0 0 auto;text-align:center">
+    <div style="font-family:'Playfair Display',serif;font-size:clamp(5rem,12vw,9rem);font-weight:900;color:#fff;line-height:1;text-shadow:0 4px 30px rgba(0,0,0,.4)">Aa</div>
+    <div style="font-family:'Space Mono',monospace;font-size:.6rem;color:var(--gold2);letter-spacing:.15em;margin-top:6px">PLAYFAIR DISPLAY</div>
+  </div>
+  <div style="flex:1 1 320px">
+    <div class="label">Serif</div>
+    <div class="ttl" style="font-size:clamp(1.8rem,4vw,3rem)">Traditional &amp; <span class="acc">Authoritative</span></div>
+    <div class="ladder" style="margin-top:10px">
+      <div class="rung"><div class="rn">&#10003;</div><div class="rt"><div class="rtitle">Defining Feature</div><div class="rdesc">Small finishing strokes at the ends of letterform strokes</div></div></div>
+      <div class="rung"><div class="rn">&#10003;</div><div class="rt"><div class="rtitle">Mood</div><div class="rdesc">Classic, formal, authoritative, trustworthy, literary</div></div></div>
+      <div class="rung"><div class="rn">&#10003;</div><div class="rt"><div class="rtitle">Best For</div><div class="rdesc">Books, newspapers, law firms, luxury brands, academia</div></div></div>
+      <div class="rung rose"><div class="rn rose">&#10007;</div><div class="rt"><div class="rtitle">Avoid For</div><div class="rdesc">Very small sizes on screen, casual or playful brands</div></div></div>
+    </div>
+    <div class="pills" style="justify-content:flex-start;margin-top:10px">
+      <span class="pill gold">Times New Roman</span><span class="pill gold">Garamond</span><span class="pill gold">Georgia</span><span class="pill gold">Baskerville</span>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- S7 SANS-SERIF -->
+<section class="slide bg-teal" id="s7">
+<div class="eyebrow"><span class="ln"></span>Classification 02 / 05</div>
+<div style="display:flex;gap:clamp(20px,4vw,56px);align-items:center;flex-wrap:wrap;width:100%;max-width:960px">
+  <div style="flex:0 0 auto;text-align:center">
+    <div style="font-family:'Inter',sans-serif;font-size:clamp(5rem,12vw,9rem);font-weight:800;color:#fff;line-height:1;text-shadow:0 4px 30px rgba(0,0,0,.4)">Aa</div>
+    <div style="font-family:'Space Mono',monospace;font-size:.6rem;color:var(--teal);letter-spacing:.15em;margin-top:6px">INTER / HELVETICA</div>
+  </div>
+  <div style="flex:1 1 320px">
+    <div class="label teal">Sans-Serif</div>
+    <div class="ttl" style="font-size:clamp(1.8rem,4vw,3rem)">Modern &amp; <span style="color:var(--teal)">Clean</span></div>
+    <div class="ladder" style="margin-top:10px">
+      <div class="rung teal"><div class="rn teal">&#10003;</div><div class="rt"><div class="rtitle">Defining Feature</div><div class="rdesc">No serifs — clean, unadorned stroke endings</div></div></div>
+      <div class="rung teal"><div class="rn teal">&#10003;</div><div class="rt"><div class="rtitle">Mood</div><div class="rdesc">Modern, clean, minimal, neutral, approachable, tech-forward</div></div></div>
+      <div class="rung teal"><div class="rn teal">&#10003;</div><div class="rt"><div class="rtitle">Best For</div><div class="rdesc">Digital interfaces, tech brands, signage, screen body text</div></div></div>
+      <div class="rung rose"><div class="rn rose">&#10007;</div><div class="rt"><div class="rtitle">Avoid For</div><div class="rdesc">Long-form print body text — can feel cold over many pages</div></div></div>
+    </div>
+    <div class="pills" style="justify-content:flex-start;margin-top:10px">
+      <span class="pill teal">Helvetica</span><span class="pill teal">Futura</span><span class="pill teal">Roboto</span><span class="pill teal">Inter</span>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- S8 SCRIPT -->
+<section class="slide bg-rose" id="s8">
+<div class="eyebrow"><span class="ln"></span>Classification 03 / 05</div>
+<div style="display:flex;gap:clamp(20px,4vw,56px);align-items:center;flex-wrap:wrap;width:100%;max-width:960px">
+  <div style="flex:0 0 auto;text-align:center">
+    <div style="font-family:'Lora',serif;font-size:clamp(4rem,10vw,7rem);font-weight:700;font-style:italic;color:#fff;line-height:1;text-shadow:0 4px 30px rgba(0,0,0,.4)">Aa</div>
+    <div style="font-family:'Space Mono',monospace;font-size:.6rem;color:#f08090;letter-spacing:.15em;margin-top:6px">LORA ITALIC / SCRIPT</div>
+  </div>
+  <div style="flex:1 1 320px">
+    <div class="label rose">Script</div>
+    <div class="ttl" style="font-size:clamp(1.8rem,4vw,3rem)">Elegant &amp; <span style="color:#f08090">Personal</span></div>
+    <div class="ladder" style="margin-top:10px">
+      <div class="rung rose"><div class="rn rose">&#10003;</div><div class="rt"><div class="rtitle">Defining Feature</div><div class="rdesc">Letterforms that connect or appear hand-drawn</div></div></div>
+      <div class="rung rose"><div class="rn rose">&#10003;</div><div class="rt"><div class="rtitle">Mood</div><div class="rdesc">Elegant, personal, romantic, creative, artisanal</div></div></div>
+      <div class="rung rose"><div class="rn rose">&#10003;</div><div class="rt"><div class="rtitle">Best For</div><div class="rdesc">Wedding invitations, luxury packaging, logos, greeting cards</div></div></div>
+      <div class="rung" style="border-left-color:#fff4"><div class="rn" style="color:#f08090">&#10007;</div><div class="rt"><div class="rtitle">NEVER for body text</div><div class="rdesc">Illegible at small sizes or in long passages</div></div></div>
+    </div>
+    <div class="pills" style="justify-content:flex-start;margin-top:10px">
+      <span class="pill rose">Great Vibes</span><span class="pill rose">Lobster</span><span class="pill rose">Pacifico</span><span class="pill rose">Brush Script</span>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- S9 DISPLAY -->
+<section class="slide bg-violet" id="s9">
+<div class="eyebrow"><span class="ln"></span>Classification 04 / 05</div>
+<div style="display:flex;gap:clamp(20px,4vw,56px);align-items:center;flex-wrap:wrap;width:100%;max-width:960px">
+  <div style="flex:0 0 auto;text-align:center">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,10vw,8rem);color:#fff;line-height:1;text-shadow:0 4px 30px rgba(0,0,0,.4);letter-spacing:.05em">Aa</div>
+    <div style="font-family:'Space Mono',monospace;font-size:.6rem;color:#a88de0;letter-spacing:.15em;margin-top:6px">BEBAS NEUE / DISPLAY</div>
+  </div>
+  <div style="flex:1 1 320px">
+    <div class="label violet">Display / Decorative</div>
+    <div class="ttl" style="font-size:clamp(1.8rem,4vw,3rem)">Bold &amp; <span style="color:#a88de0">Expressive</span></div>
+    <div class="ladder" style="margin-top:10px">
+      <div class="rung violet"><div class="rn violet">&#10003;</div><div class="rt"><div class="rtitle">Defining Feature</div><div class="rdesc">Highly stylized — designed for large sizes and short text</div></div></div>
+      <div class="rung violet"><div class="rn violet">&#10003;</div><div class="rt"><div class="rtitle">Mood</div><div class="rdesc">Varies widely — bold, quirky, retro, futuristic, playful</div></div></div>
+      <div class="rung violet"><div class="rn violet">&#10003;</div><div class="rt"><div class="rtitle">Best For</div><div class="rdesc">Posters, headlines, logos, titles, event branding</div></div></div>
+      <div class="rung rose"><div class="rn rose">&#10007;</div><div class="rt"><div class="rtitle">Avoid For</div><div class="rdesc">Body text, captions, anything below 24px</div></div></div>
+    </div>
+    <div class="pills" style="justify-content:flex-start;margin-top:10px">
+      <span class="pill violet">Impact</span><span class="pill violet">Bebas Neue</span><span class="pill violet">Abril Fatface</span><span class="pill violet">Playfair Display</span>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- S10 MONOSPACE -->
+<section class="slide bg-blue" id="s10">
+<div class="eyebrow"><span class="ln"></span>Classification 05 / 05</div>
+<div style="display:flex;gap:clamp(20px,4vw,56px);align-items:center;flex-wrap:wrap;width:100%;max-width:960px">
+  <div style="flex:0 0 auto;text-align:center">
+    <div style="font-family:'Space Mono',monospace;font-size:clamp(4rem,10vw,7rem);font-weight:700;color:#fff;line-height:1;text-shadow:0 4px 30px rgba(0,0,0,.4)">Aa</div>
+    <div style="font-family:'Space Mono',monospace;font-size:.6rem;color:#7ab4ff;letter-spacing:.15em;margin-top:6px">SPACE MONO / COURIER</div>
+  </div>
+  <div style="flex:1 1 320px">
+    <div class="label" style="color:var(--blue)">Monospace</div>
+    <div class="ttl" style="font-size:clamp(1.8rem,4vw,3rem)">Technical &amp; <span style="color:#7ab4ff">Precise</span></div>
+    <div class="ladder" style="margin-top:10px">
+      <div class="rung" style="border-left-color:var(--blue)"><div class="rn" style="color:var(--blue)">&#10003;</div><div class="rt"><div class="rtitle">Defining Feature</div><div class="rdesc">Fixed-width characters — every letter takes the same space</div></div></div>
+      <div class="rung" style="border-left-color:var(--blue)"><div class="rn" style="color:var(--blue)">&#10003;</div><div class="rt"><div class="rtitle">Mood</div><div class="rdesc">Technical, code-like, retro, mechanical, precise</div></div></div>
+      <div class="rung" style="border-left-color:var(--blue)"><div class="rn" style="color:var(--blue)">&#10003;</div><div class="rt"><div class="rtitle">Best For</div><div class="rdesc">Code samples, terminal interfaces, typewriter aesthetics</div></div></div>
+      <div class="rung rose"><div class="rn rose">&#10007;</div><div class="rt"><div class="rtitle">Avoid For</div><div class="rdesc">General body text, headlines, elegant spacing</div></div></div>
+    </div>
+    <div class="pills" style="justify-content:flex-start;margin-top:10px">
+      <span class="pill" style="border-color:rgba(58,134,255,.4);color:#7ab4ff">Courier New</span><span class="pill" style="border-color:rgba(58,134,255,.4);color:#7ab4ff">Consolas</span><span class="pill" style="border-color:rgba(58,134,255,.4);color:#7ab4ff">Space Mono</span>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- S11 CLASSIFICATION SUMMARY -->
+<section class="slide bg-dark" id="s11">
+<div class="eyebrow"><span class="ln"></span>Summary &bull; All 5 Classifications</div>
+<div class="ttl" style="margin-bottom:14px">The <span class="acc">Full Picture</span></div>
+<table class="tbl" style="max-width:960px">
+  <tr><th>Classification</th><th>Serifs?</th><th>Mood</th><th>Best Use</th><th>Avoid</th></tr>
+  <tr><td><span style="font-family:'Playfair Display',serif;color:var(--gold)">Serif</span></td><td>&#10003; Yes</td><td>Traditional, authoritative</td><td>Print body, formal docs</td><td>Small screen text</td></tr>
+  <tr><td><span style="font-family:'Inter',sans-serif;font-weight:700;color:var(--teal)">Sans-Serif</span></td><td>&#10007; No</td><td>Modern, clean, neutral</td><td>Screen UI, signage, tech</td><td>Long-form print body</td></tr>
+  <tr><td><span style="font-family:'Lora',serif;font-style:italic;color:var(--rose)">Script</span></td><td>Varies</td><td>Elegant, personal, romantic</td><td>Display, logos, invitations</td><td>Body text, small sizes</td></tr>
+  <tr><td><span style="font-family:'Bebas Neue',sans-serif;color:var(--violet)">Display</span></td><td>Varies</td><td>Bold, expressive, themed</td><td>Headlines, posters, titles</td><td>Body text, small sizes</td></tr>
+  <tr><td><span style="font-family:'Space Mono',monospace;color:var(--blue)">Mono</span></td><td>Varies</td><td>Technical, mechanical</td><td>Code, tabular data</td><td>General body text</td></tr>
+</table>
+<div style="margin-top:14px;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);border-radius:10px;padding:12px 16px;max-width:700px;font-size:.78rem;color:rgba(255,255,255,.6);line-height:1.6">
+  &#128172; <strong style="color:var(--gold2)">Class Discussion:</strong> Look at 5 brand logos around you. What classification does each use? Does it match the brand's personality?
+</div>
+</section>
+
+<!-- S12 FONT PAIRING INTRO -->
+<section class="slide bg-ink" id="s12">
+<div class="eyebrow"><span class="ln"></span>Part 2 &bull; 35 Minutes</div>
+<div class="ttl" style="text-align:center">Font <span class="acc">Pairing</span></div>
+<div class="sub" style="text-align:center;margin-bottom:20px">Selecting two or more typefaces that work together harmoniously — <b>contrast</b> creates interest, <b>shared quality</b> creates cohesion.</div>
+<div class="stats">
+  <div class="sbox"><div class="snum">1</div><div class="slbl">Font — disciplined</div></div>
+  <div class="sbox"><div class="snum" style="color:var(--teal)">2</div><div class="slbl">Fonts — professional standard</div></div>
+  <div class="sbox"><div class="snum" style="color:var(--rose)">3</div><div class="slbl">Fonts — max with justification</div></div>
+  <div class="sbox"><div class="snum" style="color:rgba(255,255,255,.2)">4+</div><div class="slbl">Fonts — almost always a mistake</div></div>
+</div>
+<div style="margin-top:18px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);border-radius:12px;padding:14px 20px;max-width:640px;text-align:center;font-size:.85rem;color:rgba(255,255,255,.75);line-height:1.6">
+  &#127775; <strong style="color:var(--gold2)">The Golden Rule:</strong> Fonts should be <em>different enough</em> to create contrast, but <em>similar enough</em> to feel like they belong together.
+</div>
+</section>
+
+<!-- S13 STRATEGY 1 SERIF+SANS -->
+<section class="slide bg-gold" id="s13">
+<div class="eyebrow"><span class="ln"></span>Pairing Strategy 01 / 05</div>
+<div class="ttl">Serif <span class="acc">+</span> Sans-Serif</div>
+<div class="sub" style="margin-bottom:16px">The <b>Classic Pair</b> — the most reliable and widely used combination in professional design.</div>
+<div style="display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start;width:100%;max-width:900px">
+  <div class="pair-preview" style="flex:1 1 300px">
+    <div style="font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:var(--ink);line-height:1.1;margin-bottom:10px">The Art of Good Design</div>
+    <div style="font-family:'Inter',sans-serif;font-size:.82rem;color:var(--muted);line-height:1.7">Typography is the art of arranging type to make written language legible, readable, and visually appealing. Every typeface choice sends a message before a single word is read.</div>
+    <div style="margin-top:10px;font-family:'Space Mono',monospace;font-size:.6rem;color:var(--rose);letter-spacing:.1em">PLAYFAIR DISPLAY + INTER</div>
+  </div>
+  <div style="flex:1 1 260px;display:flex;flex-direction:column;gap:10px">
+    <div class="rung"><div class="rn">H</div><div class="rt"><div class="rtitle">Headline — Serif</div><div class="rdesc">Commands attention, feels established, authoritative</div></div></div>
+    <div class="rung teal"><div class="rn teal">B</div><div class="rt"><div class="rtitle">Body — Sans-Serif</div><div class="rdesc">Easy to read, modern, doesn't compete with headline</div></div></div>
+    <div style="background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.25);border-radius:10px;padding:10px 14px;font-size:.72rem;color:rgba(255,255,255,.65);line-height:1.5">
+      Also works: Merriweather + Open Sans &bull; Georgia + Arial &bull; Lora + Source Sans Pro
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- S14 STRATEGY 2 SANS+SANS -->
+<section class="slide bg-teal" id="s14">
+<div class="eyebrow"><span class="ln"></span>Pairing Strategy 02 / 05</div>
+<div class="ttl">Sans <span style="color:var(--teal)">+</span> Sans</div>
+<div class="sub" style="margin-bottom:16px">The <b>Modern Pair</b> — two sans-serifs from <b>different sub-classifications</b> or with significantly different weights.</div>
+<div style="display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start;width:100%;max-width:900px">
+  <div class="pair-preview" style="flex:1 1 300px">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:2.4rem;color:var(--ink);line-height:1;margin-bottom:10px;letter-spacing:.05em">GEOMETRIC IMPACT</div>
+    <div style="font-family:'Inter',sans-serif;font-size:.82rem;color:var(--muted);line-height:1.7">Humanist sans-serif body text feels warm and approachable. The contrast between geometric and humanist creates visual interest without conflict.</div>
+    <div style="margin-top:10px;font-family:'Space Mono',monospace;font-size:.6rem;color:var(--rose);letter-spacing:.1em">BEBAS NEUE + INTER</div>
+  </div>
+  <div style="flex:1 1 260px;display:flex;flex-direction:column;gap:10px">
+    <div class="rung teal"><div class="rn teal">&#10003;</div><div class="rt"><div class="rtitle">Different sub-classifications</div><div class="rdesc">Geometric + Humanist creates natural contrast</div></div></div>
+    <div class="rung teal"><div class="rn teal">&#10003;</div><div class="rt"><div class="rtitle">Weight contrast</div><div class="rdesc">Black headline + Regular body — clear hierarchy</div></div></div>
+    <div class="rung rose"><div class="rn rose">&#10007;</div><div class="rt"><div class="rtitle">Avoid near-identical fonts</div><div class="rdesc">Arial + Helvetica — too similar, no contrast</div></div></div>
+  </div>
+</div>
+</section>
+
+<!-- S15 STRATEGY 3 SERIF+SERIF -->
+<section class="slide bg-rose" id="s15">
+<div class="eyebrow"><span class="ln"></span>Pairing Strategy 03 / 05</div>
+<div class="ttl">Serif <span style="color:#f08090">+</span> Serif</div>
+<div class="sub" style="margin-bottom:16px">The <b>Editorial Pair</b> — two serifs from <b>different historical periods</b> or with contrasting proportions.</div>
+<div style="display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start;width:100%;max-width:900px">
+  <div class="pair-preview" style="flex:1 1 300px">
+    <div style="font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:var(--ink);line-height:1.1;margin-bottom:10px;letter-spacing:-.02em">High Fashion Editorial</div>
+    <div style="font-family:'Lora',serif;font-size:.82rem;color:var(--muted);line-height:1.7">Old style serif body text feels warm, literary, and comfortable to read over long passages. The contrast between modern and old style creates editorial sophistication.</div>
+    <div style="margin-top:10px;font-family:'Space Mono',monospace;font-size:.6rem;color:var(--rose);letter-spacing:.1em">PLAYFAIR DISPLAY + LORA</div>
+  </div>
+  <div style="flex:1 1 260px;display:flex;flex-direction:column;gap:10px">
+    <div class="rung rose"><div class="rn rose">H</div><div class="rt"><div class="rtitle">Modern Serif Headline</div><div class="rdesc">High contrast, elegant — Bodoni, Playfair, Didot</div></div></div>
+    <div class="rung"><div class="rn">B</div><div class="rt"><div class="rtitle">Old Style Serif Body</div><div class="rdesc">Low contrast, warm — Garamond, Lora, Caslon</div></div></div>
+    <div style="background:rgba(255,255,255,.08);border-radius:10px;padding:10px 14px;font-size:.72rem;color:rgba(255,255,255,.65);line-height:1.5">
+      Also works: Bodoni + Garamond &bull; Playfair + Lora
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- S16 STRATEGY 4 DISPLAY+BODY -->
+<section class="slide bg-violet" id="s16">
+<div class="eyebrow"><span class="ln"></span>Pairing Strategy 04 / 05</div>
+<div class="ttl">Display <span style="color:#a88de0">+</span> Body</div>
+<div class="sub" style="margin-bottom:16px">The <b>Expressive Pair</b> — display carries the personality, body carries the content.</div>
+<div style="display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start;width:100%;max-width:900px">
+  <div class="pair-preview" style="flex:1 1 300px">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:2.8rem;color:var(--ink);line-height:1;margin-bottom:10px;letter-spacing:.08em">ROAST &amp; RITUAL</div>
+    <div style="font-family:'Inter',sans-serif;font-size:.82rem;color:var(--muted);line-height:1.7">The neutral body typeface is completely invisible — it serves the content without competing with the expressive display headline above it.</div>
+    <div style="margin-top:10px;font-family:'Space Mono',monospace;font-size:.6rem;color:var(--rose);letter-spacing:.1em">BEBAS NEUE + INTER</div>
+  </div>
+  <div style="flex:1 1 260px;display:flex;flex-direction:column;gap:10px">
+    <div class="rung violet"><div class="rn violet">&#10003;</div><div class="rt"><div class="rtitle">Display = personality only</div><div class="rdesc">Headlines, titles, pull quotes — large sizes only</div></div></div>
+    <div class="rung violet"><div class="rn violet">&#10003;</div><div class="rt"><div class="rtitle">Body = completely neutral</div><div class="rdesc">Must not compete — Lato, Open Sans, Source Sans Pro</div></div></div>
+    <div class="rung rose"><div class="rn rose">&#10007;</div><div class="rt"><div class="rtitle">Never display for body text</div><div class="rdesc">Illegible at small sizes, exhausting to read</div></div></div>
+  </div>
+</div>
+</section>
+
+<!-- S17 STRATEGY 5 ONE FAMILY -->
+<section class="slide bg-dark" id="s17">
+<div class="eyebrow"><span class="ln"></span>Pairing Strategy 05 / 05</div>
+<div class="ttl">One Family, <span class="acc">Multiple Weights</span></div>
+<div class="sub" style="margin-bottom:16px">The <b>Disciplined Pair</b> — single typeface family, multiple weights. Maximum cohesion.</div>
+<div style="display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start;width:100%;max-width:900px">
+  <div class="pair-preview" style="flex:1 1 300px;background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.1)">
+    <div style="font-family:'Inter',sans-serif;font-size:1.8rem;font-weight:800;color:#fff;line-height:1.1;margin-bottom:4px">Inter Black 800</div>
+    <div style="font-family:'Inter',sans-serif;font-size:1.1rem;font-weight:600;color:rgba(255,255,255,.75);margin-bottom:4px">Inter SemiBold 600</div>
+    <div style="font-family:'Inter',sans-serif;font-size:.85rem;font-weight:400;color:rgba(255,255,255,.55);line-height:1.7;margin-bottom:4px">Inter Regular 400 — body text at optimal size and leading. Comfortable to read over long passages.</div>
+    <div style="font-family:'Inter',sans-serif;font-size:.72rem;font-weight:300;font-style:italic;color:rgba(255,255,255,.35)">Inter Light 300 Italic — caption text</div>
+    <div style="margin-top:10px;font-family:'Space Mono',monospace;font-size:.6rem;color:var(--gold);letter-spacing:.1em">INTER — ONE FAMILY</div>
+  </div>
+  <div style="flex:1 1 260px;display:flex;flex-direction:column;gap:10px">
+    <div class="rung"><div class="rn">&#10003;</div><div class="rt"><div class="rtitle">Maximum cohesion</div><div class="rdesc">Everything from the same design DNA</div></div></div>
+    <div class="rung"><div class="rn">&#10003;</div><div class="rt"><div class="rtitle">Best families</div><div class="rdesc">Roboto, Montserrat, Inter, Source Sans Pro</div></div></div>
+    <div class="rung teal"><div class="rn teal">&#10003;</div><div class="rt"><div class="rtitle">Best for</div><div class="rdesc">Brand systems, UI design, minimalist editorial</div></div></div>
+  </div>
+</div>
+</section>
+
+<!-- S18 WHAT TO AVOID — FLIP CARDS -->
+<section class="slide bg-ink" id="s18">
+<div class="eyebrow"><span class="ln"></span>Font Pairing &bull; What to Avoid</div>
+<div class="ttl" style="margin-bottom:6px">Six <span class="acc">Mistakes</span> Everyone Makes</div>
+<div class="sub" style="margin-bottom:16px;font-size:.8rem">Tap each card to reveal the fix</div>
+<div class="flip-row">
+  <div class="fc" onclick="this.classList.toggle('flipped')">
+    <div class="fc-inner">
+      <div class="fc-face fc-front"><div class="fk">Mistake 01</div><div class="ft">Two fonts that look almost identical — Arial + Helvetica</div><div class="fh">Tap to see fix &rarr;</div></div>
+      <div class="fc-face fc-back"><div class="fk">Fix</div><div class="ft">Choose fonts from <strong>different classifications</strong> — contrast, not confusion</div></div>
+    </div>
+  </div>
+  <div class="fc" onclick="this.classList.toggle('flipped')">
+    <div class="fc-inner">
+      <div class="fc-face fc-front"><div class="fk">Mistake 02</div><div class="ft">Two expressive fonts competing for attention</div><div class="fh">Tap to see fix &rarr;</div></div>
+      <div class="fc-face fc-back"><div class="fk">Fix</div><div class="ft">One <strong>expressive</strong> font + one <strong>neutral</strong> font — always</div></div>
+    </div>
+  </div>
+  <div class="fc" onclick="this.classList.toggle('flipped')">
+    <div class="fc-inner">
+      <div class="fc-face fc-front"><div class="fk">Mistake 03</div><div class="ft">Two script fonts — Lobster + Pacifico</div><div class="fh">Tap to see fix &rarr;</div></div>
+      <div class="fc-face fc-back"><div class="fk">Fix</div><div class="ft">Maximum <strong>one script</strong> per design — pair with a clean sans-serif</div></div>
+    </div>
+  </div>
+  <div class="fc" onclick="this.classList.toggle('flipped')">
+    <div class="fc-inner">
+      <div class="fc-face fc-front"><div class="fk">Mistake 04</div><div class="ft">Mismatched moods — playful + formal</div><div class="fh">Tap to see fix &rarr;</div></div>
+      <div class="fc-face fc-back"><div class="fk">Fix</div><div class="ft">Match the <strong>emotional register</strong> of both fonts to the brand</div></div>
+    </div>
+  </div>
+  <div class="fc" onclick="this.classList.toggle('flipped')">
+    <div class="fc-inner">
+      <div class="fc-face fc-front"><div class="fk">Mistake 05</div><div class="ft">4+ fonts in one design</div><div class="fh">Tap to see fix &rarr;</div></div>
+      <div class="fc-face fc-back"><div class="fk">Fix</div><div class="ft">Maximum <strong>2–3 fonts</strong> per design — discipline creates professionalism</div></div>
+    </div>
+  </div>
+  <div class="fc" onclick="this.classList.toggle('flipped')">
+    <div class="fc-inner">
+      <div class="fc-face fc-front"><div class="fk">Mistake 06</div><div class="ft">Random pairing with no shared quality</div><div class="fh">Tap to see fix &rarr;</div></div>
+      <div class="fc-face fc-back"><div class="fk">Fix</div><div class="ft">Find a <strong>shared trait</strong> — x-height, era, proportion, or mood</div></div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- S19 SHARED QUALITY RULE -->
+<section class="slide bg-paper" id="s19">
+<div class="eyebrow" style="color:var(--rose)"><span class="ln" style="background:var(--rose)"></span>The Shared Quality Rule</div>
+<div class="ttl dark">What <span class="acc">Connects</span> a Good Pair</div>
+<div class="sub dark" style="margin-bottom:16px">Every successful font pair shares <b>at least one quality</b> that creates a subtle visual connection — even while contrasting in other ways.</div>
+<table class="tbl dark" style="max-width:780px">
+  <tr><th>Shared Quality</th><th>What It Means</th><th>Example</th></tr>
+  <tr><td><strong>Similar x-height</strong></td><td>Both fonts have tall lowercase letters — proportionally related</td><td>Playfair Display + Source Sans Pro</td></tr>
+  <tr><td><strong>Same historical era</strong></td><td>Both designed in the same period — share structural DNA</td><td>Bodoni + Futura (both 1920s)</td></tr>
+  <tr><td><strong>Similar proportions</strong></td><td>Both condensed, or both wide — feel like a family</td><td>Bebas Neue + Oswald</td></tr>
+  <tr><td><strong>Complementary moods</strong></td><td>One formal, one approachable — they balance each other</td><td>Garamond + Gill Sans</td></tr>
+  <tr><td><strong>Designed together</strong></td><td>Type designers create paired families</td><td>Alegreya + Alegreya Sans</td></tr>
+</table>
+</section>
+
+<!-- S20 INDUSTRY EXAMPLES -->
+<section class="slide bg-dark" id="s20">
+<div class="eyebrow"><span class="ln"></span>Font Pairing in Context</div>
+<div class="ttl" style="margin-bottom:14px">Industry <span class="acc">Examples</span></div>
+<table class="tbl" style="max-width:960px">
+  <tr><th>Industry</th><th>Headline Font</th><th>Body Font</th><th>Why It Works</th></tr>
+  <tr><td>&#128081; Luxury Fashion</td><td style="font-family:'Playfair Display',serif;color:var(--gold)">Didot (Modern Serif)</td><td style="font-family:'Inter',sans-serif;font-weight:300;color:rgba(255,255,255,.6)">Futura Light</td><td>Extreme contrast — elegance meets precision</td></tr>
+  <tr><td>&#128187; Tech Startup</td><td style="font-family:'Inter',sans-serif;font-weight:800;color:var(--teal)">Montserrat Bold</td><td style="font-family:'Inter',sans-serif;color:rgba(255,255,255,.6)">Inter Regular</td><td>Clean, modern, screen-optimized</td></tr>
+  <tr><td>&#128240; Editorial</td><td style="font-family:'Playfair Display',serif;color:var(--rose)">Playfair Display</td><td style="font-family:'Inter',sans-serif;color:rgba(255,255,255,.6)">Source Sans Pro</td><td>Authority with clean readability</td></tr>
+  <tr><td>&#127881; Children's Brand</td><td style="font-family:'Inter',sans-serif;font-weight:800;color:#a88de0">Fredoka One</td><td style="font-family:'Inter',sans-serif;color:rgba(255,255,255,.6)">Nunito Regular</td><td>Shared rounded quality — playful, cohesive</td></tr>
+  <tr><td>&#9878; Law / Finance</td><td style="font-family:'Lora',serif;color:var(--gold)">Garamond</td><td style="font-family:'Lora',serif;color:rgba(255,255,255,.6)">Times New Roman</td><td>Both formal, authoritative, traditional</td></tr>
+  <tr><td>&#9749; Food / Artisan</td><td style="font-family:'Playfair Display',serif;font-style:italic;color:var(--rose)">Playfair Italic</td><td style="font-family:'Inter',sans-serif;color:rgba(255,255,255,.6)">Lato Regular</td><td>Elegant headline, warm approachable body</td></tr>
+</table>
+</section>
+
+<!-- S21 LAYOUT INTRO -->
+<section class="slide bg-gold" id="s21">
+<div class="eyebrow"><span class="ln"></span>Part 3 &bull; 25 Minutes</div>
+<div class="ttl">Typography <span class="acc">Layout</span> Principles</div>
+<div class="sub" style="margin-bottom:18px">A typographic layout controls <b>six variables</b> that determine how the viewer's eye moves through the design.</div>
+<div class="cards" style="max-width:900px">
+  <div class="card"><div class="ci">&#128200;</div><div class="ct">Hierarchy</div><div class="cb">Which text is most important and seen first</div></div>
+  <div class="card"><div class="ci">&#8596;</div><div class="ct">Alignment</div><div class="cb">How text is positioned relative to a grid or edge</div></div>
+  <div class="card"><div class="ci">&#8597;</div><div class="ct">Spacing</div><div class="cb">Distance between letters, words, lines, and blocks</div></div>
+  <div class="card"><div class="ci">&#9638;</div><div class="ct">Grid</div><div class="cb">The invisible structure that organizes all elements</div></div>
+  <div class="card"><div class="ci">&#8614;</div><div class="ct">Measure</div><div class="cb">The width of a text column — 45&ndash;75 chars optimal</div></div>
+  <div class="card"><div class="ci">&#9680;</div><div class="ct">Contrast</div><div class="cb">Visual difference between typographic levels</div></div>
+</div>
+</section>
+
+<!-- S22 ALIGNMENT INTERACTIVE -->
+<section class="slide bg-paper" id="s22">
+<div class="eyebrow" style="color:var(--rose)"><span class="ln" style="background:var(--rose)"></span>Layout &bull; Alignment</div>
+<div class="ttl dark">The Four <span class="acc">Alignment</span> Types</div>
+<div class="sub dark" style="margin-bottom:14px">Click each tab to preview the alignment and see when to use it.</div>
+<div class="tabs" id="alignTabs">
+  <button class="tab active" data-align="left">Left-Aligned</button>
+  <button class="tab" data-align="right">Right-Aligned</button>
+  <button class="tab" data-align="center">Centered</button>
+  <button class="tab" data-align="justify">Justified</button>
+</div>
+<div style="display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start;width:100%;max-width:860px">
+  <div class="align-box" id="alignBox" style="text-align:left;color:var(--ink);background:var(--paper);border-color:var(--border);flex:1 1 300px">
+    Typography is the art of arranging type to make written language legible, readable, and visually appealing. Every typeface choice sends a message before a single word is read by the viewer.
+  </div>
+  <div style="flex:1 1 260px;display:flex;flex-direction:column;gap:8px" id="alignInfo">
+    <div style="font-family:'Space Mono',monospace;font-size:.65rem;color:var(--rose);letter-spacing:.1em;text-transform:uppercase" id="alignFeel">Natural &bull; Readable &bull; Neutral</div>
+    <div style="font-size:.8rem;color:var(--muted);line-height:1.6" id="alignDesc">Matches the natural left-to-right reading direction. Consistent left edge guides the eye. Best for body text, articles, and most general-purpose layouts.</div>
+    <div style="background:rgba(224,92,111,.08);border-left:3px solid var(--rose);padding:8px 12px;border-radius:0 8px 8px 0;font-size:.72rem;color:var(--muted)" id="alignAvoid">
+      <strong style="color:var(--rose)">Avoid:</strong> Very long lines without a defined column width
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- S23 SPACING TRACKING + LEADING -->
+<section class="slide bg-ink" id="s23">
+<div class="eyebrow"><span class="ln"></span>Layout &bull; Spacing</div>
+<div class="ttl" style="margin-bottom:6px">Three Levels of <span class="acc">Spacing</span></div>
+<div style="display:flex;gap:18px;flex-wrap:wrap;width:100%;max-width:960px;margin-top:8px">
+  <div style="flex:1 1 260px">
+    <div class="label">01 &mdash; Tracking</div>
+    <div style="font-size:.75rem;color:rgba(255,255,255,.55);margin-bottom:10px;line-height:1.5">Uniform spacing between ALL characters in a word or block</div>
+    <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:#fff;letter-spacing:-.05em;margin-bottom:4px">TIGHT TRACKING</div>
+    <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--gold);letter-spacing:.02em;margin-bottom:4px">NORMAL TRACKING</div>
+    <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--teal);letter-spacing:.25em;margin-bottom:10px">L O O S E</div>
+    <div style="background:rgba(224,92,111,.1);border:1px solid rgba(224,92,111,.25);border-radius:8px;padding:8px 12px;font-size:.68rem;color:rgba(255,255,255,.55);line-height:1.5">
+      &#9888; Never loose tracking on lowercase body text — destroys readability
+    </div>
+  </div>
+  <div style="flex:1 1 260px">
+    <div class="label rose">02 &mdash; Kerning</div>
+    <div style="font-size:.75rem;color:rgba(255,255,255,.55);margin-bottom:10px;line-height:1.5">Spacing between <em>specific letter pairs</em> to fix optical imbalances</div>
+    <div style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:#fff;margin-bottom:6px">AV &nbsp; To &nbsp; WA</div>
+    <div class="ladder" style="gap:6px">
+      <div class="rung rose" style="padding:7px 12px"><div class="rn rose" style="font-size:.7rem">OPT</div><div class="rt"><div class="rdesc">Software adjusts by visual shape of each pair</div></div></div>
+      <div class="rung" style="padding:7px 12px"><div class="rn" style="font-size:.7rem">MET</div><div class="rt"><div class="rdesc">Uses values built into the font by its designer</div></div></div>
+      <div class="rung teal" style="padding:7px 12px"><div class="rn teal" style="font-size:.7rem">MAN</div><div class="rt"><div class="rdesc">Designer adjusts by hand — logos and display type</div></div></div>
+    </div>
+  </div>
+  <div style="flex:1 1 260px">
+    <div class="label teal">03 &mdash; Leading</div>
+    <div style="font-size:.75rem;color:rgba(255,255,255,.55);margin-bottom:10px;line-height:1.5">Vertical space between lines — baseline to baseline</div>
+    <div id="leadingDemo" style="font-family:'Inter',sans-serif;font-size:.82rem;color:rgba(255,255,255,.75);line-height:1.2;margin-bottom:8px;transition:line-height .3s">
+      Typography is the art of arranging type. Every choice sends a message before a word is read.
+    </div>
+    <div class="slider-wrap">
+      <input type="range" id="leadSlider" min="1" max="2.5" step="0.1" value="1.2">
+      <div class="slider-label" id="leadLabel">LINE HEIGHT: 1.2&times; &mdash; TIGHT</div>
+    </div>
+    <div style="margin-top:8px;font-size:.68rem;color:rgba(255,255,255,.4);line-height:1.5">Formula: body size &times; 1.5&ndash;1.6 = optimal leading</div>
+  </div>
+</div>
+</section>
+
+<!-- S24 MEASURE + GRID -->
+<section class="slide bg-dark" id="s24">
+<div class="eyebrow"><span class="ln"></span>Layout &bull; Measure &amp; Grid</div>
+<div class="ttl" style="margin-bottom:14px">Column Width &amp; <span class="acc">Grid Systems</span></div>
+<div style="display:flex;gap:24px;flex-wrap:wrap;width:100%;max-width:960px">
+  <div style="flex:1 1 300px">
+    <div class="label">Measure — Optimal Column Width</div>
+    <div style="font-size:.78rem;color:rgba(255,255,255,.55);margin-bottom:12px;line-height:1.5">The optimal measure for body text is <strong style="color:var(--gold)">45&ndash;75 characters per line</strong></div>
+    <table class="tbl" style="font-size:.68rem">
+      <tr><th>Measure</th><th>Chars/Line</th><th>Effect</th></tr>
+      <tr><td style="color:var(--rose)">Too Narrow</td><td>&lt; 40</td><td>Choppy, tiring</td></tr>
+      <tr><td style="color:var(--teal)">Optimal</td><td>45&ndash;75</td><td>Comfortable rhythm</td></tr>
+      <tr><td style="color:var(--rose)">Too Wide</td><td>&gt; 85</td><td>Eye loses its place</td></tr>
+    </table>
+    <div style="margin-top:10px;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);border-radius:8px;padding:10px 12px;font-size:.7rem;color:rgba(255,255,255,.55);line-height:1.5">
+      &#128161; Practical rule: column width &asymp; the alphabet written out twice (52 chars)
+    </div>
+  </div>
+  <div style="flex:1 1 300px">
+    <div class="label teal">Grid Systems</div>
+    <div style="font-size:.78rem;color:rgba(255,255,255,.55);margin-bottom:10px;line-height:1.5">Click a grid type to preview it</div>
+    <div class="tabs" id="gridTabs" style="margin-bottom:10px">
+      <button class="tab active" data-grid="1">1 Col</button>
+      <button class="tab" data-grid="2">2 Col</button>
+      <button class="tab" data-grid="3">3 Col</button>
+      <button class="tab" data-grid="mod">Modular</button>
+    </div>
+    <div class="grid-vis" id="gridVis" style="grid-template-columns:1fr">
+      <div class="gcol">SINGLE COLUMN</div>
+    </div>
+    <div style="margin-top:8px;font-family:'Space Mono',monospace;font-size:.62rem;color:var(--teal);letter-spacing:.08em" id="gridLabel">Books &bull; Long-form articles &bull; Essays</div>
+  </div>
+</div>
+</section>
+
+<!-- S25 HIERARCHY SYSTEM -->
+<section class="slide bg-paper" id="s25">
+<div class="eyebrow" style="color:var(--rose)"><span class="ln" style="background:var(--rose)"></span>Layout &bull; Hierarchy</div>
+<div class="ttl dark">The Five-Level <span class="acc">Typographic System</span></div>
+<div style="display:flex;gap:20px;flex-wrap:wrap;width:100%;max-width:960px;margin-top:10px">
+  <div class="hier-demo" style="flex:1 1 280px">
+    <div style="font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:var(--ink);line-height:1.05;margin-bottom:6px">Level 1 Headline</div>
+    <div style="font-family:'Inter',sans-serif;font-size:1.1rem;font-weight:600;color:#1a1a1a;margin-bottom:8px">Level 2 — Subheading Text</div>
+    <div style="font-family:'Inter',sans-serif;font-size:.85rem;font-weight:400;color:#333;line-height:1.7;margin-bottom:6px">Level 3 body text carries the main content. It is set at a comfortable size with optimal leading for extended reading. Regular weight, medium grey.</div>
+    <div style="font-family:'Inter',sans-serif;font-size:.72rem;font-style:italic;color:#666;margin-bottom:4px">Level 4 — Caption text. Smaller, lighter, describes images.</div>
+    <div style="font-family:'Inter',sans-serif;font-size:.6rem;color:#999;letter-spacing:.05em">LEVEL 5 FINE PRINT &bull; REFERENCES &bull; DISCLAIMERS</div>
+  </div>
+  <div style="flex:1 1 280px">
+    <table class="tbl dark" style="font-size:.68rem">
+      <tr><th>Level</th><th>Size</th><th>Weight</th><th>Color</th></tr>
+      <tr><td style="color:var(--rose)">Headline</td><td>64px</td><td>Black 900</td><td>#000000</td></tr>
+      <tr><td style="color:var(--rose)">Subheading</td><td>28px</td><td>SemiBold 600</td><td>#1a1a1a</td></tr>
+      <tr><td>Body</td><td>16px</td><td>Regular 400</td><td>#333333</td></tr>
+      <tr><td>Caption</td><td>13px</td><td>Regular 400</td><td>#666666</td></tr>
+      <tr><td>Fine Print</td><td>10px</td><td>Light 300</td><td>#999999</td></tr>
+    </table>
+    <div style="margin-top:12px;background:rgba(224,92,111,.08);border-left:3px solid var(--rose);padding:10px 14px;border-radius:0 8px 8px 0;font-size:.75rem;color:var(--muted);line-height:1.6">
+      <strong style="color:var(--rose)">Rule:</strong> Never rely on size alone. Combine size + weight + color for an unmistakable hierarchy.
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- S26 LAYOUT PATTERNS -->
+<section class="slide bg-ink" id="s26">
+<div class="eyebrow"><span class="ln"></span>Layout &bull; Patterns</div>
+<div class="ttl" style="margin-bottom:14px">Four Common <span class="acc">Layout Patterns</span></div>
+<div class="cards" style="max-width:1000px">
+  <div class="card" style="min-width:200px;max-width:220px">
+    <div style="font-family:'Space Mono',monospace;font-size:.6rem;color:var(--gold);letter-spacing:.1em;margin-bottom:8px">EDITORIAL</div>
+    <div style="background:rgba(255,255,255,.06);border-radius:6px;padding:8px;font-family:'Space Mono',monospace;font-size:.52rem;color:rgba(255,255,255,.4);line-height:1.6;margin-bottom:8px">HEADLINE<br>Subheading<br>&#9474;col 1&#9474;col 2&#9474;<br>Caption</div>
+    <div class="cb">Magazines, newspapers, long-form articles</div>
+  </div>
+  <div class="card" style="min-width:200px;max-width:220px">
+    <div style="font-family:'Space Mono',monospace;font-size:.6rem;color:var(--rose);letter-spacing:.1em;margin-bottom:8px">POSTER</div>
+    <div style="background:rgba(255,255,255,.06);border-radius:6px;padding:8px;font-family:'Space Mono',monospace;font-size:.52rem;color:rgba(255,255,255,.4);line-height:1.6;margin-bottom:8px;text-align:center">&#160;<br>MASSIVE<br>HEADLINE<br>&#160;<br>subtext<br>&#160;</div>
+    <div class="cb">Maximum visual impact, minimal text levels</div>
+  </div>
+  <div class="card" style="min-width:200px;max-width:220px">
+    <div style="font-family:'Space Mono',monospace;font-size:.6rem;color:var(--teal);letter-spacing:.1em;margin-bottom:8px">WEB / UI</div>
+    <div style="background:rgba(255,255,255,.06);border-radius:6px;padding:8px;font-family:'Space Mono',monospace;font-size:.52rem;color:rgba(255,255,255,.4);line-height:1.6;margin-bottom:8px">LOGO&#160;&#160;&#160;&#160;&#160;NAV<br>Hero Headline<br>[CTA Button]<br>&#9474;c1&#9474;c2&#9474;c3&#9474;</div>
+    <div class="cb">Left-aligned, 16px+ body, 1.5&times; leading</div>
+  </div>
+  <div class="card" style="min-width:200px;max-width:220px">
+    <div style="font-family:'Space Mono',monospace;font-size:.6rem;color:var(--violet);letter-spacing:.1em;margin-bottom:8px">CENTERED FORMAL</div>
+    <div style="background:rgba(255,255,255,.06);border-radius:6px;padding:8px;font-family:'Space Mono',monospace;font-size:.52rem;color:rgba(255,255,255,.4);line-height:1.6;margin-bottom:8px;text-align:center">INSTITUTION<br>certifies that<br>RECIPIENT<br>has completed</div>
+    <div class="cb">Invitations, certificates, diplomas</div>
+  </div>
+</div>
+</section>
+
+<!-- S27 GROUP ACTIVITY -->
+<section class="slide bg-gold" id="s27">
+<div class="eyebrow"><span class="ln"></span>Part 4 &bull; Group Activity &bull; 20 Minutes</div>
+<div class="ttl">Font Pairing &amp; Layout <span class="acc">Critique</span></div>
+<div class="cards" style="max-width:1000px">
+  <div class="act-card">
+    <div class="act-num">01</div>
+    <div class="act-title">Font Pairing Challenge</div>
+    <div class="act-body">Brand: <em>Roast &amp; Ritual</em> — artisan coffee, warm, premium. Choose a font pair, name the strategy, explain the mood match. Identify one wrong pair.</div>
+  </div>
+  <div class="act-card">
+    <div class="act-num" style="color:var(--rose)">02</div>
+    <div class="act-title">Alignment Analysis</div>
+    <div class="act-body">Match alignment type to context: wedding invitation, news article, product website. Find one real-world mismatched alignment and explain the problem.</div>
+  </div>
+  <div class="act-card">
+    <div class="act-num" style="color:var(--teal)">03</div>
+    <div class="act-title">Spacing Audit</div>
+    <div class="act-body">Identify tracking, leading, and measure problems in a given paragraph. Specify corrected values and explain how each fix improves readability.</div>
+  </div>
+  <div class="act-card">
+    <div class="act-num" style="color:var(--violet)">04</div>
+    <div class="act-title">Layout Redesign</div>
+    <div class="act-body">Redesign a flat community flyer. Assign 5 hierarchy levels, choose a layout pattern, sketch the grid. Present the before/after reasoning.</div>
+  </div>
+</div>
+<div style="margin-top:14px;font-family:'Space Mono',monospace;font-size:.65rem;color:rgba(255,255,255,.4);letter-spacing:.08em">13 min group work &bull; 7 min presentations (1&ndash;2 min per group)</div>
+</section>
+
+<!-- S28 KEY TAKEAWAYS -->
+<section class="slide bg-dark" id="s28">
+<div class="eyebrow"><span class="ln"></span>Part 5 &bull; Summary</div>
+<div class="ttl" style="margin-bottom:14px">Key <span class="acc">Takeaways</span></div>
+<div class="ladder" style="max-width:800px">
+  <div class="rung"><div class="rn">01</div><div class="rt"><div class="rtitle">Typography communicates tone, not just content</div><div class="rdesc">Every typeface choice sends a message before a word is read</div></div></div>
+  <div class="rung rose"><div class="rn rose">02</div><div class="rt"><div class="rtitle">5 Classifications — each with a distinct purpose</div><div class="rdesc">Serif &bull; Sans-Serif &bull; Script &bull; Display &bull; Monospace</div></div></div>
+  <div class="rung teal"><div class="rn teal">03</div><div class="rt"><div class="rtitle">Font pairing = contrast + shared quality</div><div class="rdesc">Max 2&ndash;3 fonts. One expressive, one neutral. Always.</div></div></div>
+  <div class="rung violet"><div class="rn violet">04</div><div class="rt"><div class="rtitle">Alignment matches context and tone</div><div class="rdesc">Left for body &bull; Centered for formal &bull; Justified for print columns</div></div></div>
+  <div class="rung"><div class="rn">05</div><div class="rt"><div class="rtitle">Spacing operates at 3 levels</div><div class="rdesc">Tracking (all chars) &bull; Kerning (pairs) &bull; Leading (lines)</div></div></div>
+  <div class="rung rose"><div class="rn rose">06</div><div class="rt"><div class="rtitle">Optimal measure: 45&ndash;75 characters per line</div><div class="rdesc">Too wide = eye loses place &bull; Too narrow = choppy rhythm</div></div></div>
+  <div class="rung teal"><div class="rn teal">07</div><div class="rt"><div class="rtitle">4&ndash;5 distinct hierarchy levels in every layout</div><div class="rdesc">Each level must be visually different from the others</div></div></div>
+</div>
+</section>
+
+<!-- S29 ASSESSMENT -->
+<section class="slide bg-paper" id="s29">
+<div class="eyebrow" style="color:var(--rose)"><span class="ln" style="background:var(--rose)"></span>Assessment &bull; Short Answer</div>
+<div class="ttl dark" style="margin-bottom:14px">Check Your <span class="acc">Understanding</span></div>
+<div class="flip-row">
+  <div class="fc" onclick="this.classList.toggle('flipped')" style="height:180px">
+    <div class="fc-inner">
+      <div class="fc-face fc-front" style="background:rgba(0,0,0,.04);border-color:var(--border)"><div class="fk" style="color:var(--rose)">Question 01</div><div class="ft" style="color:var(--ink)">What is the difference between a typeface, a font, and typography?</div><div class="fh" style="color:var(--muted)">Tap for answer &rarr;</div></div>
+      <div class="fc-face fc-back"><div class="fk">Answer</div><div class="ft">Typeface = the family design. Font = specific weight/style instance. Typography = the craft of arranging type in a layout.</div></div>
+    </div>
+  </div>
+  <div class="fc" onclick="this.classList.toggle('flipped')" style="height:180px">
+    <div class="fc-inner">
+      <div class="fc-face fc-front" style="background:rgba(0,0,0,.04);border-color:var(--border)"><div class="fk" style="color:var(--rose)">Question 02</div><div class="ft" style="color:var(--ink)">A designer pairs Lobster + Pacifico for a restaurant menu. What is wrong?</div><div class="fh" style="color:var(--muted)">Tap for answer &rarr;</div></div>
+      <div class="fc-face fc-back"><div class="fk">Answer</div><div class="ft">Two script fonts — both compete, both illegible at body size. Fix: one script headline + a clean sans-serif body (e.g. Open Sans).</div></div>
+    </div>
+  </div>
+  <div class="fc" onclick="this.classList.toggle('flipped')" style="height:180px">
+    <div class="fc-inner">
+      <div class="fc-face fc-front" style="background:rgba(0,0,0,.04);border-color:var(--border)"><div class="fk" style="color:var(--rose)">Question 03</div><div class="ft" style="color:var(--ink)">Difference between tracking and kerning? When to use each?</div><div class="fh" style="color:var(--muted)">Tap for answer &rarr;</div></div>
+      <div class="fc-face fc-back"><div class="fk">Answer</div><div class="ft">Tracking = uniform spacing across all characters. Kerning = spacing between specific pairs. Use tracking for ALL CAPS labels; kerning for logos and display headlines.</div></div>
+    </div>
+  </div>
+  <div class="fc" onclick="this.classList.toggle('flipped')" style="height:180px">
+    <div class="fc-inner">
+      <div class="fc-face fc-front" style="background:rgba(0,0,0,.04);border-color:var(--border)"><div class="fk" style="color:var(--rose)">Question 04</div><div class="ft" style="color:var(--ink)">A body text column has 110 characters per line. What is the problem?</div><div class="fh" style="color:var(--muted)">Tap for answer &rarr;</div></div>
+      <div class="fc-face fc-back"><div class="fk">Answer</div><div class="ft">Too wide — the eye loses its place returning to the next line. Fix: narrow the column to 45–75 characters per line.</div></div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- S30 ASSIGNMENT + CLOSING -->
+<section class="slide bg-ink" id="s30">
+<div class="eyebrow"><span class="ln"></span>Assignment &bull; 100 Points</div>
+<div class="ttl" style="margin-bottom:14px">Your <span class="acc">Design Challenge</span></div>
+<div style="display:flex;gap:18px;flex-wrap:wrap;width:100%;max-width:960px">
+  <div style="flex:1 1 280px;display:flex;flex-direction:column;gap:10px">
+    <div class="rung"><div class="rn" style="font-size:.7rem">D1</div><div class="rt"><div class="rtitle">Font Pair Specimen — 40 pts</div><div class="rdesc">Showcase your pair: all 5 hierarchy levels, pairing strategy named, why it works</div></div></div>
+    <div class="rung rose"><div class="rn rose" style="font-size:.7rem">D2</div><div class="rt"><div class="rtitle">Typographic Layout — 60 pts</div><div class="rdesc">Poster, magazine spread, web layout, or certificate — grid visible, 4+ hierarchy levels</div></div></div>
+    <div class="rung teal"><div class="rn teal" style="font-size:.7rem">D3</div><div class="rt"><div class="rtitle">Written Reflection</div><div class="rdesc">Pairing strategy used &bull; Alignment choice &bull; Grid structure</div></div></div>
+  </div>
+  <div style="flex:1 1 280px">
+    <table class="rubric">
+      <tr><th>Criterion</th><th class="pts">Pts</th></tr>
+      <tr><td>Font pair from one of the 5 strategies</td><td class="pts">10</td></tr>
+      <tr><td>All 5 hierarchy levels visually distinct</td><td class="pts">15</td></tr>
+      <tr><td>Alignment appropriate for layout type</td><td class="pts">10</td></tr>
+      <tr><td>Leading &amp; measure within optimal ranges</td><td class="pts">10</td></tr>
+      <tr><td>Grid visible, all elements aligned</td><td class="pts">15</td></tr>
+      <tr><td>Layout visually cohesive &amp; professional</td><td class="pts">15</td></tr>
+      <tr><td>Written reflection accurate</td><td class="pts">10</td></tr>
+      <tr><td>Export + source file submitted</td><td class="pts">5</td></tr>
+      <tr class="total"><td><strong>TOTAL</strong></td><td class="pts">100</td></tr>
+    </table>
+    <div style="margin-top:10px;font-family:'Space Mono',monospace;font-size:.6rem;color:rgba(255,255,255,.3);letter-spacing:.08em">Mrantinkovic et al. (2020) &mdash; 3G Handy Guide: Graphic Designing &mdash; 3G E-Learning LLC</div>
+  </div>
+</div>
+</section>
+
+<!-- NAV -->
+<button class="nbtn" id="bp" onclick="move(-1)"><i class="fas fa-chevron-left"></i></button>
+<button class="nbtn" id="bn" onclick="move(1)"><i class="fas fa-chevron-right"></i></button>
+<div id="dots"></div>
+<button id="sbtn" onclick="sharePresentation()"><i class="fas fa-share-alt"></i> Share</button>
+<div id="toast">&#128203; Link copied!</div>
+</div>
+
+<script>
+const TOTAL=30;
+let cur=0,sx=0;
+const slides=document.querySelectorAll('.slide');
+const dotsEl=document.getElementById('dots');
+const pbar=document.getElementById('pbar');
+const ctr=document.getElementById('ctr');
+
+slides.forEach((_,i)=>{
+  const d=document.createElement('button');
+  d.className='dot'+(i===0?' active':'');
+  d.onclick=()=>goTo(i);
+  dotsEl.appendChild(d);
+});
+
+function update(){
+  slides.forEach((s,i)=>{
+    s.classList.remove('active','exit');
+    if(i===cur)s.classList.add('active');
+  });
+  document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===cur));
+  pbar.style.width=((cur+1)/TOTAL*100)+'%';
+  ctr.textContent=(cur+1)+' / '+TOTAL;
+}
+function move(dir){
+  const p=cur;
+  cur=Math.max(0,Math.min(TOTAL-1,cur+dir));
+  if(cur!==p){if(dir<0)slides[p].classList.add('exit');update();}
+}
+function goTo(i){cur=i;update();}
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='ArrowDown')move(1);
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp')move(-1);
+});
+document.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;},{passive:true});
+document.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>50)move(dx<0?1:-1);});
+
+/* ALIGNMENT DEMO */
+const alignData={
+  left:{align:'left',feel:'Natural \u2022 Readable \u2022 Neutral',desc:'Matches the natural left-to-right reading direction. Consistent left edge guides the eye. Best for body text, articles, and most general-purpose layouts.',avoid:'Very long lines without a defined column width'},
+  right:{align:'right',feel:'Sophisticated \u2022 Directional',desc:'Creates a strong right edge that anchors text to a visual element. Best for captions next to left-side images, pull quotes, and accent text.',avoid:'Body text \u2014 the ragged left edge makes it hard to find the start of each line'},
+  center:{align:'center',feel:'Formal \u2022 Ceremonial \u2022 Balanced',desc:'Creates symmetry and a sense of occasion. Best for invitations, certificates, headlines, and short display text.',avoid:'Body text longer than 3\u20134 lines \u2014 ragged edges on both sides are exhausting to read'},
+  justify:{align:'justify',feel:'Formal \u2022 Structured \u2022 Editorial',desc:'Creates clean left and right edges. Best for multi-column print layouts, books, newspapers, and magazines.',avoid:'Narrow columns (creates \u201crivers\u201d of white space); digital body text without hyphenation'}
+};
+document.querySelectorAll('#alignTabs .tab').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('#alignTabs .tab').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const d=alignData[btn.dataset.align];
+    document.getElementById('alignBox').style.textAlign=d.align;
+    document.getElementById('alignFeel').textContent=d.feel;
+    document.getElementById('alignDesc').textContent=d.desc;
+    document.getElementById('alignAvoid').innerHTML='<strong style="color:var(--rose)">Avoid:</strong> '+d.avoid;
+  });
+});
+
+/* LEADING SLIDER */
+const leadSlider=document.getElementById('leadSlider');
+const leadDemo=document.getElementById('leadingDemo');
+const leadLabel=document.getElementById('leadLabel');
+if(leadSlider){
+  leadSlider.addEventListener('input',()=>{
+    const v=parseFloat(leadSlider.value);
+    leadDemo.style.lineHeight=v;
+    const state=v<1.3?'TIGHT':v<1.6?'COMFORTABLE':v<2?'LOOSE':'VERY LOOSE';
+    leadLabel.textContent='LINE HEIGHT: '+v.toFixed(1)+'\u00d7 \u2014 '+state;
+  });
+}
+
+/* GRID TABS */
+const gridData={
+  '1':{cols:'1fr',cells:['SINGLE COLUMN'],label:'Books \u2022 Long-form articles \u2022 Essays'},
+  '2':{cols:'1fr 1fr',cells:['COLUMN 1','COLUMN 2'],label:'Newsletters \u2022 Brochures \u2022 Academic papers'},
+  '3':{cols:'1fr 1fr 1fr',cells:['COL 1','COL 2','COL 3'],label:'Magazines \u2022 Newspapers \u2022 Websites'},
+  'mod':{cols:'1fr 1fr 1fr',cells:['MOD 1','MOD 2','MOD 3','MOD 4','MOD 5','MOD 6'],label:'Complex layouts \u2022 Editorial design \u2022 UI'}
+};
+document.querySelectorAll('#gridTabs .tab').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('#gridTabs .tab').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const d=gridData[btn.dataset.grid];
+    const gv=document.getElementById('gridVis');
+    gv.style.gridTemplateColumns=d.cols;
+    gv.innerHTML=d.cells.map(c=>'<div class="gcol">'+c+'</div>').join('');
+    document.getElementById('gridLabel').textContent=d.label;
+  });
+});
+
+/* SHARE */
+function sharePresentation(){
+  const url=window.location.href;
+  if(navigator.share){navigator.share({title:'Typography Mastery',text:'Font Pairing & Layouts presentation',url}).catch(()=>{});}
+  else{navigator.clipboard.writeText(url).then(()=>{const t=document.getElementById('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);});}
+}
+
+update();
+</script>
+</body>
+</html>
